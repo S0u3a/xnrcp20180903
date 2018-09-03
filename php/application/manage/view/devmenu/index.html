@@ -1,0 +1,137 @@
+{extend name="public/common"}
+{block name="main"}
+<div class="page">
+  {include file="public/list/notice" /}
+  <div class="flexigrid">
+    <div class="mDiv">
+      <div class="ftitle">
+        <h3>菜单列表</h3>
+        <h5></h5>
+      </div>
+    </div>
+    <div class="hDiv">
+      <div class="hDivBox">
+        <table cellspacing="0" cellpadding="0" style="width: 100%;">
+          <thead>
+            <tr>
+              <th align="center" axis="col0" width="5%" class="sign"><div style="margin-left: 5px;"><i class="ico-check"></i></div></th>
+              <th align="center" axis="col1" width="26%" class="handle"><div style="margin-left: 5px;">操作(ID)</div></th>
+              <th align="center" axis="col3" width="22%"><div style="text-align: center;">菜单名称</div></th>
+              <th align="center" axis="col4" width="22%"><div style="text-align: center;">菜单URL</div></th>
+              <th align="center" axis="col5" width="5%"><div style="text-align: center;">是否启用</div></th>
+              <th align="center" axis="col6" width="10%"><div style="text-align: center;">显示位置</div></th>
+              <th align="center" axis="col9" width="10%"><div style="text-align: center;">排序</div></th>
+            </tr>
+          </thead>
+        </table>
+      </div>
+    </div>
+    <div class="tDiv">
+      <div class="tDiv2">
+       <a href="{:url('add')}">
+        <div class="fbutton">
+          <div title="新增菜单" class="add">
+            <span><i class="fa fa-plus"></i>新增菜单</span>
+          </div>
+        </div>
+       </a> 
+      </div>
+      <div style="clear:both"></div>
+    </div>      
+    <div style="height: auto;" class="bDiv">
+      <table cellspacing="0" cellpadding="0" border="0" id="article_cat_table" class="flex-table autoht">
+        <tbody id="treet1">
+       {foreach name="menu" item="vo" key="k"}
+        <tr data-level="{$vo['level']}" parent_id_path ="{$vo.parent_id_path}" class="parent_id_{$vo.pid}" nctype="0" {if condition="$vo['level'] gt 1"} style="display:none;"{/if}>
+            <td class="sign" width="5%">
+            {if condition="$vo['count'] gt 0"}
+              <div style="text-align: left;"> 
+              	<img onClick="treeClicked(this,{$vo.id},'{$vo.parent_id_path}')" nc_type="flex" status="open" fieldid="2" src="/3.0/images/tv-collapsable-last.gif">                    
+              </div>
+            {else /}
+              <div style="text-align: left;"> 
+                <img nc_type="flex" status="close" fieldid="2" src="/3.0/images/tv-collapsable-last.gif">              
+              </div>
+            {/if}  
+            </td>
+
+            <td class="handle" width="26%">
+              <div style="text-align: left;">
+                <span style="margin-left:{php} echo (($vo['level']-1) * 2);{/php}em" class="btn">
+                  <em><i class="fa fa-cog"></i>设置(<font color="red" size="2">{$vo.id}</font>)<i class="arrow"></i></em>
+                  <ul> 
+                    <li><a href="{:url('edit',array('id'=>$vo['id']))}">编辑菜单</a></li>
+                    <li><a onClick="CommonJs.JsStatus({$vo['id']},'{:url('del')}','删除');" href="javascript:;">删除菜单</a></li>
+                    <li><a href="{:url('add',array('pid'=>$vo['id']))}">新增子菜单</a></li>  
+                  </ul>
+                </span>
+              </div>
+            </td>
+
+            <td class="name" width="22%">
+              <div style="text-align: center;">
+                <input type="text" value="{$vo.title}" oldValue="{$vo.title}" onblur="CommonJs.quickEdit(this,'{:url('quickEdit')}','title','{$vo.id}',1);" style="text-align: left; width:90%;"/>
+              </div>
+            </td>
+            <td class="name" width="22%">
+              <div style="text-align: center;">                 
+                <input type="text" value="{$vo.url}" oldValue="{$vo.url}" onblur="CommonJs.quickEdit(this,'{:url('quickEdit')}','url','{$vo.id}',1);" style="text-align: left; width:90%;"/>
+              </div>
+            </td>
+            <td align="center" class="" width="5%">
+                <div data-yes="开启" data-no="禁用">
+                  {if condition='$vo.status eq 1'}
+                    <span class="yes" onClick="CommonJs.quickEdit(this,'{:url('quickEdit')}','status','{$vo.id}',1);" >
+                    <i class="fa fa-check-circle"></i>开启</span>
+                  {else /}
+                    <span class="no" onClick="CommonJs.quickEdit(this,'{:url('quickEdit')}','status','{$vo.id}',1);" >
+                    <i class="fa fa-ban"></i>禁用</span>
+                  {/if}
+                </div>
+            </td>
+
+            <td align="center" class="" width="10%">
+              <div style="text-align: center;">菜单位置{$vo.pos}</div>
+            </td>
+
+            <td align="center" class="" width="10%">
+              <div style="text-align: center;">
+                <input type="text" onKeyUp="this.value=this.value.replace(/[^\d]/g,'')" onpaste="this.value=this.value.replace(/[^\d]/g,'')" oldValue="{$vo.sort}" onblur="CommonJs.quickEdit(this,'{:url('quickEdit')}','sort','{$vo.id}',1);" size="4" value="{$vo.sort}" style="text-align: left; width:90%;"/>
+              </div>
+            </td>
+            </tr>
+         {/foreach}                                 
+        </tbody>
+      </table>        
+    </div>
+  </div>
+</div>
+  <script>
+      $(document).ready(function(){	
+  	    // 表格行点击选中切换
+  	    $('.bDiv > table>tbody >tr').click(function(){
+    		    $(this).toggleClass('trSelected');
+    		});
+      });
+  
+    $("tr[parent_id_path^='0_']").show();
+     // 点击展开 收缩节点
+     function treeClicked(obj,cat_id,parent_id_path){
+
+     var img1 = PublicPath + 'images/tv-expandable.gif';
+     var img2 = PublicPath + 'images/tv-collapsable-last.gif';
+
+		 var src = $(obj).attr('src');
+		 if(src == img1)
+		 {
+  			 $(".parent_id_"+cat_id).show();
+  			 $(obj).attr('src',img2);
+		 }else{
+
+		     $("tr[parent_id_path^='"+parent_id_path+"_']").hide().find('img').attr('src',img1);
+         $("tr[parent_id_path^='"+parent_id_path+"_']").find('img[status="close"]').attr('src',img2);
+			   $(obj).attr('src',PublicPath + 'images/tv-expandable.gif');
+		 }
+	 }  	
+  </script>
+{/block}

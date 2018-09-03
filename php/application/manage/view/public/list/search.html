@@ -1,0 +1,87 @@
+<div class="mDiv">
+<div class="ftitle">
+    <h3>{$pageData['title1']}</h3>
+    <h5>(共{$_total}条记录)</h5>
+</div>
+<div title="刷新数据" class="pReload"><i class="fa fa-refresh"></i></div>   
+{notempty name="listNode.search"}  
+<form class="navbar-form form-inline" id="searchForm" action="" method="post" onSubmit="return false;">
+    <div class="sDiv">
+        <div class="sDiv2">
+            {volist name="listNode.search" id="vo"}
+            {switch name="vo.type"}
+                {case string}{/*字符串类型*/}
+                    <input type="text" size="30" class="qsbox" name="search[{$vo.tag}]" placeholder="{$vo.title}" {$vo.attr}>
+                {/case}
+                {case number}{/*数字类型*/}
+                    <input type="text" size="30" class="qsbox" name="search[{$vo.tag}]" placeholder="{$vo.title}" {$vo.attr}>
+                </case>
+                {case price}{/*价格类型*/}
+                    <input type="text" size="30" class="qsbox" name="search[{$vo.tag}]" placeholder="{$vo.title}" {$vo.attr}>
+                {/case}
+
+                {case select}{/*枚举类型*/}
+                <select name="search[{$vo.tag}]" class="select" {$vo.attr}>
+                    <option value="">请选择</option>
+                    {if condition="$vo['default']['type'] eq 'string'"}
+                        {volist name="vo.default.parame" id="pa"}
+                            <option value="{$key}">{$pa}</option>
+                        {/volist}
+                        {else /}
+                        {volist name="$vo.default.parame" id="pa"}
+                            <option value="{$key}">{$pa}</option>
+                        {/volist}
+                    {/if}
+                </select>
+                {/case}
+                {case bool}{/*布尔类型*/}
+                <div class="onoff" style="display: inline-block">
+                    {if condition="$vo['default']['type'] eq 'string'"}
+                    {volist name="vo.default.parame" id="bo"}
+                    {if condition="$i eq 1"}
+                        <label for="menu_{$vo.tag}{$i}" class="cb-enable ">{$bo}</label>
+                        <input id="menu_{$vo.tag}{$i}" name="search[{$vo.tag}]" value="{$key}" type="radio" >
+                    {else /}
+                        <label for="menu_{$vo.tag}{$i}" class="cb-disable">{$bo}</label>
+                        <input id="menu_{$vo.tag}{$i}" name="search[{$vo.tag}]" value="{$key}" type="radio">
+                    {/if}
+                    {/volist}
+                    {else /}
+                        {volist name="vo.default.parame" id="bo"}
+                            {if condition="$i eq 1"}
+                                <label for="menu_{$form.tag}{$i}" class="cb-enable">{$bo}</label>
+                                <input id="menu_{$form.tag}{$i}" name="search[{$vo.tag}]" value="{$key}" type="radio">
+                            {else /}
+                                <label for="menu_{$form.tag}{$i}" class="cb-disable">{$bo}</label>
+                                <input id="menu_{$form.tag}{$i}" name="search[{$vo.tag}]" value="{$key}" type="radio">
+                            {/if}
+                        {/volist}
+                    {/if}
+                </div>
+                {/case}
+                {case datetime}
+                <input type="text" size="30" class="datainp wicon datetime" id="search_{$vo.tag}_datetime" name="search[{$vo.tag}_start]" placeholder="{$vo.title}-开始" {$vo.attr}>
+                <input type="text" size="30" class="datainp wicon datetime" id="search_{$vo.tag}_end" name="search[{$vo.tag}_end]" placeholder="{$vo.title}-结束" {$vo.attr}>
+                {/case}
+                {default /}
+            {/switch}
+            {/volist}
+            <button type="button" class="btn search-input-btn" onClick="return CommonJs.LoadSearch();">提交</button>
+        </div>
+    </div>
+</form>
+<script type="text/javascript">
+$(".datetime").each(function(){
+    $(this).jeDate({
+        isinitVal:true,
+        festival:false,
+        ishmsVal:false,
+        minDate: '',
+        maxDate: '',
+        format:"YYYY-MM-DD",
+        zIndex:3000,
+    });
+});
+</script>
+{/notempty}
+</div>

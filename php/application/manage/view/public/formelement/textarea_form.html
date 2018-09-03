@@ -1,0 +1,10 @@
+<dl class="row" id="id_{$form.tag}" data-msg="请输入{$form.title}">
+	<dt class="tit">
+		{if condition="$form['require'] eq 1"}<em>*</em>{/if}
+		{$form.title}
+	</dt>
+	<dd class="opt">
+		<textarea class="form-control" id="post_description" style="height:auto;" name="{$form['tag']}" title="{$form.notice}" {$form.attr|raw}>{$info[$form['tag']]}</textarea>
+		<p class="notic">{$form.notice}</p>
+	</dd>
+</dl>

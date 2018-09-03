@@ -1,0 +1,26 @@
+<dl class="row" id="id_{$form.tag}" data-msg="请选择{$form.title}">
+	<dt class="tit">
+		{if condition="$form['require'] eq 1"}<em>*</em>{/if}
+		{$form.title}
+	</dt>
+	<dd class="opt">
+		{php}
+			$info[$form['tag']] = explode(',',$info[$form['tag']]) ;
+		{/php}
+
+		{if condition="$form['default']['type'] eq 'string'"}
+			{volist name="$form['default']['parame']" id="vo"}
+				<label>
+				<input type="checkbox" name="{$form.tag}[]" value="{$key}" {$form.attr} {if condition="in_array($key,$info[$form['tag']])"} checked="checked"{/if}> {$vo}
+				</label>
+			{/volist}
+		{else /}
+			{volist name="defaultData[$form['default']['parame']]" id="vo"}
+				<label>
+				<input type="checkbox" name="{$form.tag}[]" value="{$key}" {$form.attr} {if condition="in_array($key,$info[$form['tag']])"} checked="checked"{/if}> {$vo}
+				</label>
+			{/volist}
+		{/if}
+		<p class="notic">{$form.notice}</p>
+	</dd>
+</dl>
