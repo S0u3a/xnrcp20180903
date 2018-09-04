@@ -842,13 +842,12 @@ class PermutationCombination extends Base
         if ($type == 1) {
             $num5          = explode(',',$num5);
             $num4          = explode(',',$num4);
-wr("sssssssssssssss");
+
             if (!in_array($num5[0],$nn)) return [0,[]];
             foreach ($num5 as $nv) {
                 if (!in_array($nv,[1,2,3,4,5,6])) return [0,[]];
             }
-
-
+            wr("黄蕾");
             if (count($num5) !== 1) return [0,[]];
             if (count($num4) <= 0 || count($num4) >= 6 ) return [0,[]];
 
