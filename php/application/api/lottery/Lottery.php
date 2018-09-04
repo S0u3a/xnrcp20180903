@@ -160,7 +160,7 @@ class Lottery extends Base
                     //计算赔率
                     $this->calculatingOdds($value,$isWin,$lotteryRule);
                 }
-                wr(["=============01"]);
+
                 //更改订单信息
                 $updataOrder                    = [];
                 $updataOrder['status']          = 3;
@@ -170,7 +170,7 @@ class Lottery extends Base
                 $updataOrder['opentimestamp']   = $opentimestamp;
                 $updataOrder['win_code']        = json_encode($isWin[1]);
                 $updataOrder['iswin']           = $isWin[0] > 0 ? 1 : 0;
-
+wr(["=============01",$updataOrder]);
                 $orderModle->updateById($value['id'],$updataOrder);
             }
         }else{
@@ -193,7 +193,7 @@ class Lottery extends Base
         $pid             = $lotteryRule['pid'];
         $money           = 0;
         $umoney          = 0;
-        wr(["=============02"]);
+
         $agentOdds       = $oddsModel->getLotteryAgentOddsByUid($aid,$tag);
         //时时彩
         switch ($pid) {
@@ -219,7 +219,7 @@ class Lottery extends Base
                     $amoney  = hk6OddsMoney($tag,$rebate,$lotteryRule,$value['price'],$isWin,$aid,$agentOdds,$value);
                 }
 
-                $umoney      = ($money-$amoney)*1;wr(["=============03"]);
+                $umoney      = ($money-$amoney)*1;wr(["=============1",$money,$umoney]);
                 break;
             case 102://快3
                 $money       = oneOddsMoney($tag,$rebate,$lotteryRule,$value['price'],$isWin);
@@ -255,7 +255,7 @@ class Lottery extends Base
         }
 
         if ($money <= 0 || $umoney <= 0)  return true;
-        wr(["=============04"]);
+        wr(["=============2",$money,$umoney]);
         if (in_array($pid,[96,99,102,108,115]))
         {
             //代理存在 需要分给代理一部分佣金 (时时彩不考虑代理)
@@ -271,13 +271,13 @@ class Lottery extends Base
                 model('user_account_log')->addAccountLog($aid,$amoney,'代理返佣',1,5);
             }
         }
-        wr(["=============05"]);
+
         $userinfo              = $userModel->getOneByUid($value['uid']);
         $data                  = [];
         $data['account']       = $userinfo['account']+$umoney;
         $userModel->updateById($userinfo['id'],$data);
         $userModel->delDetailDataCacheByUid($value['uid']);
-        wr(["=============06"]);
+        
         //写日志
         model('user_account_log')->addAccountLog($value['uid'],$umoney,'彩票中奖',1,4);
         return true;
