@@ -848,6 +848,7 @@ class PermutationCombination extends Base
                 if (!in_array($nv,[1,2,3,4,5,6])) return [0,[]];
             }
 
+            wr("sssssssssssssss")
             if (count($num5) !== 1) return [0,[]];
             if (count($num4) <= 0 || count($num4) >= 6 ) return [0,[]];
 
