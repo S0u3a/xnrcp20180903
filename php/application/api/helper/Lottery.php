@@ -780,7 +780,7 @@ class Lottery extends Base
 
         $LotteryRule         = new \app\api\lottery\LotteryRule($id);
         $Lottery             = new \app\api\lottery\Lottery($id);
-
+wr([$lottery_rule,$num5,$num4,$num3,$num2,$num1]);
         //计算用户下注数
         $bets                = $LotteryRule->getLotteryBetNumber($lottery_rule,$num5,$num4,$num3,$num2,$num1);
         if ($bets[0] <= 0) return $LotteryRule->getError();
