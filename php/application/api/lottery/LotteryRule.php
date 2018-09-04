@@ -451,21 +451,21 @@ class LotteryRule extends Base
                 $permutation    = $PermutationCombination->star_zuxuan($num5,5,1);break;
 
             case '99-9-1'://自选不中-自选不中-五不中
-                $permutation    = $PermutationCombination->star_zuxuan($num5,5);break;
+                $permutation    = $PermutationCombination->star_zuxuan($num5,5,2);break;
             case '99-9-2'://自选不中-自选不中-六不中
-                $permutation    = $PermutationCombination->star_zuxuan($num5,6);break;
+                $permutation    = $PermutationCombination->star_zuxuan($num5,6,2);break;
             case '99-9-3'://自选不中-自选不中-七不中
-                $permutation    = $PermutationCombination->star_zuxuan($num5,7);break;
+                $permutation    = $PermutationCombination->star_zuxuan($num5,7,2);break;
             case '99-9-4'://自选不中-自选不中-八不中
-                $permutation    = $PermutationCombination->star_zuxuan($num5,8);break;
+                $permutation    = $PermutationCombination->star_zuxuan($num5,8,3);break;
             case '99-9-5'://自选不中-自选不中-九不中
-                $permutation    = $PermutationCombination->star_zuxuan($num5,9);break;
+                $permutation    = $PermutationCombination->star_zuxuan($num5,9,4);break;
             case '99-9-6'://自选不中-自选不中-十不中
-                $permutation    = $PermutationCombination->star_zuxuan($num5,10);break;
+                $permutation    = $PermutationCombination->star_zuxuan($num5,10,5);break;
             case '99-9-7'://自选不中-自选不中-十一不中
-                $permutation    = $PermutationCombination->star_zuxuan($num5,11);break;
+                $permutation    = $PermutationCombination->star_zuxuan($num5,11,5);break;
             case '99-9-8'://自选不中-自选不中-十二不中
-                $permutation    = $PermutationCombination->star_zuxuan($num5,12);break;
+                $permutation    = $PermutationCombination->star_zuxuan($num5,12,6);break;
             case '99-10-1'://生肖-生肖-正肖
                 $permutation    = $PermutationCombination->star_zuxuan($num5,1);break;
             case '99-10-2'://生肖-生肖-特肖
