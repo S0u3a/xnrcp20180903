@@ -865,7 +865,7 @@ class PermutationCombination extends Base
                 $C[]    = [$num5[0],$value];
             }
 
-            $CN         = count($C);wr([$CN,$C]);
+            $CN         = count($C);
             return [$CN,$C];
         }
 
