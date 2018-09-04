@@ -845,7 +845,7 @@ class PermutationCombination extends Base
 
             if (!in_array($num5[0],$nn)) return [0,[]];
  
-            foreach ($num5 as $nv) {
+            foreach ($num4 as $nv) {
                 wr("=====".$nv);
                 //if (!in_array($nv,[1,2,3,4,5,6])) return [0,[]];
             }
