@@ -983,7 +983,7 @@ if(!function_exists('hk6OddsMoney'))
 		$money 					= 0;
 		$winBets 				= isset($isWin[0]) ? intval($isWin[0]) : 0;
 		$winCode 				= isset($isWin[1]) ? $isWin[1] : [];
-
+		wr(["=============03",$tag]);
 		if ($aid > 0 && !empty($agentOdds) && !empty($agentOdds['odds2'])) {
 			$odds 				= !empty($agentOdds['odds2']) ? $agentOdds['odds2'] : $agentOdds['odds1'];
 		}else{
@@ -993,8 +993,21 @@ if(!function_exists('hk6OddsMoney'))
 		//赔率个数
 		$ocount 				= count(explode(',',$odds));
     	$odds           		= $ocount>=2 ? getOddsRebates(0,$odds) : getOddsRebate(0,$odds,0);
-
-        if (in_array($tag,['99-5-1'])) {//正码1-6
+    	wr(["=============01",$tag]);
+    	if (in_array($tag,['99-1-1'])) {//两面
+    		if (in_array('和局',$winCode)) {
+    			$money 		= $orderinfo['money'];
+    		}else{
+    			$ops  = ['特单','特双','特大','特小','特合单','特合双','特合大','特合小','特尾大','特尾小','特天肖','特地肖','特前肖','特后肖','特家肖','特野肖','总单','总双','总大','总小'];
+	        	$ops  = array_flip($ops);
+	        	$oo   = 0;
+				foreach ($winCode as $key => $value) {
+					$oo 		= isset($ops[$value])?(isset($odds[$ops[$value]])?$odds[$ops[$value]]:0):0;
+					$money 		+= $oo*$price*1;
+				}
+    		}
+    		wr(["=============02",$money]);
+        }elseif (in_array($tag,['99-5-1'])) {//正码1-6
         	$ops  = ['单','双','大','小','合单','合双','合大','合小','尾大','尾小','红波','绿波','蓝波'];
         	$ops  = array_flip($ops);
         	$oo   = 0;
@@ -1015,17 +1028,60 @@ if(!function_exists('hk6OddsMoney'))
 				}
 				$money 		+= $ooo*$price*1;
         	}
-        }else if (in_array($tag,['99-8-1'])) {
+        }else if (in_array($tag,['99-8-1','99-8-2','99-8-3','99-8-4'])) {
         	$ops  = ['鼠','牛','虎','兔','龙','蛇','马','羊','猴','鸡','狗','猪'];
         	$ops  = array_flip($ops);
         	$oo   = 0;
-        	//取第一个生肖赔率
+
+        	//对应生肖和赔率
+        	foreach ($ops as $key => $value) {
+        		$oddsArr[$key] = $odds[$value];
+        	}
+
+        	foreach ($winCode as $key => $value)
+        	{
+        		//分解尾号 格式化对应生肖赔率
+        		$winWs 		= explode(',',$value);
+        		$winOdds 	= [];
+        		foreach ($winWs as $k1 => $v1) {
+        			$winOdds[$v1] 	= $oddsArr[$v1];
+        		}
+
+        		//找出最小赔率
+        		$mainOdds 	= min($winOdds);
+				$money 		+= $mainOdds*$price*1;
+			}
+
+        	/*//取第一个生肖赔率
         	foreach ($winCode as $key => $value) {
         		$sx 		= explode(',',$value);
 				$oo 		= isset($ops[$sx[0]])?(isset($odds[$ops[$sx[0]]])?$odds[$ops[$sx[0]]]:0):0;
 				break;
 			}
-			$money 			+= $oo*$price*$winBets;
+			$money 			+= $oo*$price*$winBets;*/
+        }else if (in_array($tag,['99-8-5','99-8-6','99-8-7','99-8-8'])) {
+        	$ops  = ['尾0','尾1','尾2','尾3','尾4','尾5','尾6','尾7','尾8','尾9'];
+        	$ops  = array_flip($ops);
+
+        	//对应尾号和赔率
+        	foreach ($ops as $key => $value) {
+        		$oddsArr[$key] = $odds[$value];
+        	}
+        	
+        	foreach ($winCode as $key => $value)
+        	{
+        		//分解尾号 格式化对应尾号赔率
+        		$winWs 		= explode(',',$value);
+        		$winOdds 	= [];
+        		foreach ($winWs as $k1 => $v1) {
+        			$winOdds[$v1] 	= $oddsArr[$v1];
+        		}
+
+        		//找出最小赔率
+        		$mainOdds 	= min($winOdds);
+				$money 		+= $mainOdds*$price*1;
+			}
+
         }else if (in_array($tag,['99-10-1','99-10-2','99-10-3'])) {
         	$ops  = ['鼠','牛','虎','兔','龙','蛇','马','羊','猴','鸡','狗','猪'];
         	$ops  = array_flip($ops);
