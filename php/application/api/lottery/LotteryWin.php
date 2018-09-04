@@ -1511,6 +1511,7 @@ class LotteryWin extends Base
                 $opcode     = array_merge($zm,[$tm]);
                 $sx1        = ['鼠','牛','虎','兔','龙','蛇','马','羊','猴','鸡','狗','猪'];
                 $sx2        = [];
+
                 foreach ($sx1 as $sv) {
                     $sx     = $this->shengxiao($sv);
                     foreach ($opcode as $ov) {
@@ -1518,7 +1519,7 @@ class LotteryWin extends Base
                     }
                 }
 
-                $sxnum      = count($sx);
+                $sxnum      = count($sx2);
                 $sxstr[]    = ($sxnum>=1 && $sxnum<=4) ? '234肖' : $sxnum.'肖';
                 $sxstr[]    = $sxnum%2 == 0  ? '总肖双' : '总肖单';
                 

@@ -601,7 +601,7 @@ class Lottery extends Base
                 return $LotteryWin->win_hk6($opencode,$select_code,5,5);break;
             case '99-6-1'://正码过关-正码过关-正码过关
                 return $LotteryWin->win_hk6($opencode,$select_code,6);break;
-            /*case '99-7-1'://连码-连码-四全中
+            case '99-7-1'://连码-连码-四全中
                 return $LotteryWin->win_hk6($opencode,$select_code,7,4);break;
             case '99-7-2'://连码-连码-三全中
                 return $LotteryWin->win_hk6($opencode,$select_code,7,3);break;
@@ -612,7 +612,7 @@ class Lottery extends Base
             case '99-7-5'://连码-连码-二中特
                 return $LotteryWin->win_hk6($opencode,$select_code,8);break;
             case '99-7-6'://连码-连码-特串
-                return $LotteryWin->win_hk6($opencode,$select_code,8,1);break;*/
+                return $LotteryWin->win_hk6($opencode,$select_code,8,1);break;
 
             case '99-8-1'://连肖连尾-连肖连尾-二连肖
                 return $LotteryWin->win_hk6($opencode,$select_code,9,2);break;
