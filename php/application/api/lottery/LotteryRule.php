@@ -434,21 +434,21 @@ class LotteryRule extends Base
                 $permutation    = $PermutationCombination->star_zuxuan($num5,2);break;
 
             case '99-8-1'://连肖连尾-连肖连尾-二连肖
-                $permutation    = $PermutationCombination->star_zuxuan($num5,2);break;
+                $permutation    = $PermutationCombination->star_zuxuan($num5,2,1);break;
             case '99-8-2'://连肖连尾-连肖连尾-三连肖
-                $permutation    = $PermutationCombination->star_zuxuan($num5,3);break;
+                $permutation    = $PermutationCombination->star_zuxuan($num5,3,1);break;
             case '99-8-3'://连肖连尾-连肖连尾-四连肖
-                $permutation    = $PermutationCombination->star_zuxuan($num5,4);break;
+                $permutation    = $PermutationCombination->star_zuxuan($num5,4,1);break;
             case '99-8-4'://连肖连尾-连肖连尾-五连肖
-                $permutation    = $PermutationCombination->star_zuxuan($num5,5);break;
+                $permutation    = $PermutationCombination->star_zuxuan($num5,5,1);break;
             case '99-8-5'://连肖连尾-连肖连尾-二连尾
-                $permutation    = $PermutationCombination->star_zuxuan($num5,2);break;
+                $permutation    = $PermutationCombination->star_zuxuan($num5,2,1);break;
             case '99-8-6'://连肖连尾-连肖连尾-三连尾
-                $permutation    = $PermutationCombination->star_zuxuan($num5,3);break;
+                $permutation    = $PermutationCombination->star_zuxuan($num5,3,1);break;
             case '99-8-7'://连肖连尾-连肖连尾-四连尾
-                $permutation    = $PermutationCombination->star_zuxuan($num5,4);break;
+                $permutation    = $PermutationCombination->star_zuxuan($num5,4,1);break;
             case '99-8-8'://连肖连尾-连肖连尾-五连尾
-                $permutation    = $PermutationCombination->star_zuxuan($num5,5);break;
+                $permutation    = $PermutationCombination->star_zuxuan($num5,5,1);break;
 
             case '99-9-1'://自选不中-自选不中-五不中
                 $permutation    = $PermutationCombination->star_zuxuan($num5,5);break;

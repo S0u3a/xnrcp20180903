@@ -851,19 +851,19 @@ class LotteryWin extends Base
                 
                 //根据玩法,判断开奖号码是否属于ABB或AAB形式,如不是,则直接不用判断,一律不中奖
                 $is_effective = 0;  //是否符合开奖条件[0:不符合  1:符合]
-                if($opencode[0] == $opencode[1]){
+                if($opencode[0] == $opencode[1] && $opencode[0] != $opencode[2]){
                     $is_effective = 1;
                 }
 
-                if($opencode[0] == $opencode[2]){
-                    $is_effective = 1;
+                if($opencode[0] == $opencode[2] && $opencode[0] != $opencode[1]){
+                    $is_effective = 2;
                 }
 
-                if($opencode[1] == $opencode[2]){
-                    $is_effective = 1;
+                if($opencode[1] == $opencode[2] && $opencode[0] != $opencode[1]){
+                    $is_effective = 3;
                 }
 
-                if($is_effective == 1){
+                if($is_effective >= 1){
                     foreach ($select_code as $key => $value)
                     {   
                         $n1     = substr($value[0],0,1);

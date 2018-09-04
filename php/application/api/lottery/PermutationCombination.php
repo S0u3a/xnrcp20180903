@@ -392,7 +392,7 @@ class PermutationCombination extends Base
     }
 
     //组选 组合方式
-    public function star_zuxuan($num5 = '',$num=0)
+    public function star_zuxuan($num5 = '',$num=0,$type = 0)
     {
         if (strlen($num5)<=0 || $num <= 0)  return [0,[]];
 
@@ -400,6 +400,10 @@ class PermutationCombination extends Base
         //去重
         $num5       = array_flip(array_flip($num5));
         $num5       = implode(',',$num5);
+
+        //连肖连尾 最多选择6个数字
+        $tnum       = explode(',',$num5);
+        if ($type == 1 && count($tnum) > 6) return [0,[]];
 
         $C          = $this->combination($num5,$num);
         $CN         = count($C);

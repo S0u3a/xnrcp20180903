@@ -1024,7 +1024,7 @@ class Lottery extends Base
             $lottery        = new \app\api\lottery\Lottery(0);
             $isWin          = $lottery->winningPrize($opencode,$opentimestamp,$rules,$select_code);
             //print_r([$isWin,$opencode,$rules,1]);exit;
-            //return ['Code' => '00000001', 'Msg'=>lang('00000001')];
+            return ['Code' => '00000002', 'Msg'=>lang('00000002')];
             //中奖 计算中奖金额
             if ($isWin[0] > 0 && !empty($isWin[1]))
             {
