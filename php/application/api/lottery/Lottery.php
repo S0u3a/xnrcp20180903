@@ -150,6 +150,7 @@ class Lottery extends Base
                 $select_code    = $value['select_code'];
 
                 $isWin          = $this->winningPrize($opencode,$opentimestamp,$rules,$select_code);
+                wr(["=============0",$isWin,$opencode]);
                 /*if ($rules == '99-15-1') {
                     return false;
                 }*/
