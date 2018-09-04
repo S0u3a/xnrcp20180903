@@ -18,7 +18,7 @@ use think\facade\Lang;
 class Lottery extends Base
 {
 	private $dataValidate 		= null;
-    private $mainTable          = 'Category';
+    private $mainTable          = 'category';
 	
 	public function __construct($parame=[],$className='',$methodName='',$modelName='')
     {
