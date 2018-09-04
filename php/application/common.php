@@ -983,7 +983,7 @@ if(!function_exists('hk6OddsMoney'))
 		$money 					= 0;
 		$winBets 				= isset($isWin[0]) ? intval($isWin[0]) : 0;
 		$winCode 				= isset($isWin[1]) ? $isWin[1] : [];
-		wr(["=============03",$tag]);
+
 		if ($aid > 0 && !empty($agentOdds) && !empty($agentOdds['odds2'])) {
 			$odds 				= !empty($agentOdds['odds2']) ? $agentOdds['odds2'] : $agentOdds['odds1'];
 		}else{
@@ -993,7 +993,7 @@ if(!function_exists('hk6OddsMoney'))
 		//赔率个数
 		$ocount 				= count(explode(',',$odds));
     	$odds           		= $ocount>=2 ? getOddsRebates(0,$odds) : getOddsRebate(0,$odds,0);
-    	wr(["=============01",$tag]);
+    	
     	if (in_array($tag,['99-1-1'])) {//两面
     		if (in_array('和局',$winCode)) {
     			$money 		= $orderinfo['money'];
@@ -1006,7 +1006,6 @@ if(!function_exists('hk6OddsMoney'))
 					$money 		+= $oo*$price*1;
 				}
     		}
-    		wr(["=============02",$money]);
         }elseif (in_array($tag,['99-5-1'])) {//正码1-6
         	$ops  = ['单','双','大','小','合单','合双','合大','合小','尾大','尾小','红波','绿波','蓝波'];
         	$ops  = array_flip($ops);
