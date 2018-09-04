@@ -838,11 +838,14 @@ class PermutationCombination extends Base
 
         $nn     = [11,22,33,44,55,66];
         $nn3    = [111,222,333,444,555,666];
-        wr([$num5,$num4,$type]);
+
         if ($type == 1) {
             $num5          = explode(',',$num5);
             $num4          = explode(',',$num4);
 
+            wr('11111====');
+            if (count($num5)  !== 1) return [0,[]];
+wr('22222====');
             if (count($num4) <= 0||count($num5)<= 0||count($num5) >1||!in_array($num5[0],$nn)) return [0,[]];
 
             $CN     = 0;
