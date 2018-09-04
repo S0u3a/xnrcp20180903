@@ -421,17 +421,17 @@ class LotteryRule extends Base
             case '99-6-1'://正码过关-正码过关-正码过关
                 $permutation    = $PermutationCombination->zmgg_hc6($num5);break;
             case '99-7-1'://连码-连码-四全中
-                $permutation    = $PermutationCombination->star_zuxuan($num5,4);break;
+                $permutation    = $PermutationCombination->star_zuxuan($num5,4,2);break;
             case '99-7-2'://连码-正码过关-三全中
-                $permutation    = $PermutationCombination->star_zuxuan($num5,3);break;
+                $permutation    = $PermutationCombination->star_zuxuan($num5,3,2);break;
             case '99-7-3'://连码-连码-三中二
-                $permutation    = $PermutationCombination->star_zuxuan($num5,3);break;
+                $permutation    = $PermutationCombination->star_zuxuan($num5,3,2);break;
             case '99-7-4'://连码-连码-二全中
-                $permutation    = $PermutationCombination->star_zuxuan($num5,2);break;
+                $permutation    = $PermutationCombination->star_zuxuan($num5,2,2);break;
             case '99-7-5'://连码-连码-二中特
-                $permutation    = $PermutationCombination->star_zuxuan($num5,2);break;
+                $permutation    = $PermutationCombination->star_zuxuan($num5,2,2);break;
             case '99-7-6'://连码-连码-特串
-                $permutation    = $PermutationCombination->star_zuxuan($num5,2);break;
+                $permutation    = $PermutationCombination->star_zuxuan($num5,2,2);break;
 
             case '99-8-1'://连肖连尾-连肖连尾-二连肖
                 $permutation    = $PermutationCombination->star_zuxuan($num5,2,1);break;
