@@ -193,7 +193,7 @@ class Lottery extends Base
         $pid             = $lotteryRule['pid'];
         $money           = 0;
         $umoney          = 0;
-        wr(["=============01",$pid,$isWin]);
+
         $agentOdds       = $oddsModel->getLotteryAgentOddsByUid($aid,$tag);
         //时时彩
         switch ($pid) {
