@@ -1298,6 +1298,9 @@ class LotteryWin extends Base
         switch ($type) {
             case 1:
                 $lm         = $this->liangmian($zm,$tm);
+                //首先判断是否和局
+                if (in_array('和局',$lm)) return [1,['和局'=>'和局']];
+                
                 foreach ($select_code as $key => $value)
                 {
                     $scode          = $value[0];
