@@ -28,8 +28,8 @@ return [
     'api_auth_key'				=> '9b12d0f61a382e19ffa87ed306ff3c3b',
     //项目开发必须在本地
     'apidoc_project_id'         =>'7',
-    'apidoc_project_url'        =>'http://dev.xmap1803015.com/',
-    'apidoc_url'                =>'http://apidoc.php.hzxmnet.com/',
+    'apidoc_project_url'        =>'http://dev.xnrcp20180903.com/',
+    'apidoc_url'                =>'http://apidoc.php.xnrcms.cn/',
     //站点配置
     'xnrcms_name'               =>'阳光彩票',
     'xnrcms_var'                =>'1.0',
