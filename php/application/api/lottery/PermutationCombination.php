@@ -234,7 +234,7 @@ class PermutationCombination extends Base
             if (!in_array($value,$dxds)) unset($num5[$key]);
         }
 
-        $num5   = implode(',',$num5);
+        $num5   = implode(',',$num5);wr([$num5]);
         return $this->star_zuxuan($num5,1);
     }
 
