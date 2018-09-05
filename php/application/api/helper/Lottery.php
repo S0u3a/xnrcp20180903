@@ -392,7 +392,7 @@ class Lottery extends Base
         if (!empty($orderList)) {
             foreach ($orderList as $key => $value) {
                 $nums            = [$value['num5'],$value['num4'],$value['num3'],$value['num2'],$value['num1']];
-                $orderList[$key]['nums']     = implode('|',$nums);
+                $orderList[$key]['nums']     = trim(implode('|',$nums));
 
                 $pay_money      += $value['money'];
                 $order_money    += $value['order_money'];
