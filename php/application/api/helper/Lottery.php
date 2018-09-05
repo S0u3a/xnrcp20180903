@@ -1248,7 +1248,7 @@ class Lottery extends Base
             $nums   = implode(',',$tnum2);
         }
 
-        wr([$nums,$lottery_rule]);
+        wr(['ssss1',$nums,$lottery_rule]);
         return $nums;
     }
 }
