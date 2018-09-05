@@ -227,14 +227,14 @@ class PermutationCombination extends Base
         if (empty($num5))  return [0,[]];
         $num5       = explode(',',$num5);
         $num5       = array_flip(array_flip($num5));
-
+        wr([$num5]);
         //$lhh        = [4,3,2,1];//大小单双
         $dxds       = [1=>'大',2=>'小',3=>'单',4=>'双'];
         foreach ($num5 as $key => $value) {
             if (!in_array($value,$dxds)) unset($num5[$key]);
         }
 
-        $num5   = implode(',',$num5);wr([$dxds]);
+        $num5   = implode(',',$num5);
         return $this->star_zuxuan($num5,1);
     }
 
