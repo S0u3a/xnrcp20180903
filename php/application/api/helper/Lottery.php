@@ -774,9 +774,13 @@ class Lottery extends Base
         $num3      = isset($parame['number3']) ? str_replace('~','',$parame['number3']) : '';
         $num2      = isset($parame['number2']) ? str_replace('~','',$parame['number2']) : '';
         $num1      = isset($parame['number1']) ? str_replace('~','',$parame['number1']) : '';
-        
+
         //转换数字对应的汉字 根据规则ID 为了考虑前端传的是数字 主要针对num5
-        $num5      = $this->format_num5($num5,$lottery_rule);
+        $num5      = $this->format_nums($num5,$lottery_rule);
+        $num4      = $this->format_nums($num2,$lottery_rule);
+        $num3      = $this->format_nums($num3,$lottery_rule);
+        $num2      = $this->format_nums($num2,$lottery_rule);
+        $num1      = $this->format_nums($num1,$lottery_rule);
 
         $cacheKey  = 'selectNumber2_'.md5($lottery_rule.'_'.$id.'_'.$parame['uid'].$parame['hashid']);
         cache($cacheKey,null);
@@ -1226,9 +1230,9 @@ class Lottery extends Base
         echo json_encode($backdata);exit;
     }
 
-    private function format_num5($num5,$lottery_rule)
+    private function format_nums($nums,$lottery_rule)
     {   
-        if (strlen($num5) <= 0) return $num5;
+        if (strlen($nums) <= 0) return $nums;
 
         $temp       = [];
         if (in_array($lottery_rule,['88-7-1','88-7-2','88-7-3','88-7-4','88-7-5','88-7-6','88-7-7','88-7-8','88-7-9','88-7-10'])) {
@@ -1238,13 +1242,13 @@ class Lottery extends Base
         }
 
         if (!empty($temp)) {
-            $tnum1  = explode(',',$num5);
+            $tnum1  = explode(',',$nums);
             $tnum2  = [];
             foreach ($tnum1 as $key => $value) $tnum2[]    = $temp[$value];
-            $num5   = implode(',',$tnum2);
+            $nums   = implode(',',$tnum2);
         }
 
         wr([$num5,$lottery_rule]);
-        return $num5;
+        return $nums;
     }
 }
