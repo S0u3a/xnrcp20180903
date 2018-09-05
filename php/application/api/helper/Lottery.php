@@ -417,7 +417,7 @@ class Lottery extends Base
         $Data['user_level']         = $level;
         $Data['pay_money']          = sprintf("%.2f",$pay_money);
         $Data['order_money']        = sprintf("%.2f",$order_money);
-wr($Data);
+
         return ['Code' => '000000', 'Msg'=>lang('000000'),'Data'=>$Data];
     }
 
@@ -774,6 +774,9 @@ wr($Data);
         $num3      = isset($parame['number3']) ? str_replace('~','',$parame['number3']) : '';
         $num2      = isset($parame['number2']) ? str_replace('~','',$parame['number2']) : '';
         $num1      = isset($parame['number1']) ? str_replace('~','',$parame['number1']) : '';
+
+        //转换数字对应的汉字 根据规则ID 为了考虑前端传的是数字 主要针对num5
+        $num5      = $this->format_num5($num5,$lottery_rule);
 
         $cacheKey  = 'selectNumber2_'.md5($lottery_rule.'_'.$id.'_'.$parame['uid'].$parame['hashid']);
         cache($cacheKey,null);
@@ -1221,5 +1224,11 @@ wr($Data);
         $backdata['data']   = $list;
         cache($cacheKey,time()+3);
         echo json_encode($backdata);exit;
-    } 
+    }
+
+    private function format_num5($num5,$lottery_rule)
+    {
+        wr([$num5,$lottery_rule]);
+        return $num5;
+    }
 }
