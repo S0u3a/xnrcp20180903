@@ -1241,9 +1241,9 @@ class Lottery extends Base
             $temp    = [1=>'大',2=>'小',3=>'单',4=>'双'];
         }elseif (in_array($lottery_rule,['88-9-1','88-9-2','88-9-3'])) {
             $temp    = [1=>'豹子',2=>'顺子',3=>'对子',4=>'半顺',5=>'杂六'];
-        }/*elseif (condition) {
+        }elseif (in_array($lottery_rule,['88-10-1'])) {
             $temp    = [1=>'牛一',2=>'牛二',3=>'牛三',4=>'牛四',5=>'牛五',6=>'牛六',7=>'牛七',8=>'牛八',9=>'牛九',10=>'牛牛',11=>'无牛'];
-        }*/
+        }
 
         if (!empty($temp)) {
             $tnum1  = explode(',',$nums);
