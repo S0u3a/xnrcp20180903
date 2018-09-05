@@ -272,8 +272,7 @@ class PermutationCombination extends Base
 
     public function xuan_da_xiao_dan_shuang_cg($num5="",$num4="",$num3="",$num2="",$num1="")
     {
-        wr([$num5,$num4,$num3,$num2,$num1]);
-        if (strlen($num5)<=0||strlen($num4)<=0||strlen($num3)<=0||strlen($num2)<=0||strlen($num1)<=0)
+        if (strlen($num5)<=0&&strlen($num4)<=0&&strlen($num3)<=0&&strlen($num2)<=0&&strlen($num1)<=0)
         return [0,[]];
     
         $nn5 = $this->xuan_da_xiao_dan_shuang($num5);
