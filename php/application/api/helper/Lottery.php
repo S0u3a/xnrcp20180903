@@ -1227,7 +1227,20 @@ class Lottery extends Base
     }
 
     private function format_num5($num5,$lottery_rule)
-    {
+    {   
+        if (strlen($num5) <= 0) return $num5;
+
+        if (in_array($lottery_rule,['88-7-1'])) {
+            $lhh    = [1=>'龙',2=>'虎',3=>'和'];
+            $tnum1  = explode(',',$num5);
+            $tnum2  = [];
+            foreach ($tnum1 as $key => $value) {
+                $tnum2[]    = $lhh[$value];
+            }
+
+            $num5   = implode(',',$tnum2);
+        }
+        
         wr([$num5,$lottery_rule]);
         return $num5;
     }
