@@ -262,9 +262,10 @@ class PermutationCombination extends Base
         $num5       = explode(',',$num5);
         $num5       = array_flip(array_flip($num5));
 
-        $lhh        = [10,9,8,7,6,5,4,3,2,1,0];//牛牛,牛九,牛八,牛七,牛六,牛五,牛四,牛三,牛二,牛一,无牛
+        //$lhh        = [10,9,8,7,6,5,4,3,2,1,0];//牛牛,牛九,牛八,牛七,牛六,牛五,牛四,牛三,牛二,牛一,无牛
+        $dn         = [1=>'牛一',2=>'牛二',3=>'牛三',4=>'牛四',5=>'牛五',6=>'牛六',7=>'牛七',8=>'牛八',9=>'牛九',10=>'牛牛',11=>'无牛'];
         foreach ($num5 as $key => $value) {
-            if (!in_array($value,$lhh)) unset($num5[$key]);
+            if (!in_array($value,$dn)) unset($num5[$key]);
         }
 
         $num5   = implode(',',$num5);
