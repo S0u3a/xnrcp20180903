@@ -777,7 +777,7 @@ class Lottery extends Base
 
         //转换数字对应的汉字 根据规则ID 为了考虑前端传的是数字 主要针对num5
         $num5      = $this->format_nums($num5,$lottery_rule);
-        $num4      = $this->format_nums($num2,$lottery_rule);
+        $num4      = $this->format_nums($num4,$lottery_rule);
         $num3      = $this->format_nums($num3,$lottery_rule);
         $num2      = $this->format_nums($num2,$lottery_rule);
         $num1      = $this->format_nums($num1,$lottery_rule);
