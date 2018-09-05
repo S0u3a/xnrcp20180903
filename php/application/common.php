@@ -993,7 +993,7 @@ if(!function_exists('hk6OddsMoney'))
 		//赔率个数
 		$ocount 				= count(explode(',',$odds));
     	$odds           		= $ocount>=2 ? getOddsRebates(0,$odds) : getOddsRebate(0,$odds,0);
-    	
+
     	if (in_array($tag,['99-1-1'])) {//两面
     		if (in_array('和局',$winCode)) {
     			$money 		= $orderinfo['money'];
@@ -1006,14 +1006,28 @@ if(!function_exists('hk6OddsMoney'))
 					$money 		+= $oo*$price*1;
 				}
     		}
-        }elseif (in_array($tag,['99-5-1'])) {//正码1-6
+        }elseif (in_array($tag,['99-5-1','99-5-2','99-5-3','99-5-4','99-5-5','99-5-6'])) {//正码1-6
         	$ops  = ['单','双','大','小','合单','合双','合大','合小','尾大','尾小','红波','绿波','蓝波'];
         	$ops  = array_flip($ops);
         	$oo   = 0;
-			foreach ($winCode as $key => $value) {
-				$oo 		= isset($ops[$value])?(isset($odds[$ops[$value]])?$odds[$ops[$value]]:0):0;
-				$money 		+= $oo*$price*1;
-			}
+
+        	//判断是否和局
+        	if (in_array('和局',$winCode)) {
+        		$hnum 		= isset($winCode['和局N']) ? intval($winCode['和局N']) : 0;
+    			$money 		= $orderinfo['price'] * $hnum;
+
+    			foreach ($winCode as $key => $value) {
+    				if (in_array($value,['红波','绿波','蓝波'])) {
+						$oo 		= isset($ops[$value])?(isset($odds[$ops[$value]])?$odds[$ops[$value]]:0):0;
+						$money 		+= $oo*$price*1;
+    				}
+				}
+    		}else{
+    			foreach ($winCode as $key => $value) {
+					$oo 		= isset($ops[$value])?(isset($odds[$ops[$value]])?$odds[$ops[$value]]:0):0;
+					$money 		+= $oo*$price*1;
+				}
+    		}
         }elseif (in_array($tag,['99-6-1'])) {//大小单双
         	$ops  = ['单','双','大','小','合单','合双','合大','合小','尾大','尾小','红波','绿波','蓝波'];
         	$ops  = array_flip($ops);

@@ -1300,7 +1300,7 @@ class LotteryWin extends Base
                 $lm         = $this->liangmian($zm,$tm);
                 //首先判断是否和局
                 if (in_array('和局',$lm)) return [1,['和局'=>'和局']];
-                
+
                 foreach ($select_code as $key => $value)
                 {
                     $scode          = $value[0];
@@ -1346,13 +1346,33 @@ class LotteryWin extends Base
                 break;
             case 5:
                 $zmgg         = $this->zmgg($zm[$pos]);
-                foreach ($select_code as $key => $value)
+
+                //如果出现和局 除了红波、绿波、蓝波，其他玩法都是和局，开49，返还投注金额
+                if (in_array('和局',$zmgg))
                 {
-                    $scode          = $value[0];
-                    if ( in_array($scode,$zmgg))
+                    $wincode['和局N']     = 0;
+                    foreach ($select_code as $key => $value)
                     {
-                        $win++;
-                        $wincode[$scode] = $scode;
+                        $scode          = $value[0];
+                        if ( in_array($scode,$zmgg) && in_array($scode,['红波','绿波','蓝波']))
+                        {
+                            $win++;
+                            $wincode[$scode] = $scode;
+                        }else{
+                            $wincode['和局']  = '和局';
+                            $wincode['和局N'] += (in_array($scode,['红波','绿波','蓝波']) ? 0 : 1);
+                        }
+                    }
+
+                }else{
+                    foreach ($select_code as $key => $value)
+                    {
+                        $scode          = $value[0];
+                        if ( in_array($scode,$zmgg))
+                        {
+                            $win++;
+                            $wincode[$scode] = $scode;
+                        }
                     }
                 }
                 break;
@@ -1702,7 +1722,7 @@ class LotteryWin extends Base
         $zm1    = substr($zm,0,1);
         $zm2    = substr($zm,1,1);
         $zms[]  = intval($zm)%2 == 0  ? '双' : '单';
-        $zms[]  = (intval($zm) >= 25 && intval($zm) <= 48)  ? '大' : '小';
+        $zms[]  = (intval($zm) >= 25 && intval($zm) <= 48)  ? '大' : ($zm == 49 ? '和局' : '小');
 
         $zmh    = $zm1*1+$zm2*1;
         $zms[]   = $zmh>= 7 ? '合大' : '合小';
