@@ -1704,7 +1704,6 @@ class LotteryWin extends Base
                     {
                         $win++;
                         $wincode[$scode] = $scode;
-                        break;
                     }
                 }
                 break;
