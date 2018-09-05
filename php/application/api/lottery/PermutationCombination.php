@@ -211,7 +211,8 @@ class PermutationCombination extends Base
         $num5       = explode(',',$num5);
         $num5       = array_flip(array_flip($num5));
 
-        $lhh        = [3,2,1];//龙虎和
+        $lhh        = [1=>'龙',2=>'虎',3=>'和'];
+        //$lhh        = [3,2,1];//龙虎和
         foreach ($num5 as $key => $value) {
             if (!in_array($value,$lhh)) unset($num5[$key]);
         }
