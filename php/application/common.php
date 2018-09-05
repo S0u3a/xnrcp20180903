@@ -1123,18 +1123,22 @@ if(!function_exists('hk6OddsMoney'))
 				$money 		+= $oo*$price*1*$winBets;
 			}
         }else if (in_array($tag,['99-12-2'])) {
-        	$ops  = ['红单','红双','红大','红小','绿单','绿双','绿大','绿小','蓝单','蓝双','蓝大','蓝小'];
-        	$ops  = array_flip($ops);
-        	$oo   = [];
+        	if (in_array('和局',$winCode)) {
+    			$money 		= $orderinfo['money'];
+    		}else{
+    			$ops  = ['红单','红双','红大','红小','绿单','绿双','绿大','绿小','蓝单','蓝双','蓝大','蓝小'];
+	        	$ops  = array_flip($ops);
+	        	$oo   = [];
 
-        	foreach ($winCode as $key => $value) {
-				$oo[] 		= isset($ops[$value])?(isset($odds[$ops[$value]])?$odds[$ops[$value]]:0):0;
-			}
+	        	foreach ($winCode as $key => $value) {
+					$oo[] 		= isset($ops[$value])?(isset($odds[$ops[$value]])?$odds[$ops[$value]]:0):0;
+				}
 
-			//取较大赔率为计算赔率
-			sort($oo);
-			$ooo 		= $oo[count($oo)-1];
-			$money 		+= $ooo*$price*1*$winBets;
+				//取较大赔率为计算赔率
+				sort($oo);
+				$ooo 		= $oo[count($oo)-1];
+				$money 		+= $ooo*$price*1*$winBets;
+    		}
         }else if (in_array($tag,['99-12-3'])) {
         	$ops  = ['红大单','红大双','红小单','红小双','绿大单','绿大双','绿小单','绿小双','蓝大单','蓝大双','蓝小单','蓝小双'];
         	$ops  = array_flip($ops);

@@ -495,17 +495,17 @@ class LotteryRule extends Base
             case '99-14-2'://七码五行-七码五行-五行
                 $permutation    = $PermutationCombination->star_zuxuan($num5,1);break;
             case '99-15-1'://中一-中一-五中一
-                $permutation    = $PermutationCombination->star_zuxuan($num5,5);break;
+                $permutation    = $PermutationCombination->star_zuxuan($num5,5,2);break;
             case '99-15-2'://中一-中一-六中一
-                $permutation    = $PermutationCombination->star_zuxuan($num5,6);break;
+                $permutation    = $PermutationCombination->star_zuxuan($num5,6,2);break;
             case '99-15-3'://中一-中一-七中一
-                $permutation    = $PermutationCombination->star_zuxuan($num5,7);break;
+                $permutation    = $PermutationCombination->star_zuxuan($num5,7,2);break;
             case '99-15-4'://中一-中一-八中一
-                $permutation    = $PermutationCombination->star_zuxuan($num5,8);break;
+                $permutation    = $PermutationCombination->star_zuxuan($num5,8,3);break;
             case '99-15-5'://中一-中一-九中一
-                $permutation    = $PermutationCombination->star_zuxuan($num5,9);break;
+                $permutation    = $PermutationCombination->star_zuxuan($num5,9,4);break;
             case '99-15-6'://中一-中一-十中一
-                $permutation    = $PermutationCombination->star_zuxuan($num5,10);break;
+                $permutation    = $PermutationCombination->star_zuxuan($num5,10,5);break;
 
             //快三
             case '102-1-1'://二不同号-二不同号-标准选号

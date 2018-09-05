@@ -1674,7 +1674,8 @@ class LotteryWin extends Base
                 }
                 break;
             case 19:
-                $opcode       = array_merge($zm,[$tm]);
+                //$opcode       = array_merge($zm,[$tm]);
+                $opcode         = [$tm];
                 foreach ($select_code as $key => $value)
                 {
                     $scode      = $value[0];
