@@ -1230,17 +1230,20 @@ class Lottery extends Base
     {   
         if (strlen($num5) <= 0) return $num5;
 
+        $temp       = [];
         if (in_array($lottery_rule,['88-7-1','88-7-2','88-7-3','88-7-4','88-7-5','88-7-6','88-7-7','88-7-8','88-7-9','88-7-10'])) {
-            $lhh    = [1=>'龙',2=>'虎',3=>'和'];
-            $tnum1  = explode(',',$num5);
-            $tnum2  = [];
-            foreach ($tnum1 as $key => $value) {
-                $tnum2[]    = $lhh[$value];
-            }
-
-            $num5   = implode(',',$tnum2);
+            $temp    = [1=>'龙',2=>'虎',3=>'和'];
+        }elseif (in_array($lottery_rule,['88-8-1','88-8-2','88-8-3','88-8-4','88-8-5','88-8-6'])) {
+            $temp    = [1=>'大',2=>'小',3=>'单',4=>'双'];
         }
 
+        if (!empty($temp)) {
+            $tnum1  = explode(',',$num5);
+            $tnum2  = [];
+            foreach ($tnum1 as $key => $value) $tnum2[]    = $temp[$value];
+            $num5   = implode(',',$tnum2);
+        }
+        
         wr([$num5,$lottery_rule]);
         return $num5;
     }
