@@ -126,7 +126,8 @@ class LotteryWin extends Base
         foreach ($select_code as $key => $value)
         {
             if ($value === $num) {
-                $win += $hz[$star][$value];
+                //$win += $hz[$star][$value];
+                $win ++;
                 $wincode[$value] = $value;
             }
         }
@@ -166,7 +167,8 @@ class LotteryWin extends Base
         foreach ($select_code as $key => $value)
         {
             if ($value === $num) {
-                $win += $kd[$star][$value];
+                //$win += $kd[$star][$value];
+                $win ++;
                 $wincode[$value] = $value;
             }
         }

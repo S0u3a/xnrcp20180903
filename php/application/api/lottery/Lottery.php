@@ -326,20 +326,20 @@ class Lottery extends Base
             case '88-2-6'://二星-后二组选-复式
                 return $LotteryWin->win_ssc_zuhe_bxsx($opencode,$select_code,2);break;
             case '88-2-7'://二星-后二组选-单式
-                return $LotteryWin->win_ssc_sxyz($opencode,$select_code,2);break;
-            case '88-2-8'://二星-后二直选-复式
+                return $LotteryWin->win_ssc_zuhe_bxsx($opencode,$select_code,2);break;
+            case '88-2-8'://二星-前二直选-复式
                 return $LotteryWin->win_ssc_sxyz($opencode,$select_code,2,1);break;
-            case '88-2-9'://二星-后二直选-单式
+            case '88-2-9'://二星-前二直选-单式
                 return $LotteryWin->win_ssc_sxyz($opencode,$select_code,2,1);break;
-            case '88-2-10'://二星-后二直选-直选和值
+            case '88-2-10'://二星-前二直选-直选和值
                 return $LotteryWin->win_ssc_zxhz($opencode,$select_code,2,1);break;
-            case '88-2-11'://二星-后二直选-直选跨度
+            case '88-2-11'://二星-前二直选-直选跨度
                 return $LotteryWin->win_ssc_zxkd($opencode,$select_code,2,1);break;
-            case '88-2-12'://二星-后二直选-和值尾数
+            case '88-2-12'://二星-前二直选-和值尾数
                 return $LotteryWin->win_ssc_hzws($opencode,$select_code,2,1);break;
-            case '88-2-13'://二星-后二组选-复式
+            case '88-2-13'://二星-前二组选-复式
                 return $LotteryWin->win_ssc_zuhe_bxsx($opencode,$select_code,2,1);break;
-            case '88-2-14'://二星-后二组选-单式
+            case '88-2-14'://二星-前二组选-单式
                 return $LotteryWin->win_ssc_zuhe_bxsx($opencode,$select_code,2,1);break;
             case '88-3-1'://定位胆-定位胆-定位胆
                 return $LotteryWin->win_location_gall($opencode,$select_code);break;

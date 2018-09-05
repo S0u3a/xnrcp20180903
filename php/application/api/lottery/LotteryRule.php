@@ -88,9 +88,9 @@ class LotteryRule extends Base
                 $permutation    = $PermutationCombination->zhix_hzws($num5);break;
             //时时彩-后二星-组选
             case '88-2-6'://复试
-                $permutation    = $PermutationCombination->star_zuxuan($num5,1);break;
+                $permutation    = $PermutationCombination->star_zuxuan($num5,2);break;
             case '88-2-7'://单试
-                $permutation    = $PermutationCombination->single_form($num5,1);break;
+                $permutation    = $PermutationCombination->single_form($num5,2);break;
 
             //时时彩-前二星-直选
             case '88-2-8'://复试
