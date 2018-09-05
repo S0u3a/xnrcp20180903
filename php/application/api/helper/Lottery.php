@@ -774,7 +774,7 @@ class Lottery extends Base
         $num3      = isset($parame['number3']) ? str_replace('~','',$parame['number3']) : '';
         $num2      = isset($parame['number2']) ? str_replace('~','',$parame['number2']) : '';
         $num1      = isset($parame['number1']) ? str_replace('~','',$parame['number1']) : '';
-        wr([$num5,$num4,$num3,$num2,$num1]);
+        
         //转换数字对应的汉字 根据规则ID 为了考虑前端传的是数字 主要针对num5
         $num5      = $this->format_num5($num5,$lottery_rule);
 
