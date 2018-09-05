@@ -154,7 +154,6 @@ class LotteryRule extends Base
             case '88-5-2'://二星-单式
                 $permutation    = $PermutationCombination->rx_single_form($num5,$num4,2,1);break;
             case '88-5-3'://二星-组合
-                wr([$num5,$num4]);
                 $permutation    = $PermutationCombination->rx_star_zuxuan($num5,$num4,2,2);break;
             case '88-5-4'://三星-复试
                 $permutation    = $PermutationCombination->star_rx_fs($num5,$num4,$num3,$num2,$num1,3);break;

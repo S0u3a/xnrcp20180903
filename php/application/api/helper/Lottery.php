@@ -417,7 +417,7 @@ class Lottery extends Base
         $Data['user_level']         = $level;
         $Data['pay_money']          = sprintf("%.2f",$pay_money);
         $Data['order_money']        = sprintf("%.2f",$order_money);
-
+wr($Data);
         return ['Code' => '000000', 'Msg'=>lang('000000'),'Data'=>$Data];
     }
 
