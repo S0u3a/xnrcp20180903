@@ -883,9 +883,9 @@ class Lottery extends Base
                    
                     $scode       = is_array($scode) ? $scode : [$scode];
                 }
-                
+                wr($scode);
                 $data[$k]['select_code'] = !empty($scode) ? implode('|',$scode) : '';
-                $data[$k]['money']       = $v['order_money'];
+                $data[$k]['money']       = $v['order_money'];wr('====================');
             }
         }
 
