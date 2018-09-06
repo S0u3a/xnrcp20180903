@@ -859,7 +859,7 @@ class Lottery extends Base
 
         //数据格式化
         $data                       = (isset($lists['lists']) && !empty($lists['lists'])) ? $lists['lists'] : [];
-wr($data);
+
         if (!empty($data)) {
 
             //自行定义格式化数据输出
@@ -867,7 +867,7 @@ wr($data);
             {
                 $rules_str               = explode('-',$v['rules_str']);
                 $data[$k]['create_time'] = date('Y/m/d H:i',$v['create_time']);
-                $data[$k]['rules_str']   = $v['lottery_title'] . '-' . $rules_str[0] . '-' . $rules_str[1];
+                $data[$k]['rules_str']   = $v['ctitle'] . '-' . $rules_str[0] . '-' . $rules_str[1];
 
                 $scode                   = [];
                 if (!empty($v['select_code'])) {
