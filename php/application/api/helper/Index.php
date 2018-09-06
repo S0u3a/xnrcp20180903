@@ -137,16 +137,24 @@ class Index extends Base
             }
         }
 
-        $Tree                  = new \xnrcms\DataTree($catData);
-        $catData               = $Tree->arrayTree();
-        wr($catData);
+        /*$Tree                  = new \xnrcms\DataTree($catData);
+        $catData               = $Tree->arrayTree();*/
+
+        $newData['id']          = 1;
+        $newData['title']       = '时时彩';
+        $newData['icon']        = '';
+        $newData['pid']         = 0;
+        $newData['description'] = '';
+        $newData['_child']      = $catData;
+
+        wr($newData);
         //自行书写业务逻辑代码
 
         //需要返回的数据体
         $Data                   = [];
         $Data['notice_list']    = $noticeData;
         $Data['ad_list']        = $adData;
-        $Data['cat_list']       = $catData;
+        $Data['cat_list']       = $newData;
 
         return ['Code' => '000000', 'Msg'=>lang('000000'),'Data'=>$Data];
     }
