@@ -861,7 +861,7 @@ class Lottery extends Base
         $data                       = (isset($lists['lists']) && !empty($lists['lists'])) ? $lists['lists'] : [];
 
         if (!empty($data)) {
-wr($data);
+
             //自行定义格式化数据输出
             foreach($data as $k=>$v)
             {
@@ -883,7 +883,7 @@ wr($data);
                    
                     $scode       = is_array($scode) ? $scode : [$scode];
                 }
-                
+                wr($scode);
                 $data[$k]['select_code'] = !empty($scode) ? implode('|',$scode) : '';
                 $data[$k]['money']       = $v['order_money'];wr('====================');
             }
