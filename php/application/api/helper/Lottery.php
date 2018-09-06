@@ -880,7 +880,7 @@ class Lottery extends Base
                                 $pos        = str_replace(['5','4','3','2','1'],['万','千','百','十','个'],$kk);
                                 $pos        = str_replace('-','',$pos);
                                 $pnum       = is_array($vvv) ? implode(',',$vvv) : $vvv;
-                                $scode[]    = $pos.','.str_replace(',','',$pos);;
+                                $scode[]    = $pos.','.str_replace(',','',$pnum);;
                             }
                         }
 
