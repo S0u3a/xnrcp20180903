@@ -871,7 +871,10 @@ class Lottery extends Base
 
                 $scode                   = [];
                 if (!empty($v['select_code'])) {
-                    $select_code = json_decode($v['select_code'],true);wr($select_code);
+                    $select_code = json_decode($v['select_code'],true);
+                    if (strpos($v['rules'],'88-5-') !== false) {
+                        wr("sss====".strpos($v['rules'],'88-5-')."===");
+                    }
                     $select_code = is_string($select_code) ? [$select_code] : $select_code;
                     if (isset($select_code[0]) && is_array($select_code[0])) {
                         foreach ($select_code as $kk => $vv) {
