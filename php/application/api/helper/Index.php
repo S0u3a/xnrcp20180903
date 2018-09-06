@@ -107,7 +107,7 @@ class Index extends Base
             
             $catData            = $catList['Data']['lists'];
             $lotteryConfig      = config('lottery.');
-wr($catData);
+
             foreach($catData as $k=>$v){
                 $catData[$k]['icon']    = get_cover($v['icon'],'path');
                 $catData[$k]['optime']  = 0;
@@ -139,7 +139,7 @@ wr($catData);
 
         $Tree                  = new \xnrcms\DataTree($catData);
         $catData               = $Tree->arrayTree();
-
+        wr($catData);
         //自行书写业务逻辑代码
 
         //需要返回的数据体
