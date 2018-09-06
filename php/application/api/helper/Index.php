@@ -163,7 +163,7 @@ class Index extends Base
         $Data                   = [];
         $Data['notice_list']    = $noticeData;
         $Data['ad_list']        = $adData;
-        $Data['cat_list']       = $newData;
+        $Data['cat_list']       = [$newData];
 
         return ['Code' => '000000', 'Msg'=>lang('000000'),'Data'=>$Data];
     }
