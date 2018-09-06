@@ -447,13 +447,6 @@ class LotteryWin extends Base
         return [$win,$wincode];
     }
 
-
-
-
-
-
-
-
     //任选 组三
     public function win_rx_zu3($opencode='',$select_code=[],$star=0)
     {
@@ -472,9 +465,10 @@ class LotteryWin extends Base
 
         foreach ($select_code as $key => $value)
         {
-            $nc             = explode('-',$key);
+            $nc             = explode('-',$key);//确定是几位数
             if (count($nc) !== $star || empty($value))  continue;//星数不一致或者选号为空
 
+            //获取对应位数的数字
             $temp        = [];
             for ($i=0; $i <count($nc) ; $i++)
             { 
@@ -482,9 +476,25 @@ class LotteryWin extends Base
             }
             sort($temp);
 
+            //判断得出的三位数是否是ABB型 不是直接跳出
+            $is_effective = 0;  //是否符合开奖条件[0:不符合  1:符合]
+            if($temp[0] == $temp[1] && $temp[0] != $temp[2]) $is_effective++;
+            if($temp[0] == $temp[2] && $temp[0] != $temp[1]) $is_effective++;
+            if($temp[1] == $temp[2] && $temp[0] != $temp[1]) $is_effective++;
+            if ($is_effective <= 0) continue;
+
             $temp = implode(',',$temp);
 
-            foreach ($value as $kk => $vv)
+            //去重
+            $tempvalue      = [];
+            foreach ($value as $tkk => $tvv){
+                sort($tvv);
+                $tempvalue[implode('',$tvv)]    = $tvv;  
+            }
+
+            sort($tempvalue);
+
+            foreach ($tempvalue as $kk => $vv)
             {   
                 //取出一个号作为重复号
                 $vv1                = array_merge($vv,[$vv[0]]);
