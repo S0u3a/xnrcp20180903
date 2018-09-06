@@ -903,7 +903,7 @@ class Lottery extends Base
                 $data[$k]['money']       = $v['order_money'];wr('====================');
             }
         }
-
+wr($data);
         $lists['lists']             = $data;
 
         return ['Code' => '000000', 'Msg'=>lang('000000'),'Data'=>$lists];
