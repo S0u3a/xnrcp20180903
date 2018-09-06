@@ -138,7 +138,7 @@ class Index extends Base
         }
 
         $newData['id']          = 1;
-        $newData['title']       = '时时彩';
+        $newData['title']       = '热门彩种';
         $newData['ctype']       = 1;
         $newData['pid']         = 0;
         $newData['sort']        = 1;
