@@ -153,17 +153,17 @@ class Index extends Base
         $newData['_child']      = $catData;
         
 
-       /* $Tree                  = new \xnrcms\DataTree($catData);
-        $catData               = $Tree->arrayTree();*/
+        $Tree                  = new \xnrcms\DataTree($catData);
+        $catData               = $Tree->arrayTree();
 
-        wr($newData);
+        wr($catData);
         //自行书写业务逻辑代码
 
         //需要返回的数据体
         $Data                   = [];
         $Data['notice_list']    = $noticeData;
         $Data['ad_list']        = $adData;
-        $Data['cat_list']       = $newData;
+        $Data['cat_list']       = $catData;
 
         return ['Code' => '000000', 'Msg'=>lang('000000'),'Data'=>$Data];
     }
