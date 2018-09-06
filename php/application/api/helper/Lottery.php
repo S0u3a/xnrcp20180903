@@ -876,14 +876,14 @@ class Lottery extends Base
                     if (isset($select_code[0]) && is_array($select_code[0])) {
                         foreach ($select_code as $kk => $vv) {
                             $scode[]    = implode(',',$vv);
-                        }
+                        }wr($scode);
                     }else{
                         $scode          = $select_code;
                     }
-                   
+                    
                     $scode       = is_array($scode) ? $scode : [$scode];
                 }
-                wr($scode);
+                
                 $data[$k]['select_code'] = !empty($scode) ? implode('|',$scode) : '';
                 $data[$k]['money']       = $v['order_money'];wr('====================');
             }
