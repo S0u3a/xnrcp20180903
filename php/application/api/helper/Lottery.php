@@ -881,6 +881,7 @@ class Lottery extends Base
                                 $scode[]    = $pos.'='.implode(',',$vvv);
                             }
                         }
+                        wr($scode);
                     }else{
 
                         $select_code = is_string($select_code) ? [$select_code] : $select_code;
