@@ -832,7 +832,7 @@ class Lottery extends Base
         //定义关联查询表信息，默认是空数组，为空时为单表查询,格式必须为一下格式
         //Rtype :`INNER`、`LEFT`、`RIGHT`、`FULL`，不区分大小写，默认为`INNER`。
         $RelationTab                = [];
-        //$RelationTab['member']        = array('Ralias'=>'me','Ron'=>'me.uid=main.uid','Rtype'=>'LEFT','Rfield'=>array('nickname'));
+        $RelationTab['category']    = array('Ralias'=>'cat','Ron'=>'cat.id=main.lottery_id','Rtype'=>'LEFT','Rfield'=>array('title as ctitle'));
 
         $modelParame['RelationTab'] = $RelationTab;
 
@@ -859,7 +859,7 @@ class Lottery extends Base
 
         //数据格式化
         $data                       = (isset($lists['lists']) && !empty($lists['lists'])) ? $lists['lists'] : [];
-
+wr($data);
         if (!empty($data)) {
 
             //自行定义格式化数据输出
@@ -903,7 +903,7 @@ class Lottery extends Base
                 $data[$k]['money']       = $v['order_money'];wr('====================');
             }
         }
-wr($data);
+
         $lists['lists']             = $data;
 
         return ['Code' => '000000', 'Msg'=>lang('000000'),'Data'=>$lists];
