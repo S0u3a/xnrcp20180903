@@ -878,7 +878,7 @@ class Lottery extends Base
                         foreach ($select_code as $kk => $vv) {
                             foreach ($vv as $kkk => $vvv) {
                                 $pos        = str_replace(['5','4','3','2','1'],['万','千','百','十','个'],$kk);
-                                wr($vvv);
+                                wr($vv);
                                 $scode[]    = $pos.'='.implode(',',$vvv);
                             }
                         }
