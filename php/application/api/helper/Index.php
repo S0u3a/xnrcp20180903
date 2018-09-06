@@ -139,23 +139,31 @@ class Index extends Base
 
         $newData['id']          = 1;
         $newData['title']       = '时时彩';
-        $newData['icon']        = '';
+        $newData['ctype']       = 1;
         $newData['pid']         = 0;
+        $newData['sort']        = 1;
+        $newData['status']      = 1;
+        $newData['icon']        = '';
+        $newData['isrecommend'] = 1;
+        $newData['update_time'] = 1526270846;
+        $newData['create_time'] = 1526270846;
         $newData['description'] = '';
+        $newData['optime']      = 0;
+        $newData['times']       = 0;
         $newData['_child']      = $catData;
         
-        
-        $Tree                  = new \xnrcms\DataTree($catData);
-        $catData               = $Tree->arrayTree();
 
-        wr($catData);
+       /* $Tree                  = new \xnrcms\DataTree($catData);
+        $catData               = $Tree->arrayTree();*/
+
+        wr($newData);
         //自行书写业务逻辑代码
 
         //需要返回的数据体
         $Data                   = [];
         $Data['notice_list']    = $noticeData;
         $Data['ad_list']        = $adData;
-        $Data['cat_list']       = $catData;
+        $Data['cat_list']       = $newData;
 
         return ['Code' => '000000', 'Msg'=>lang('000000'),'Data'=>$Data];
     }
