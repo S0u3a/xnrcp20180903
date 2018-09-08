@@ -1202,7 +1202,7 @@ class Lottery extends Base
             $Data['create_time']    = !empty($info['create_time']) ? $info['create_time'] : '';
             $Data['rules']          = !empty($info['rules_str']) ? $info['rules_str'] : '';
             $Data['order_money']    = !empty($info['order_money']) ? $info['order_money'] : '';
-            $Data['odds']           = "1000";
+            $Data['odds']           = !empty($info['odds']) ? $info['odds'] : '/';
             $Data['lottery_id']     = $info['lottery_id'];
             $Data['lottery_pid']    = isset($catinfo['pid']) ? $catinfo['pid'] : 0;
 
