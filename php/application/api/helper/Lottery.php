@@ -1174,9 +1174,21 @@ class Lottery extends Base
         $dbModel                = model($this->mainTable);
 
         //自行书写业务逻辑代码
-
         //需要返回的数据体
-        $Data                   = ['TEST'];
+        $Data['id']           = 50;
+        $Data['icon']         = 'http://dev.xnrcp20180903.com/uploads/picture/2018-05-15/9756ca37084ee5818965b802b312b0ed.png';
+        $Data['title']          = '重庆时时彩';
+        $Data['expect']         = '20180908064';
+        $Data['wins']             = "未中奖";
+        $Data['opencode']             = "123456";
+        $Data['select_code']             = "12345678";
+        $Data['order_sn']             = "12345678999";
+        $Data['create_time']             = date('Y-m-d H:i:s',time());
+        $Data['rules']             = "aaaaaa";
+        $Data['order_money']             = '100';
+        $Data['odds']             = "1000";
+        $Data['lottery_id']             = 92;
+        $Data['lottery_pid']             = 88;
 
         return ['Code' => '000000', 'Msg'=>lang('000000'),'Data'=>$Data];
     }
