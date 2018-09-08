@@ -135,8 +135,6 @@ class Index extends Base
                     }
                     
                     $catDatas[]     = $v;
-                }else{
-                    unset($catData[$k]);
                 }
             }
         }
@@ -154,7 +152,7 @@ class Index extends Base
         $newData['description'] = '';
         $newData['optime']      = 0;
         $newData['times']       = 0;
-        $newData['_child']      = $catData;
+        $newData['_child']      = $catDatas;
         
 
        /* $Tree                  = new \xnrcms\DataTree($catData);
