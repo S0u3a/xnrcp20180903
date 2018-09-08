@@ -134,7 +134,7 @@ class Index extends Base
                     }
                     
                 }else{
-                    unset($catData[$k]);
+                    //unset($catData[$k]);
                 }
             }
         }
