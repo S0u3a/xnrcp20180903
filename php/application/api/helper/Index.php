@@ -107,7 +107,7 @@ class Index extends Base
             
             $catData            = $catList['Data']['lists'];
             $lotteryConfig      = config('lottery.');
-            wr($catData);
+
             foreach($catData as $k=>$v){
                 $catData[$k]['icon']    = get_cover($v['icon'],'path');
                 $catData[$k]['optime']  = 0;
@@ -133,6 +133,8 @@ class Index extends Base
                         $catData[$k]['optime']  = time() + 86400*1;
                     }
                     
+                }else{
+                    unset($catData[$k]);
                 }
             }
         }
