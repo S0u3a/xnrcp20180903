@@ -107,15 +107,16 @@ class Index extends Base
             
             $catData            = $catList['Data']['lists'];
             $lotteryConfig      = config('lottery.');
+            $catDatas           = [];
 
             foreach($catData as $k=>$v){
-                $catData[$k]['icon']    = get_cover($v['icon'],'path');
-                $catData[$k]['optime']  = 0;
-                $catData[$k]['times']   = 0;
+                $v['icon']    = get_cover($v['icon'],'path');
+                $v['optime']  = 0;
+                $v['times']   = 0;
                 if ($v['pid'] > 0) {
                     $lottery_id             = $v['id'];
                     $lottery                = new \app\api\lottery\Lottery($lottery_id);
-                    $catData[$k]['times']   = $lottery->getLotteryTime();
+                    $v['times']             = $lottery->getLotteryTime();
 
                     //获取表名
                     $lottery_table      = '';
@@ -128,13 +129,14 @@ class Index extends Base
                     $map     = [];
                     $map[]   = ['lotterid','=',$lottery_id];
                     $optime  = model($lottery_table)->where($map)->limit(1)->order('id desc')->value('opentimestamp');
-                    $catData[$k]['optime']  = !empty($optime) ? $optime : 0;
+                    $v['optime']  = !empty($optime) ? $optime : 0;
                     if ($lottery_id == 100) {
-                        $catData[$k]['optime']  = time() + 86400*1;
+                        $v['optime']  = time() + 86400*1;
                     }
                     
+                    $catDatas[]     = $v;
                 }else{
-                    //unset($catData[$k]);
+                    unset($catData[$k]);
                 }
             }
         }
