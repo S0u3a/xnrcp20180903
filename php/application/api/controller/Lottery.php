@@ -256,6 +256,36 @@ class Lottery extends Base
 
     /*api:9ce6cd7c1c84ea4fda791f2c8dabfd41*/
 
+    /*api:a1d0b88435868652be9fad2e94c20896*/
+    /**
+     * 注单2
+     * @access public
+     * @param  [array] $parame 扩展参数
+     * @return [json]          接口数据输出
+    */
+    public function orderList2($parame = []){
+
+        //执行接口调用
+        return $this->execApi($parame);
+    }
+
+    /*api:a1d0b88435868652be9fad2e94c20896*/
+
+    /*api:d2a8a5f4ff6cde000cbc13a019cfb436*/
+    /**
+     * 注单详情
+     * @access public
+     * @param  [array] $parame 扩展参数
+     * @return [json]          接口数据输出
+    */
+    public function orderDetail($parame = []){
+
+        //执行接口调用
+        return $this->execApi($parame);
+    }
+
+    /*api:d2a8a5f4ff6cde000cbc13a019cfb436*/
+
     /*接口扩展*/
 
     

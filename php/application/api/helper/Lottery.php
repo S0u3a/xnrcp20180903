@@ -1079,6 +1079,110 @@ class Lottery extends Base
 
     /*api:9ce6cd7c1c84ea4fda791f2c8dabfd41*/
 
+    /*api:a1d0b88435868652be9fad2e94c20896*/
+    /**
+     * * 注单2
+     * @param  [array] $parame 接口参数
+     * @return [array]         接口输出数据
+     */
+    private function orderList2($parame)
+    {
+        //主表数据库模型
+        $dbModel                    = model('lottery_order');
+
+        /*定义数据模型参数*/
+        //主表名称，可以为空，默认当前模型名称
+        $modelParame['MainTab']     = 'lottery_order';
+
+        //主表名称，可以为空，默认为main
+        $modelParame['MainAlias']   = 'main';
+
+        //主表待查询字段，可以为空，默认全字段
+        $modelParame['MainField']   = [];
+
+        //定义关联查询表信息，默认是空数组，为空时为单表查询,格式必须为一下格式
+        //Rtype :`INNER`、`LEFT`、`RIGHT`、`FULL`，不区分大小写，默认为`INNER`。
+        $RelationTab                = [];
+        $RelationTab['category']    = array('Ralias'=>'cat','Ron'=>'cat.id=main.lottery_id','Rtype'=>'LEFT','Rfield'=>array('title as ctitle,icon'));
+
+        $modelParame['RelationTab'] = $RelationTab;
+
+        //接口数据
+        $modelParame['apiParame']   = $parame;
+
+        //检索条件 需要对应的模型里面定义查询条件 格式为formatWhere...
+        $modelParame['whereFun']    = 'formatWhereDefault';
+
+        //排序定义
+        $modelParame['order']       = 'main.id desc';       
+        
+        //数据分页步长定义
+        $modelParame['limit']       = 15;
+
+        //数据分页页数定义
+        $modelParame['page']        = (isset($parame['page']) && $parame['page'] > 0) ? $parame['page'] : 1;
+
+        //数据缓存是时间，默认0 不缓存 ,单位秒
+        $modelParame['cacheTime']   = 0;
+
+        //列表数据
+        $lists                      = $dbModel->getPageList($modelParame);
+
+        //数据格式化
+        $data                       = (isset($lists['lists']) && !empty($lists['lists'])) ? $lists['lists'] : [];
+
+        if (!empty($data)) {
+
+            //自行定义格式化数据输出
+            foreach($data as $k=>$v)
+            {
+                $rules_str               = explode('-',$v['rules_str']);
+                $data[$k]['create_time'] = date('Y/m/d H:i',$v['create_time']);
+                $data[$k]['rules_str']   = $v['ctitle'] . '-' . $rules_str[0] . '-' . $rules_str[1];
+
+                $data[$k]['icon']       = isset($v['icon']) ? get_cover($v['icon'],'path') : '';
+                $data[$k]['title']      = $v['ctitle'];
+                $data[$k]['expect']     = !empty($v['expect']) ? $v['expect'] : '/';
+                
+                if ($v['status'] == 1) {
+                    $wins               = "未支付";
+                }else{
+                    $wins               = $v['status'] == 2 ? '未开奖' : ($v['iswin'] == 1 ? '已中奖' : '未中奖');
+                }
+                
+                $data[$k]['wins']       = $wins;
+                $data[$k]['money']      = $v['order_money'];
+            }
+        }
+
+        $lists['lists']             = $data;
+
+        return ['Code' => '000000', 'Msg'=>lang('000000'),'Data'=>$lists];
+    }
+
+    /*api:a1d0b88435868652be9fad2e94c20896*/
+
+    /*api:d2a8a5f4ff6cde000cbc13a019cfb436*/
+    /**
+     * * 注单详情
+     * @param  [array] $parame 接口参数
+     * @return [array]         接口输出数据
+     */
+    private function orderDetail($parame)
+    {
+        //主表数据库模型
+        $dbModel                = model($this->mainTable);
+
+        //自行书写业务逻辑代码
+
+        //需要返回的数据体
+        $Data                   = ['TEST'];
+
+        return ['Code' => '000000', 'Msg'=>lang('000000'),'Data'=>$Data];
+    }
+
+    /*api:d2a8a5f4ff6cde000cbc13a019cfb436*/
+
     /*接口扩展*/
 
     private function addDistributionMoney($uid=0,$money=0)

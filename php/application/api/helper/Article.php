@@ -320,5 +320,73 @@ class Article extends Base
 
     /*api:3285f044aed7ea73b2355d4a88115a48*/
 
+    /*api:30d51582facf7bd82a5b655219452c2d*/
+    /**
+     * * 公告列表
+     * @param  [array] $parame 接口参数
+     * @return [array]         接口输出数据
+     */
+    private function noticeList($parame)
+    {
+        //主表数据库模型
+        $dbModel                    = model($this->mainTable);
+
+        /*定义数据模型参数*/
+        //主表名称，可以为空，默认当前模型名称
+        $modelParame['MainTab']     = $this->mainTable;
+
+        //主表名称，可以为空，默认为main
+        $modelParame['MainAlias']   = 'main';
+
+        //主表待查询字段，可以为空，默认全字段
+        $modelParame['MainField']   = [];
+
+        //定义关联查询表信息，默认是空数组，为空时为单表查询,格式必须为一下格式
+        //Rtype :`INNER`、`LEFT`、`RIGHT`、`FULL`，不区分大小写，默认为`INNER`。
+        $RelationTab                = [];
+        //$RelationTab['member']        = array('Ralias'=>'me','Ron'=>'me.uid=main.uid','Rtype'=>'LEFT','Rfield'=>array('nickname'));
+
+        $modelParame['RelationTab'] = $RelationTab;
+
+        //接口数据
+        $modelParame['apiParame']   = $parame;
+
+        //检索条件 需要对应的模型里面定义查询条件 格式为formatWhere...
+        $modelParame['whereFun']    = 'formatWhereDefault';
+
+        //排序定义
+        $modelParame['order']       = 'main.id desc';       
+        
+        //数据分页步长定义
+        $modelParame['limit']       = isset($parame['limit']) ? $parame['limit'] : 10;
+
+        //数据分页页数定义
+        $modelParame['page']        = (isset($parame['page']) && $parame['page'] > 0) ? $parame['page'] : 1;
+
+        //数据缓存是时间，默认0 不缓存 ,单位秒
+        $modelParame['cacheTime']   = 0;
+
+        //列表数据
+        $lists                      = $dbModel->getPageList($modelParame);
+
+        //数据格式化
+        $data                       = (isset($lists['lists']) && !empty($lists['lists'])) ? $lists['lists'] : [];
+
+        if (!empty($data)) {
+
+            //自行定义格式化数据输出
+            foreach($data as $k=>$v)
+            {
+                $data[$k]['create_time']    = date('Y-m-d H:i:s',$v['create_time']);
+            }
+        }
+
+        $lists['lists']             = $data;
+
+        return ['Code' => '000000', 'Msg'=>lang('000000'),'Data'=>$lists];
+    }
+
+    /*api:30d51582facf7bd82a5b655219452c2d*/
+
     /*接口扩展*/
 }
