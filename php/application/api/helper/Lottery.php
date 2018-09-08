@@ -346,6 +346,7 @@ class Lottery extends Base
         $updata['price']            = $price;
         $updata['money']            = $pay_money;
         $updata['order_money']      = $money;
+        $updata['order_sn']         = date('YmdHis').randomString(6);
         //$updata['odds']             = json_encode($odds);
         $updata['unit']             = $unit;
         $updata['rebate']           = $rules['pid'] == 88 ? $rebate : 0;
@@ -1171,24 +1172,48 @@ class Lottery extends Base
     private function orderDetail($parame)
     {
         //主表数据库模型
-        $dbModel                = model($this->mainTable);
+        $dbModel            = model('lottery_order');
 
+        $info               = $dbModel->getOneById($parame['id']);
+
+        if (!empty($info)) {
+            
+            //格式为数组
+            $info                 = $info->toArray();
+
+            $Data['id']           = $info['id'];
+
+            $catinfo              = model('category')->getOneById($info['lottery_id']);
+            $catinfo              = !empty($catinfo) ? $catinfo->toArray() : [];
+
+            if ($info['status'] == 1) {
+                $wins               = "未支付";
+            }else{
+                $wins               = $info['status'] == 2 ? '未开奖' : ($info['iswin'] == 1 ? '已中奖' : '未中奖');
+            }
+
+            $Data['icon']           = isset($catinfo['icon']) ? get_cover($catinfo['icon'],'path') : '';
+            $Data['title']          = isset($catinfo['title']) ? $catinfo['title'] : '';
+            $Data['expect']         = !empty($info['expect']) ? $info['expect'] : '/';
+            $Data['wins']           = $wins;
+            $Data['opencode']       = !empty($info['opencode']) ? $info['opencode'] : '/';
+            $Data['select_code']    = "12345678";
+            $Data['order_sn']       = !empty($info['order_sn']) ? $info['order_sn'] : '';
+            $Data['create_time']    = !empty($info['create_time']) ? $info['create_time'] : '';
+            $Data['rules']          = !empty($info['rules_str']) ? $info['rules_str'] : '';
+            $Data['order_money']    = !empty($info['order_money']) ? $info['order_money'] : '';
+            $Data['odds']           = "1000";
+            $Data['lottery_id']     = $info['lottery_id'];
+            $Data['lottery_pid']    = isset($catinfo['pid']) ? $catinfo['pid'] : 0;
+
+            return ['Code' => '000000', 'Msg'=>lang('000000'),'Data'=>$Data];
+        }else{
+
+            return ['Code' => '100015', 'Msg'=>lang('100015')];
+        }
         //自行书写业务逻辑代码
         //需要返回的数据体
-        $Data['id']           = 50;
-        $Data['icon']         = 'http://dev.xnrcp20180903.com/uploads/picture/2018-05-15/9756ca37084ee5818965b802b312b0ed.png';
-        $Data['title']          = '重庆时时彩';
-        $Data['expect']         = '20180908064';
-        $Data['wins']             = "未中奖";
-        $Data['opencode']             = "123456";
-        $Data['select_code']             = "12345678";
-        $Data['order_sn']             = "12345678999";
-        $Data['create_time']             = date('Y-m-d H:i:s',time());
-        $Data['rules']             = "aaaaaa";
-        $Data['order_money']             = '100';
-        $Data['odds']             = "1000";
-        $Data['lottery_id']             = 92;
-        $Data['lottery_pid']             = 88;
+        
 
         return ['Code' => '000000', 'Msg'=>lang('000000'),'Data'=>$Data];
     }
