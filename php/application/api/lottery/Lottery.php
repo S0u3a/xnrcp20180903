@@ -219,7 +219,7 @@ class Lottery extends Base
                     $amoney  = hk6OddsMoney($tag,$rebate,$lotteryRule,$value['price'],$isWin,$aid,$agentOdds,$value);
                 }
 
-                $umoney      = ($money-$amoney)*1;wr(["=============1",$money,$umoney]);
+                $umoney      = ($money-$amoney)*1;
                 break;
             case 102://快3
                 $money       = oneOddsMoney($tag,$rebate,$lotteryRule,$value['price'],$isWin);
@@ -255,7 +255,7 @@ class Lottery extends Base
         }
 
         if ($money <= 0 || $umoney <= 0)  return true;
-        wr(["=============2",$money,$umoney]);
+
         if (in_array($pid,[96,99,102,108,115]))
         {
             //代理存在 需要分给代理一部分佣金 (时时彩不考虑代理)
