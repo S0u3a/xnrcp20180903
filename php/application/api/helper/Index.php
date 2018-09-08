@@ -158,7 +158,6 @@ class Index extends Base
        /* $Tree                  = new \xnrcms\DataTree($catData);
         $catData               = $Tree->arrayTree();*/
 
-        wr($newData);
         //自行书写业务逻辑代码
 
         //需要返回的数据体
