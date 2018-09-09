@@ -424,12 +424,20 @@ class Crontab extends Base
         $ff1            = strtotime(date('Ymd 00:00:00'));
         $ff2            = strtotime(date('Ymd H:i:00'));
 
-        //是否被3分钟整除
+        //是否被1分钟整除
         if (($ff2-$ff1)%60 != 0) return false;
 
         $ff             = ($ff2-$ff1)/60;
-        $number         = (substr(date('Ymd'),5).'000')*1+$ff;
-        $expect         = substr(date('Ymd'),0,5).$number;
+        if ($ff >= 0 && $ff < 10) {
+            $ff             = '000' . $ff;
+        }elseif ($ff >= 10 && $ff < 100) {
+            $ff             = '00' . $ff;
+        }elseif ($ff >= 100 && $ff < 1000) {
+            $ff             = '0' . $ff;
+        }
+
+        $expect         = date('Ymd').$ff;
+
         $code           = randomString(5);
         $temp           = [];
         for ($i=0; $i < 5; $i++) { 
