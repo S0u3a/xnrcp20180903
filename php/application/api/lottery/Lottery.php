@@ -828,7 +828,7 @@ class Lottery extends Base
             //分分时时彩  09:30-23:30
             $time_start1      = $this->format_lottery_limit('00:00:00');
             $time_end1        = $this->format_lottery_limit('23:59:59');
-wr("ssssssssssssssssss");
+
             $limit_time       = $this->getLotteryTime();
             $table_name       = 'lottery_ffssc';
             $cacheDataKey     = 'updateData_'.$table_name.'_opentimestamp_' . $this->lotteryid;
@@ -1338,6 +1338,9 @@ wr("ssssssssssssssssss");
 
             //这里判断是不是最后一期
             switch ($this->lotteryid) {
+                case 89:
+                    # code...
+                    break;
                 case 94:
                     //黑龙江期数设置
                     $nextExpect       = ((intval($expect)+1) >= 1000000)?(intval($expect)+1):'0'.(intval($expect)+1);
@@ -1406,7 +1409,9 @@ wr("ssssssssssssssssss");
                                 $tempNum          = '0'.$tempNum;
                             }
                             
-                            $nextExpect           = substr(date('Ymd'),0,7) . $tempNum;
+                            $nnn   = $this->lotteryid == 89 ? 8 : 7;
+
+                            $nextExpect           = substr(date('Ymd'),0,$nnn) . $tempNum;
                             $nextItem             = $tempNum;
                         }
                     }
