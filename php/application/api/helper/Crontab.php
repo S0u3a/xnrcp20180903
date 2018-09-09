@@ -443,15 +443,13 @@ class Crontab extends Base
         for ($i=0; $i < 5; $i++) { 
             $temp[]     = substr($code,$i,1);
         }
-        wr('=========ssss');
-        wr($info);
+
         if(empty($info)){
             $updata['expect']       = $expect;
             $updata['opencode']     = implode(',',$temp);
             $updata['opentime']     = date('Y-m-d H:i:s',$ff2);
             $updata['opentimestamp']= $ff2;
-            wr('=========ssss1');
-            wr($updata);
+            
             $dbModel->addData($updata);
         }else{
             $addtimestamp          = $info['opentimestamp']+60;

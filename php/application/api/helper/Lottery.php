@@ -216,7 +216,7 @@ class Lottery extends Base
             $data['nearfuture_code']    = isset($list[1]['opencode']) ? $list[1]['opencode'] : '';
             $data['opentimestamp']      = $stayOpen['opentimestamp'];
             $data['lottery_history']    = $list;
-            wr($data);
+
     		return ['Code' => '000000', 'Msg'=>lang('000000'),'Data'=>$data];
     	}else{
 
@@ -903,7 +903,7 @@ class Lottery extends Base
                 }
                 
                 $data[$k]['select_code'] = !empty($scode) ? implode('|',$scode) : '';
-                $data[$k]['money']       = $v['order_money'];wr('====================');
+                $data[$k]['money']       = $v['order_money'];
             }
         }
 
@@ -1418,7 +1418,6 @@ class Lottery extends Base
             $nums   = implode(',',$tnum2);
         }
 
-        wr(['ssss1',$nums,$lottery_rule]);
         return $nums;
     }
 }
