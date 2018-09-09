@@ -36,6 +36,24 @@ class Ad extends Base
 	//列表页面
 	public function index()
     {
+        $ff1            = strtotime(date('Ymd 00:00:00'));
+        $ff2            = strtotime(date('Ymd H:i:00'));
+
+        //是否被1分钟整除
+        if (($ff2-$ff1)%60 != 0) return false;
+
+        $ff             = ($ff2-$ff1)/60;
+        if ($ff >= 0 && $ff < 10) {
+            $ff             = '000' . $ff;
+        }elseif ($ff >= 10 && $ff < 100) {
+            $ff             = '00' . $ff;
+        }elseif ($ff >= 100 && $ff < 1000) {
+            $ff             = '0' . $ff;
+        }
+
+        $expect         = date('Ymd').$ff;
+        echo $expect;exit;
+
 		$menuid     = input('menuid',0) ;
 		$search 	= input('search','');
         $page       = input('page',1);
