@@ -216,7 +216,7 @@ class Lottery extends Base
             $data['nearfuture_code']    = isset($list[1]['opencode']) ? $list[1]['opencode'] : '';
             $data['opentimestamp']      = $stayOpen['opentimestamp'];
             $data['lottery_history']    = $list;
-
+            wr($data);
     		return ['Code' => '000000', 'Msg'=>lang('000000'),'Data'=>$data];
     	}else{
 
@@ -747,7 +747,7 @@ class Lottery extends Base
             $rules['odds2']      = $odds['odds2'];
             $rules['rebate']     = 0.13;
         }
-wr($rules);
+
         return ['Code' => '000000', 'Msg'=>lang('000000'),'Data'=>$rules];
     }
 
