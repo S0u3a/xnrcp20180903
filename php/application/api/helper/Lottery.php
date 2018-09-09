@@ -747,7 +747,7 @@ class Lottery extends Base
             $rules['odds2']      = $odds['odds2'];
             $rules['rebate']     = 0.13;
         }
-
+wr($rules);
         return ['Code' => '000000', 'Msg'=>lang('000000'),'Data'=>$rules];
     }
 
