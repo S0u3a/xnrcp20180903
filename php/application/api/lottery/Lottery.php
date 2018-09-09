@@ -1338,9 +1338,6 @@ class Lottery extends Base
 
             //这里判断是不是最后一期
             switch ($this->lotteryid) {
-                case 89:
-                    # code...
-                    break;
                 case 94:
                     //黑龙江期数设置
                     $nextExpect       = ((intval($expect)+1) >= 1000000)?(intval($expect)+1):'0'.(intval($expect)+1);
