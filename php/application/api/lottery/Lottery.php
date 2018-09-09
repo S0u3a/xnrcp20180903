@@ -828,7 +828,7 @@ class Lottery extends Base
             //分分时时彩  09:30-23:30
             $time_start1      = $this->format_lottery_limit('00:00:00');
             $time_end1        = $this->format_lottery_limit('23:59:59');
-
+wr("ssssssssssssssssss");
             $limit_time       = $this->getLotteryTime();
             $table_name       = 'lottery_ffssc';
             $cacheDataKey     = 'updateData_'.$table_name.'_opentimestamp_' . $this->lotteryid;

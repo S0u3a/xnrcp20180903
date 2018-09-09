@@ -415,7 +415,7 @@ class Crontab extends Base
     public function ssc1f()
     {
         $cacheKey       = 'ssc1f_key';
-        $addtime        = cache($cacheKey);wr($addtime);
+        $addtime        = cache($cacheKey);
         if (!empty($addtime) && $addtime > time()) return false;
 
         $dbModel        = model('lottery_ssc1');
