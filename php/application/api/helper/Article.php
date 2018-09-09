@@ -378,6 +378,7 @@ class Article extends Base
             foreach($data as $k=>$v)
             {
                 $data[$k]['create_time']    = date('Y-m-d H:i:s',$v['create_time']);
+                $data[$k]['content']        = !empty($v['content']) ? strip_tags($v['content']) : '';
             }
         }
 
