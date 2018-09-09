@@ -160,6 +160,25 @@ class Lottery extends Base
                     $lotteryRule   = $ruleModle->getLotterRule($rules);
                     //计算赔率
                     $odds          = $this->calculatingOdds($value,$isWin,$lotteryRule);
+                }else{
+
+                    //没中奖 如果有代理 代理拿用户投注金额百分比
+                    $rate          = config('system_config.agent_fen_rate');
+                    $amoney        = !empty($rate) ? $rate*$value['money'] : 0;
+                    $aid           = !empty($value['agent_id']) ? $value['agent_id'] : 0;
+                    
+                    if ($aid > 0 && $amoney > 0)
+                    {
+                        $userModel         = model('user_detail');
+                        $agentinfo         = $userModel->getOneByUid($aid);
+                        $data              = [];
+                        $data['account']   = $agentinfo['account']+$amoney;
+                        $userModel->updateById($agentinfo['id'],$data);
+                        $userModel->delDetailDataCacheByUid($aid);
+
+                        //写日志
+                        model('user_account_log')->addAccountLog($aid,$amoney,'代理返佣',1,5);
+                    }
                 }
 
                 //更改订单信息
