@@ -1201,7 +1201,7 @@ class Lottery extends Base
             if (!empty($info['num2']))  $select_code[] = $info['num2'];
             if (!empty($info['num1']))  $select_code[] = $info['num1'];
             $scode                  = !empty($select_code) ? implode('|',$select_code) : '/';
-wr($scode);
+
             $Data['icon']           = isset($catinfo['icon']) ? get_cover($catinfo['icon'],'path') : '';
             $Data['title']          = isset($catinfo['title']) ? $catinfo['title'] : '';
             $Data['expect']         = !empty($info['expect']) ? $info['expect'] : '/';
