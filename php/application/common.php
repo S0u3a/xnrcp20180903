@@ -889,14 +889,17 @@ if(!function_exists('sscOddsMoney'))
 		//赔率个数
 		$ocount 				= count(explode(',',$odds));
     	$odds           		= $ocount>=2 ? getOddsRebates(0,$odds) : getOddsRebate(0,$odds,0);
+    	$orderOdds 				= [];
 
         if (in_array($tag,['88-1-3','88-11-3','88-11-10']))
         {
             if (!empty($winCode)) {
 	            foreach ($winCode as $kk => $vv)
 	            {
-	                for ($i=$vv; $i > 0; $i--) { 
-	                    $money += $odds[(count($odds)-$i)]*$price*1;
+	                for ($i=$vv; $i > 0; $i--) {
+	                	$oo 			= $odds[(count($odds)-$i)];
+	                    $money 			+= $oo*$price*1;
+        				$orderOdds[]	= $oo;
 	                }
 	            }
             }
@@ -906,8 +909,10 @@ if(!function_exists('sscOddsMoney'))
             if (!empty($winCode)) {
 	            foreach ($winCode as $kk => $vv)
 	            {
-	                $n1     = repeatNumForNumber($vv,2);
-	                $money 	+= $odds[($n1 == 2 ? 0 : 1)]*$price*1;
+	                $n1     		= repeatNumForNumber($vv,2);
+	                $oo 			= $odds[($n1 == 2 ? 0 : 1)];
+	                $money 			+= $oo*$price*1;
+        			$orderOdds[]	= $oo;
 	            }
         	}
         }
@@ -916,9 +921,10 @@ if(!function_exists('sscOddsMoney'))
         	// ===修改标记===
         	// $money 			+= $odds*$price*$winBets;
         	$money 			+= $odds*$price;
+        	$orderOdds[]	= $odds;
         }
 
-        return sprintf("%.3f",$money);
+        return [sprintf("%.3f",$money),(!empty($orderOdds) ? implode(',',$orderOdds) : '')];
 	}
 }
 
@@ -945,28 +951,33 @@ if(!function_exists('pk10OddsMoney'))
 		//赔率个数
 		$ocount 				= count(explode(',',$odds));
     	$odds           		= $ocount>=2 ? getOddsRebates(0,$odds) : getOddsRebate(0,$odds,0);
+    	$orderOdds 				= [];
 
         if (in_array($tag,['96-5-1'])) {//和值
         	
         	if (!empty($winCode)) {
         		foreach ($winCode as $kk => $vv)
 	            {
-	                $money 		+= $odds[($vv*1-2)]*$price*1;
+	            	$oo 			= $odds[($vv*1-2)];
+	                $money 			+= $oo*$price*1;
+	                $orderOdds[]	= $oo;
 	            }
         	}
         }elseif (in_array($tag,['96-8-7'])) {//大小单双
             if (!empty($winCode)) {
         		foreach ($winCode as $kk => $vv)
 	            {
-	            	$oo 		= in_array($vv,['大','小']) ? $odds[0] : $odds[2];
-	                $money 		+= $oo*$price*1;
+	            	$oo 			= in_array($vv,['大','小']) ? $odds[0] : $odds[2];
+	                $money 			+= $oo*$price*1;
+	                $orderOdds[]	= $oo;
 	            }
         	}
         }else{
         	$money 			+= $odds*$price*$winBets;
+        	$orderOdds[]	= $odds;
         }
 
-        return sprintf("%.3f",$money);
+        return [sprintf("%.3f",$money),(!empty($orderOdds) ? implode(',',$orderOdds) : '')];
 	}
 }
 
@@ -993,6 +1004,7 @@ if(!function_exists('hk6OddsMoney'))
 		//赔率个数
 		$ocount 				= count(explode(',',$odds));
     	$odds           		= $ocount>=2 ? getOddsRebates(0,$odds) : getOddsRebate(0,$odds,0);
+    	$orderOdds 				= [];
 
     	if (in_array($tag,['99-1-1'])) {//两面
     		if (in_array('和局',$winCode)) {
@@ -1002,8 +1014,9 @@ if(!function_exists('hk6OddsMoney'))
 	        	$ops  = array_flip($ops);
 	        	$oo   = 0;
 				foreach ($winCode as $key => $value) {
-					$oo 		= isset($ops[$value])?(isset($odds[$ops[$value]])?$odds[$ops[$value]]:0):0;
-					$money 		+= $oo*$price*1;
+					$oo 			= isset($ops[$value])?(isset($odds[$ops[$value]])?$odds[$ops[$value]]:0):0;
+					$money 			+= $oo*$price*1;
+					$orderOdds[]	= $oo;
 				}
     		}
         }elseif (in_array($tag,['99-5-1','99-5-2','99-5-3','99-5-4','99-5-5','99-5-6'])) {//正码1-6
@@ -1018,14 +1031,16 @@ if(!function_exists('hk6OddsMoney'))
 
     			foreach ($winCode as $key => $value) {
     				if (in_array($value,['红波','绿波','蓝波'])) {
-						$oo 		= isset($ops[$value])?(isset($odds[$ops[$value]])?$odds[$ops[$value]]:0):0;
-						$money 		+= $oo*$price*1;
+						$oo 			= isset($ops[$value])?(isset($odds[$ops[$value]])?$odds[$ops[$value]]:0):0;
+						$money 			+= $oo*$price*1;
+						$orderOdds[]	= $oo;
     				}
 				}
     		}else{
     			foreach ($winCode as $key => $value) {
-					$oo 		= isset($ops[$value])?(isset($odds[$ops[$value]])?$odds[$ops[$value]]:0):0;
-					$money 		+= $oo*$price*1;
+					$oo 			= isset($ops[$value])?(isset($odds[$ops[$value]])?$odds[$ops[$value]]:0):0;
+					$money 			+= $oo*$price*1;
+					$orderOdds[]	= $oo;
 				}
     		}
         }elseif (in_array($tag,['99-6-1'])) {//大小单双
@@ -1039,7 +1054,9 @@ if(!function_exists('hk6OddsMoney'))
 					$oo 		= isset($ops[$value])?(isset($odds[$ops[$value]])?$odds[$ops[$value]]:0):0;
 					$ooo 		*=  $oo;		
 				}
-				$money 		+= $ooo*$price*1;
+
+				$money 			+= $ooo*$price*1;
+				$orderOdds[]	= $ooo;
         	}
         }else if (in_array($tag,['99-8-1','99-8-2','99-8-3','99-8-4'])) {
         	$ops  = ['鼠','牛','虎','兔','龙','蛇','马','羊','猴','鸡','狗','猪'];
@@ -1061,8 +1078,9 @@ if(!function_exists('hk6OddsMoney'))
         		}
 
         		//找出最小赔率
-        		$mainOdds 	= min($winOdds);
-				$money 		+= $mainOdds*$price*1;
+        		$minOdds 		= min($winOdds);
+				$money 			+= $minOdds*$price*1;
+				$orderOdds[]	= $minOdds;
 			}
 
         	/*//取第一个生肖赔率
@@ -1091,8 +1109,9 @@ if(!function_exists('hk6OddsMoney'))
         		}
 
         		//找出最小赔率
-        		$mainOdds 	= min($winOdds);
-				$money 		+= $mainOdds*$price*1;
+        		$minOdds 		= min($winOdds);
+				$money 			+= $minOdds*$price*1;
+				$orderOdds[]	= $minOdds;
 			}
 
         }else if (in_array($tag,['99-10-1','99-10-2','99-10-3'])) {
@@ -1101,8 +1120,9 @@ if(!function_exists('hk6OddsMoney'))
         	$oo   = 0;
 
         	foreach ($winCode as $key => $value) {
-				$oo 		= isset($ops[$value])?(isset($odds[$ops[$value]])?$odds[$ops[$value]]:0):0;
-				$money 		+= ($oo-1)*$price*1+$price;
+				$oo 			= isset($ops[$value])?(isset($odds[$ops[$value]])?$odds[$ops[$value]]:0):0;
+				$money 			+= ($oo-1)*$price*1+$price;
+				$orderOdds[]	= $oo;
 			}
         }else if (in_array($tag,['99-10-4'])) {
         	$ops  = ['234肖','5肖','6肖','7肖','总肖单','总肖双'];
@@ -1110,8 +1130,9 @@ if(!function_exists('hk6OddsMoney'))
         	$oo   = 0;
 
         	foreach ($winCode as $key => $value) {
-				$oo 		= isset($ops[$value])?(isset($odds[$ops[$value]])?$odds[$ops[$value]]:0):0;
-				$money 		+= ($oo-1)*$price*1+$price;
+				$oo 			= isset($ops[$value])?(isset($odds[$ops[$value]])?$odds[$ops[$value]]:0):0;
+				$money 			+= ($oo-1)*$price*1+$price;
+				$orderOdds[]	= $oo;
 			}
         }else if (in_array($tag,['99-12-1'])) {
         	$ops  = ['红波','蓝波','绿波'];
@@ -1119,8 +1140,9 @@ if(!function_exists('hk6OddsMoney'))
         	$oo   = 0;
 
         	foreach ($winCode as $key => $value) {
-				$oo 		= isset($ops[$value])?(isset($odds[$ops[$value]])?$odds[$ops[$value]]:0):0;
-				$money 		+= $oo*$price*1*$winBets;
+				$oo 			= isset($ops[$value])?(isset($odds[$ops[$value]])?$odds[$ops[$value]]:0):0;
+				$money 			+= $oo*$price*1*$winBets;
+				$orderOdds[]	= $oo;
 			}
         }else if (in_array($tag,['99-12-2'])) {
         	if (in_array('和局',$winCode)) {
@@ -1136,8 +1158,9 @@ if(!function_exists('hk6OddsMoney'))
 
 				//取较大赔率为计算赔率
 				sort($oo);
-				$ooo 		= $oo[count($oo)-1];
-				$money 		+= $ooo*$price*1*$winBets;
+				$ooo 			= $oo[count($oo)-1];
+				$money 			+= $ooo*$price*1*$winBets;
+				$orderOdds[]	= $ooo;
     		}
         }else if (in_array($tag,['99-12-3'])) {
         	$ops  = ['红大单','红大双','红小单','红小双','绿大单','绿大双','绿小单','绿小双','蓝大单','蓝大双','蓝小单','蓝小双'];
@@ -1150,8 +1173,9 @@ if(!function_exists('hk6OddsMoney'))
         			$money 		= $orderinfo['money'];
         			break;
         		}else{
-					$oo 		= isset($ops[$value])?(isset($odds[$ops[$value]])?$odds[$ops[$value]]:0):0;
-					$money 		+= $oo*$price*1*$winBets;
+					$oo 			= isset($ops[$value])?(isset($odds[$ops[$value]])?$odds[$ops[$value]]:0):0;
+					$money 			+= $oo*$price*1*$winBets;
+					$orderOdds[]	= $oo;
         		}
 			}
         }else if (in_array($tag,['99-12-4'])) {
@@ -1164,8 +1188,9 @@ if(!function_exists('hk6OddsMoney'))
         			$money 		= $orderinfo['money'];
         			break;
         		}else{
-					$oo 		= isset($ops[$value])?(isset($odds[$ops[$value]])?$odds[$ops[$value]]:0):0;
-					$money 		+= $oo*$price*1*$winBets;
+					$oo 			= isset($ops[$value])?(isset($odds[$ops[$value]])?$odds[$ops[$value]]:0):0;
+					$money 			+= $oo*$price*1*$winBets;
+					$orderOdds[]	= $oo;
 				}
 			}
         }
@@ -1175,8 +1200,9 @@ if(!function_exists('hk6OddsMoney'))
         	$oo   = 0;
 
         	foreach ($winCode as $key => $value) {
-        		$oo 		= isset($ops[$value])?(isset($odds[$ops[$value]])?$odds[$ops[$value]]:0):0;
-				$money 		+= $oo*$price*1;
+        		$oo 			= isset($ops[$value])?(isset($odds[$ops[$value]])?$odds[$ops[$value]]:0):0;
+				$money 			+= $oo*$price*1;
+				$orderOdds[]	= $oo;
 			}
         }
         else if (in_array($tag,['99-13-2'])) {
@@ -1185,8 +1211,9 @@ if(!function_exists('hk6OddsMoney'))
         	$oo   = 0;
 
         	foreach ($winCode as $key => $value) {
-        		$oo 		= isset($ops[$value])?(isset($odds[$ops[$value]])?$odds[$ops[$value]]:0):0;
-				$money 		+= $oo*$price*1;
+        		$oo 			= isset($ops[$value])?(isset($odds[$ops[$value]])?$odds[$ops[$value]]:0):0;
+				$money 			+= $oo*$price*1;
+				$orderOdds[]	= $oo;
 			}
         }
         else if (in_array($tag,['99-14-1'])) {
@@ -1195,8 +1222,9 @@ if(!function_exists('hk6OddsMoney'))
         	$oo   = 0;
 
         	foreach ($winCode as $key => $value) {
-        		$oo 		= isset($ops[$value])?(isset($odds[$ops[$value]])?$odds[$ops[$value]]:0):0;
-				$money 		+= $oo*$price*1;
+        		$oo 			= isset($ops[$value])?(isset($odds[$ops[$value]])?$odds[$ops[$value]]:0):0;
+				$money 			+= $oo*$price*1;
+				$orderOdds[]	= $oo;
 			}
         }
         else if (in_array($tag,['99-14-2'])) {
@@ -1205,16 +1233,17 @@ if(!function_exists('hk6OddsMoney'))
         	$oo   = 0;
 
         	foreach ($winCode as $key => $value) {
-        		$oo 		= isset($ops[$value])?(isset($odds[$ops[$value]])?$odds[$ops[$value]]:0):0;
-				$money 		+= $oo*$price*1;
+        		$oo 			= isset($ops[$value])?(isset($odds[$ops[$value]])?$odds[$ops[$value]]:0):0;
+				$money 			+= $oo*$price*1;
+        		$orderOdds[]	= $oo;
 			}
         }
         else{
         	$money 			+= $odds*$price*$winBets;
+        	$orderOdds[]	= $odds;
         }
 
-        //print_r([$money,$odds,$winCode,$tag]);exit;
-        return sprintf("%.3f",$money);
+        return [sprintf("%.3f",$money),(!empty($orderOdds) ? implode(',',$orderOdds) : '')];
 	}
 }
 
@@ -1232,10 +1261,15 @@ if(!function_exists('oneOddsMoney'))
 		$winBets 				= isset($isWin[0]) ? intval($isWin[0]) : 0;
 		$winCode 				= isset($isWin[1]) ? $isWin[1] : [];
 
+		$orderOdds 				= [];
+
         $odds 					= $aid > 0 ? $agentOdds : $lotteryRule['odds'];
     	$odds           		= getOddsRebate(0,$odds,0);
     	$money 					+= $odds*$price*$winBets;
-        return sprintf("%.3f",$money);
+        
+        $orderOdds[]			= $odds;
+
+        return [sprintf("%.3f",$money),(!empty($orderOdds) ? implode(',',$orderOdds) : '')];
 	}
 }
 
@@ -1263,10 +1297,12 @@ if(!function_exists('manyOddsMoney'))
 		$ocount 				= count(explode(',',$odds));
     	$odds           		= $ocount>=2 ? getOddsRebates(0,$odds) : getOddsRebate(0,$odds,0);
 
+    	$orderOdds 				= [];
     	switch ($tag) {
     		case '115-1-1':
     			foreach ($winCode as $key => $value) {
     				$oo 		= isset($odds[$value]) ? $odds[$value] : 0;
+    				$orderOdds[]= $oo;
     				$money 		+= $oo*$price*1;
     			}
     			break;
@@ -1275,6 +1311,7 @@ if(!function_exists('manyOddsMoney'))
     			$ops  = array_flip($ops);
     			foreach ($winCode as $key => $value) {
     				$oo 		= isset($ops[$value])?(isset($odds[$ops[$value]])?$odds[$ops[$value]]:0):0;
+    				$orderOdds[]= $oo;
     				$money 		+= $oo*$price*1;
     			}
     			break;
@@ -1283,19 +1320,22 @@ if(!function_exists('manyOddsMoney'))
     			$ops  = array_flip($ops);
     			foreach ($winCode as $key => $value) {
     				$oo 		= isset($ops[$value])?(isset($odds[$ops[$value]])?$odds[$ops[$value]]:0):0;
+    				$orderOdds[]= $oo;
     				$money 		+= $oo*$price*1;
     			}
     			break;
     		case '115-4-1':
-    			$money 		+= $odds*$price*1;
+    			$money 			+= $odds*$price*1;
+    			$orderOdds[]	= $odds;
     			break;
     		case '115-5-1':
-    			$money 		+= $odds*$price*1;
+    			$money 			+= $odds*$price*1;
+    			$orderOdds[]	= $odds;
     			break;
     		default: $money = 0; break;
     	}
 
-        return sprintf("%.3f",$money);
+        return [sprintf("%.3f",$money),(!empty($orderOdds) ? implode(',',$orderOdds) : '')];
 	}
 }
 

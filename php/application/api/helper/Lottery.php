@@ -684,6 +684,8 @@ class Lottery extends Base
                 $data[$k]['icon']       = get_cover($v['icon'],'path');
                 $data[$k]['opencode']   = $lately['opencode'];
                 $data[$k]['expect']     = $lately['expect'];
+                $data[$k]['opentime']   = $lately['opentime'];
+                $data[$k]['lotterycat'] = $v['pid'];
             }
         }
 
