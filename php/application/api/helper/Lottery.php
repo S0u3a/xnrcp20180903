@@ -1191,7 +1191,7 @@ class Lottery extends Base
             if ($info['status'] == 1) {
                 $wins               = "未支付";
             }else{
-                $wins               = $info['status'] == 2 ? '未开奖' : ($info['iswin'] == 1 ? '已中奖' : '未中奖');
+                $wins               = $info['status'] == 2 ? '未开奖,请稍等' : ($info['iswin'] == 1 ? '恭喜您，中奖了' : '没有中奖，再接再厉');
             }
 
             $Data['icon']           = isset($catinfo['icon']) ? get_cover($catinfo['icon'],'path') : '';
