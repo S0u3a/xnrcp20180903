@@ -417,7 +417,7 @@ class Crontab extends Base
         $cacheKey       = 'ssc1f_key';
         $addtime        = cache($cacheKey);wr($addtime);
         if (!empty($addtime) && $addtime > time()) return false;
-wr(['==============1']);
+
         $dbModel        = model('lottery_ssc1');
         $info           = $dbModel->getInfoByLimitTime();
         
@@ -426,7 +426,7 @@ wr(['==============1']);
 
         //是否被1分钟整除
         if (($ff2-$ff1)%60 != 0) return false;
-wr(['==============2']);
+
         $ff             = ($ff2-$ff1)/60;
         if ($ff >= 0 && $ff < 10) {
             $ff             = '000' . $ff;
@@ -435,20 +435,23 @@ wr(['==============2']);
         }elseif ($ff >= 100 && $ff < 1000) {
             $ff             = '0' . $ff;
         }
-wr(['==============3']);
+
         $expect         = date('Ymd').$ff;
-wr(['==============4='.$expect]);
+
         $code           = randomString(5);
         $temp           = [];
         for ($i=0; $i < 5; $i++) { 
             $temp[]     = substr($code,$i,1);
         }
-
+        wr('=========ssss');
+        wr($info);
         if(empty($info)){
             $updata['expect']       = $expect;
             $updata['opencode']     = implode(',',$temp);
             $updata['opentime']     = date('Y-m-d H:i:s',$ff2);
             $updata['opentimestamp']= $ff2;
+            wr('=========ssss1');
+            wr($updata);
             $dbModel->addData($updata);
         }else{
             $addtimestamp          = $info['opentimestamp']+60;
