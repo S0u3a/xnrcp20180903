@@ -1189,17 +1189,25 @@ class Lottery extends Base
             $catinfo              = !empty($catinfo) ? $catinfo->toArray() : [];
 
             if ($info['status'] == 1) {
-                $wins               = "未支付";
+                $wins               = "已选号，未支付";
             }else{
                 $wins               = $info['status'] == 2 ? '未开奖,请稍等' : ($info['iswin'] == 1 ? '恭喜您，中奖了' : '没有中奖，再接再厉');
             }
+
+            $select_code            = [];
+            if (!empty($info['num5']))  $select_code[] = $info['num5'];
+            if (!empty($info['num4']))  $select_code[] = $info['num4'];
+            if (!empty($info['num3']))  $select_code[] = $info['num3'];
+            if (!empty($info['num2']))  $select_code[] = $info['num2'];
+            if (!empty($info['num1']))  $select_code[] = $info['num1'];
+            $scode                  = !empty($select_code) ? implode('|',$select_code) : '/';
 
             $Data['icon']           = isset($catinfo['icon']) ? get_cover($catinfo['icon'],'path') : '';
             $Data['title']          = isset($catinfo['title']) ? $catinfo['title'] : '';
             $Data['expect']         = !empty($info['expect']) ? $info['expect'] : '/';
             $Data['wins']           = $wins;
             $Data['opencode']       = !empty($info['opencode']) ? $info['opencode'] : '/';
-            $Data['select_code']    = "12345678";
+            $Data['select_code']    = $scode;
             $Data['order_sn']       = !empty($info['order_sn']) ? $info['order_sn'] : '';
             $Data['create_time']    = !empty($info['create_time']) ? $info['create_time'] : '';
             $Data['rules']          = !empty($info['rules_str']) ? $info['rules_str'] : '';
