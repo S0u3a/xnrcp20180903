@@ -562,7 +562,7 @@ class Lottery extends Base
             $userModel->delDetailDataCacheByUid($parame['uid']);
 
             //计算分销
-            $this->distribution($userinfo['invitation_code'],$money,$parame['uid']);
+            //$this->distribution($userinfo['invitation_code'],$money,$parame['uid']);
 
             //修改投注状态
             $dbModel->updateByIds($updata);
@@ -1244,7 +1244,7 @@ class Lottery extends Base
         }
     }
 
-    //三级分成
+    /*//三级分成
     private function distribution($invitation_code='',$money=0,$uid=0)
     {
         if (empty($invitation_code) || $money <= 0 || $uid <= 0) return false;
@@ -1347,7 +1347,7 @@ class Lottery extends Base
         }
 
         return true;
-    }
+    }*/
 
     private function getlottery($parame)
     {   
