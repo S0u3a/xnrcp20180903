@@ -904,6 +904,9 @@ if(!function_exists('sscOddsMoney'))
 	            }
             }
         }
+        /*elseif (in_array($tag,['88-3-1'])) {
+        	
+        }*/
         elseif (in_array($tag,['88-12-8','88-12-24','88-12-16']))
         {
             if (!empty($winCode)) {
@@ -917,10 +920,8 @@ if(!function_exists('sscOddsMoney'))
         	}
         }
         else
-        {	
-        	// ===修改标记===
-        	// $money 			+= $odds*$price*$winBets;
-        	$money 			+= $odds*$price;
+        {
+        	$money 			+= $odds*$price*$winBets;
         	$orderOdds[]	= $odds;
         }
 
