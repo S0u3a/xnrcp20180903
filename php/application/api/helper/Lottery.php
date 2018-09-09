@@ -211,7 +211,7 @@ class Lottery extends Base
             
             $data                       = [];
             $data['lottery_id']         = $info['id'];
-            $data['lottery_limit']      = 60;
+            $data['lottery_limit']      = $lottery->getLotteryTime();
             $data['term_number']        = $stayOpen['term_number'];
             $data['nearfuture_code']    = isset($list[1]['opencode']) ? $list[1]['opencode'] : '';
             $data['opentimestamp']      = $stayOpen['opentimestamp'];
