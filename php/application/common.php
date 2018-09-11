@@ -1243,6 +1243,7 @@ if(!function_exists('hk6OddsMoney'))
 			}
         }
         else{
+        	wr([$tag,$rebate,$lotteryRule,$price,$isWin]);
         	$money 			+= $odds*$price*$winBets;
         	$orderOdds[]	= $odds;
         }
