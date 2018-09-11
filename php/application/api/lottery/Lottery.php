@@ -194,7 +194,7 @@ class Lottery extends Base
                 $updataOrder['opentimestamp']   = $opentimestamp;
                 $updataOrder['win_code']        = json_encode($isWin[1]);
                 $updataOrder['iswin']           = $isWin[0] > 0 ? 1 : 0;
-wr('sssssssssssssssssss111==55555');
+
                 $orderModle->updateById($value['id'],$updataOrder);
             }
         }else{
