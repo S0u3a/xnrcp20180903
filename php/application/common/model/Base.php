@@ -140,7 +140,13 @@ class Base extends Model
 			}
 		}
 
-		return !empty($data) ? $this->saveAll($data) : null;
+		$res 	= null
+		if (!empty($data)) {
+			$res = $this->saveAll($data);
+			foreach ($data as $value) Cache::rm('table_' . $this->name . '_' . $value['id']);
+		}
+
+		return $res;
 	}
 
 	//查询	通过主键ID
