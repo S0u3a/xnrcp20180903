@@ -140,7 +140,7 @@ class Lottery extends Base
                 $cacheKey       = 'lottery_order_id_create_time_'.$value['id'].$value['create_time'];
                 $cacheVal       = $value['id'].$value['create_time'];
                 $iscache        = cache($cacheKey);
-                //if (!empty($iscache) && $iscache == $cacheVal) continue;
+                if (!empty($iscache) && $iscache == $cacheVal) continue;
                 cache($cacheKey,$cacheVal);
 
                 //执行中奖判断
@@ -183,7 +183,7 @@ class Lottery extends Base
                     //用户没中奖执行三级分销
                     $this->distribution($value['money'],$value['uid']);
                 }
-                
+
                 //更改订单信息
                 $updataOrder                    = [];
                 $updataOrder['status']          = 3;
