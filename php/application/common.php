@@ -1243,6 +1243,7 @@ if(!function_exists('hk6OddsMoney'))
         	wr("ssssssss=9===".$tag);
         	$money 			+= $odds*$price*$winBets;
         	$orderOdds[]	= $odds;
+        	wr("ssssssss=9==1=".$tag);
         }
 
         return [sprintf("%.3f",$money),(!empty($orderOdds) ? implode(',',$orderOdds) : '')];

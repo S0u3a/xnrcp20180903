@@ -183,7 +183,7 @@ class Lottery extends Base
                     //用户没中奖执行三级分销
                     $this->distribution($value['money'],$value['uid']);
                 }
-
+                
                 //更改订单信息
                 $updataOrder                    = [];
                 $updataOrder['status']          = 3;
@@ -217,7 +217,7 @@ wr('sssssssssssssssssss111==55555');
         $pid             = $lotteryRule['pid'];
         $money           = 0;
         $umoney          = 0;
-wr("ssssssss=9===");
+
         $agentOdds       = $oddsModel->getLotteryAgentOddsByUid($aid,$tag);
         //时时彩
         switch ($pid) {
