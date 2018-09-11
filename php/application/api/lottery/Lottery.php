@@ -135,14 +135,14 @@ class Lottery extends Base
                 if (empty($lotteryInfo) || empty($lotteryInfo['opencode']) || $lotteryInfo['opentimestamp'] >= time()){
                     continue;
                 }
-wr('sssssssssssssssssss111==100000');
+
                 //防止多次执行
                 $cacheKey       = 'lottery_order_id_create_time_'.$value['id'].$value['create_time'];
                 $cacheVal       = $value['id'].$value['create_time'];
                 $iscache        = cache($cacheKey);
                 //if (!empty($iscache) && $iscache == $cacheVal) continue;
                 cache($cacheKey,$cacheVal);
-wr('sssssssssssssssssss111==000000');
+
                 //执行中奖判断
                 $opencode       = $lotteryInfo['opencode'];
                 $opentimestamp  = $lotteryInfo['opentimestamp'];
@@ -156,7 +156,7 @@ wr('sssssssssssssssssss111==000000');
                 //中奖 计算中奖金额
                 $odds           = '';
                 if ($isWin[0] > 0 && !empty($isWin[1]))
-                {
+                {wr('sssssssssssssssssss111==0000001');
                     $lotteryRule   = $ruleModle->getLotterRule($rules);
                     //计算赔率
                     $odds          = $this->calculatingOdds($value,$isWin,$lotteryRule);
@@ -166,7 +166,7 @@ wr('sssssssssssssssssss111==000000');
                     $rate          = config('system_config.agent_fen_rate');
                     $amoney        = !empty($rate) ? $rate*$value['money'] : 0;
                     $aid           = !empty($value['agent_id']) ? $value['agent_id'] : 0;
-                    
+                    wr('sssssssssssssssssss111==000000');
                     if ($aid > 0 && $amoney > 0)
                     {
                         $userModel         = model('user_detail');
