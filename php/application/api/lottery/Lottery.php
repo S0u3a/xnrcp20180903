@@ -1086,7 +1086,7 @@ class Lottery extends Base
 
             //不在预售时间范围内 数据不用更新
             if ($this->nowTime < $time_start1 || $this->nowTime > $time_end1) return false;
-wr("ssssssssss1");
+
             $opentimestamp    = cache($cacheDataKey);
             wr("广西快三下期开奖时间：".date('Y-m-d H:i:s',$opentimestamp)."\n");
             //未到开奖时间数据不更新
