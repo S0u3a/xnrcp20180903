@@ -183,7 +183,7 @@ class Lottery extends Base
                     //用户没中奖执行三级分销
                     $this->distribution($value['money'],$value['uid']);
                 }
-
+                
                 //更改订单信息
                 $updataOrder                    = [];
                 $updataOrder['status']          = 3;
@@ -239,17 +239,16 @@ wr('sssssssssssssssssss111==55555');
                 $umoney      = ($money-$amoney)*1;
                 break;
             case 99://六合彩
-                wr("ssssssss=991");
                 $moneyAndOdds       = hk6OddsMoney($tag,$rebate,$lotteryRule,$value['price'],$isWin,0,[],$value);
                 $money              = $moneyAndOdds[0];
-wr("ssssssss=99");
+
                 if ($aid <= 0 || empty($agentOdds)) {
                     $amoney  = 0;
                 }else{
                     $moneyAndOdds   = hk6OddsMoney($tag,$rebate,$lotteryRule,$value['price'],$isWin,$aid,$agentOdds,$value);
                     $amoney         = $moneyAndOdds[0];
                 }
-wr("ssssssss=994");
+
                 $umoney      = ($money-$amoney)*1;
                 break;
             case 102://快3
