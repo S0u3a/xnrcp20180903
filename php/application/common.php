@@ -1240,7 +1240,7 @@ if(!function_exists('hk6OddsMoney'))
 			}
         }
         else{
-        	wr("ssssssss=9===".$tag);
+        	wr([$odds,$price,$winBets]);
         	$money 			+= $odds*$price*$winBets;
         	$orderOdds[]	= $odds;
         	wr("ssssssss=9==1=".$tag);
