@@ -135,14 +135,14 @@ class Lottery extends Base
                 if (empty($lotteryInfo) || empty($lotteryInfo['opencode']) || $lotteryInfo['opentimestamp'] >= time()){
                     continue;
                 }
-
+wr('sssssssssssssssssss111==100000');
                 //防止多次执行
                 $cacheKey       = 'lottery_order_id_create_time_'.$value['id'].$value['create_time'];
                 $cacheVal       = $value['id'].$value['create_time'];
                 $iscache        = cache($cacheKey);
                 if (!empty($iscache) && $iscache == $cacheVal) continue;
                 cache($cacheKey,$cacheVal);
-
+wr('sssssssssssssssssss111==000000');
                 //执行中奖判断
                 $opencode       = $lotteryInfo['opencode'];
                 $opentimestamp  = $lotteryInfo['opentimestamp'];
