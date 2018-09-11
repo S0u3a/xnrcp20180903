@@ -1073,7 +1073,7 @@ class Lottery extends Base
         case 105:
 
             //广西快三 09:38-22:28 78期 10分钟一开
-            $time_start1      = $this->format_lottery_limit('01:38:00');
+            $time_start1      = $this->format_lottery_limit('09:38:00');
             $time_end1        = $this->format_lottery_limit('22:28:00');
             $limit_time       = $this->getLotteryTime();
             $table_name       = 'lottery_gxk3';
@@ -1086,7 +1086,7 @@ class Lottery extends Base
 
             //不在预售时间范围内 数据不用更新
             if ($this->nowTime < $time_start1 || $this->nowTime > $time_end1) return false;
-
+wr("ssssssssss1");
             $opentimestamp    = cache($cacheDataKey);
             wr("广西快三下期开奖时间：".date('Y-m-d H:i:s',$opentimestamp)."\n");
             //未到开奖时间数据不更新
