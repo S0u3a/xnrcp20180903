@@ -239,6 +239,7 @@ wr('sssssssssssssssssss111==55555');
                 $umoney      = ($money-$amoney)*1;
                 break;
             case 99://六合彩
+                wr("ssssssss=991");
                 $moneyAndOdds       = hk6OddsMoney($tag,$rebate,$lotteryRule,$value['price'],$isWin,0,[],$value);
                 $money              = $moneyAndOdds[0];
 wr("ssssssss=99");
