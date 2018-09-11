@@ -1243,6 +1243,9 @@ if(!function_exists('hk6OddsMoney'))
 			}
         }
         else{
+        	foreach ($winCode as $key => $value) {
+        		wr($value);
+			}
         	wr(intval("01"));
         	wr("ssss");
         	$money 			+= $odds*$price*$winBets;
