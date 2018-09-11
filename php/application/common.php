@@ -1001,7 +1001,7 @@ if(!function_exists('hk6OddsMoney'))
 		}else{
 			$odds 				= !empty($lotteryRule['odds2']) ? $lotteryRule['odds2'] : $lotteryRule['odds'];
 		}
-wr("ssssssss=9===".$tag);
+
 		//赔率个数
 		$ocount 				= count(explode(',',$odds));
     	$odds           		= $ocount>=2 ? getOddsRebates(0,$odds) : getOddsRebate(0,$odds,0);
@@ -1240,6 +1240,7 @@ wr("ssssssss=9===".$tag);
 			}
         }
         else{
+        	wr("ssssssss=9===".$tag);
         	$money 			+= $odds*$price*$winBets;
         	$orderOdds[]	= $odds;
         }
