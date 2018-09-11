@@ -324,6 +324,11 @@ class Lottery extends Base
 
         //投注总额
         $money                      = $bets[0]*$price;
+
+        //单注金额不能超过10000
+        if ($money > $bets[0] * 10000)
+        return ['Code' => '200017', 'Msg'=>lang('200017')];
+
         $userModel                  = model('user_detail');
         $userinfo                   = $userModel->getOneByUid($parame['uid']);
         $user_level                 = getUserLevel($userinfo['account_all']);
