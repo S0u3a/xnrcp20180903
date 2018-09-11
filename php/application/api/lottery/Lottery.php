@@ -142,7 +142,7 @@ class Lottery extends Base
                 $iscache        = cache($cacheKey);
                 if (!empty($iscache) && $iscache == $cacheVal) continue;
                 cache($cacheKey,$cacheVal);
-wr('sssssssssssssssssss111==sss');
+
                 //执行中奖判断
                 $opencode       = $lotteryInfo['opencode'];
                 $opentimestamp  = $lotteryInfo['opentimestamp'];
@@ -194,7 +194,7 @@ wr('sssssssssssssssssss111==sss');
                 $updataOrder['opentimestamp']   = $opentimestamp;
                 $updataOrder['win_code']        = json_encode($isWin[1]);
                 $updataOrder['iswin']           = $isWin[0] > 0 ? 1 : 0;
-
+wr('sssssssssssssssssss111==55555');
                 $orderModle->updateById($value['id'],$updataOrder);
             }
         }else{
