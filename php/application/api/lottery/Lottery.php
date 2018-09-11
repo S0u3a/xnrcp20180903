@@ -179,11 +179,12 @@ class Lottery extends Base
                         //写日志
                         model('user_account_log')->addAccountLog($aid,$amoney,'代理返佣',1,5);
                     }
-
+wr('sssssssssssssssssss111==222222');
                     //用户没中奖执行三级分销
                     $this->distribution($value['money'],$value['uid']);
+                    wr('sssssssssssssssssss111==33333');
                 }
-
+wr('sssssssssssssssssss111==444444');
                 //更改订单信息
                 $updataOrder                    = [];
                 $updataOrder['status']          = 3;
