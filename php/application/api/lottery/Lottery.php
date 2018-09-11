@@ -125,7 +125,7 @@ class Lottery extends Base
                 $lottery_table      = '';
                 if (isset($this->lotteryConfig['lottery_tag'][$value['lottery_id']])) {
                     $lottery_table  = $this->lotteryConfig['lottery_tag'][$value['lottery_id']];
-                }else{wr('sssssssssssssssssss111');
+                }else{
                     continue;
                 }
 
@@ -135,7 +135,7 @@ class Lottery extends Base
                 if (empty($lotteryInfo) || empty($lotteryInfo['opencode']) || $lotteryInfo['opentimestamp'] >= time()){
                     continue;
                 }
-
+wr('sssssssssssssssssss111==');
                 //防止多次执行
                 $cacheKey       = 'lottery_order_id_create_time_'.$value['id'].$value['create_time'];
                 $cacheVal       = $value['id'].$value['create_time'];
