@@ -140,10 +140,10 @@ class Base extends Model
 			}
 		}
 
-		$res 	= null
+		$res 	= null;
 		if (!empty($data)) {
 			$res = $this->saveAll($data);
-			//foreach ($data as $value) Cache::rm('table_' . $this->name . '_' . $value['id']);
+			foreach ($data as $value) Cache::rm('table_' . $this->name . '_' . $value['id']);
 		}
 
 		return $res;
