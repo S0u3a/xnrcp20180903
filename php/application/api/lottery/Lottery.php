@@ -1078,7 +1078,7 @@ class Lottery extends Base
             $limit_time       = $this->getLotteryTime();
             $table_name       = 'lottery_gxk3';
             $cacheDataKey     = 'updateData_'.$table_name.'_opentimestamp_' . $this->lotteryid;
-wr('ssssssssssssssss');
+
             //设置第二天首开时间
             if ($this->nowTime>$this->format_lottery_limit('02:40:00') && $this->nowTime < $this->format_lottery_limit('09:28:00')) {
                 cache($cacheDataKey,$time_start1 + 60*1);
@@ -1086,7 +1086,7 @@ wr('ssssssssssssssss');
 wr('ssssssssssssssss2');
             //不在预售时间范围内 数据不用更新
             if ($this->nowTime < $time_start1 || $this->nowTime > $time_end1) return false;
-
+wr('ssssssssssssssss');
             $opentimestamp    = cache($cacheDataKey);
             wr("广西快三下期开奖时间：".date('Y-m-d H:i:s',$opentimestamp)."\n");
             //未到开奖时间数据不更新
