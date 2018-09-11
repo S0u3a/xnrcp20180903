@@ -1020,7 +1020,10 @@ if(!function_exists('hk6OddsMoney'))
 					$orderOdds[]	= $oo;
 				}
     		}
-        }elseif (in_array($tag,['99-5-1','99-5-2','99-5-3','99-5-4','99-5-5','99-5-6'])) {//正码1-6
+        }elseif (in_array($tag,['99-2-1'])) {
+        	wr([$odds,$price,$winBets]);
+        }
+        elseif (in_array($tag,['99-5-1','99-5-2','99-5-3','99-5-4','99-5-5','99-5-6'])) {//正码1-6
         	$ops  = ['单','双','大','小','合单','合双','合大','合小','尾大','尾小','红波','绿波','蓝波'];
         	$ops  = array_flip($ops);
         	$oo   = 0;
@@ -1240,10 +1243,8 @@ if(!function_exists('hk6OddsMoney'))
 			}
         }
         else{
-        	wr([$odds,$price,$winBets]);
         	$money 			+= $odds*$price*$winBets;
         	$orderOdds[]	= $odds;
-        	wr("ssssssss=9==1=".$tag);
         }
 
         return [sprintf("%.3f",$money),(!empty($orderOdds) ? implode(',',$orderOdds) : '')];
