@@ -1071,6 +1071,7 @@ class Lottery extends Base
             $this->saveLottery(model($table_name),$limit_time,$cacheDataKey);
             break;
         case 105:
+        wr('ssssssssssssssss');
             //广西快三 09:38-22:28 78期 10分钟一开
             $time_start1      = $this->format_lottery_limit('09:38:00');
             $time_end1        = $this->format_lottery_limit('22:28:00');
