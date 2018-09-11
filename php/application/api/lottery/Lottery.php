@@ -140,7 +140,7 @@ wr('sssssssssssssssssss111==100000');
                 $cacheKey       = 'lottery_order_id_create_time_'.$value['id'].$value['create_time'];
                 $cacheVal       = $value['id'].$value['create_time'];
                 $iscache        = cache($cacheKey);
-                if (!empty($iscache) && $iscache == $cacheVal) continue;
+                //if (!empty($iscache) && $iscache == $cacheVal) continue;
                 cache($cacheKey,$cacheVal);
 wr('sssssssssssssssssss111==000000');
                 //执行中奖判断
