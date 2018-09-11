@@ -1083,7 +1083,7 @@ wr('ssssssssssssssss111111111121');
             if ($this->nowTime>$this->format_lottery_limit('02:40:00') && $this->nowTime < $this->format_lottery_limit('09:28:00')) {
                 cache($cacheDataKey,$time_start1 + 60*1);
             }
-
+wr("ssssssssss");
             //不在预售时间范围内 数据不用更新
             if ($this->nowTime < $time_start1 || $this->nowTime > $time_end1) return false;
 
