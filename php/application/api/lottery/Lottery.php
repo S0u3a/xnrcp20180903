@@ -156,8 +156,9 @@ class Lottery extends Base
                 //中奖 计算中奖金额
                 $odds           = '';
                 if ($isWin[0] > 0 && !empty($isWin[1]))
-                {wr('sssssssssssssssssss111==0000001');
+                {
                     $lotteryRule   = $ruleModle->getLotterRule($rules);
+wr('sssssssssssssssssss111==444444');
                     //计算赔率
                     $odds          = $this->calculatingOdds($value,$isWin,$lotteryRule);
                 }else{
@@ -166,7 +167,7 @@ class Lottery extends Base
                     $rate          = config('system_config.agent_fen_rate');
                     $amoney        = !empty($rate) ? $rate*$value['money'] : 0;
                     $aid           = !empty($value['agent_id']) ? $value['agent_id'] : 0;
-                    wr('sssssssssssssssssss111==000000');
+                    
                     if ($aid > 0 && $amoney > 0)
                     {
                         $userModel         = model('user_detail');
@@ -179,12 +180,11 @@ class Lottery extends Base
                         //写日志
                         model('user_account_log')->addAccountLog($aid,$amoney,'代理返佣',1,5);
                     }
-wr('sssssssssssssssssss111==222222');
+
                     //用户没中奖执行三级分销
                     $this->distribution($value['money'],$value['uid']);
-                    wr('sssssssssssssssssss111==33333');
                 }
-wr('sssssssssssssssssss111==444444');
+                
                 //更改订单信息
                 $updataOrder                    = [];
                 $updataOrder['status']          = 3;
