@@ -1003,8 +1003,8 @@ class Lottery extends Base
             break;
         case 100:
             //香港六合彩 不定期开奖 系统设置每天 21:35-22:00查询开奖信息
-            $time_start1      = $this->format_lottery_limit('09:00:00');
-            $time_end1        = $this->format_lottery_limit('23:00:00');
+            $time_start1      = $this->format_lottery_limit('00:00:00');
+            $time_end1        = $this->format_lottery_limit('24:00:00');
             $limit_time       = $this->getLotteryTime();
             $table_name       = 'lottery_hk6';
             $cacheDataKey     = 'updateData_'.$table_name.'_opentimestamp_' . $this->lotteryid;
@@ -1083,10 +1083,10 @@ class Lottery extends Base
             if ($this->nowTime>$this->format_lottery_limit('02:40:00') && $this->nowTime < $this->format_lottery_limit('09:28:00')) {
                 cache($cacheDataKey,$time_start1 + 60*1);
             }
-wr('ssssssssssssssss2');
+
             //不在预售时间范围内 数据不用更新
             if ($this->nowTime < $time_start1 || $this->nowTime > $time_end1) return false;
-wr('ssssssssssssssss');
+
             $opentimestamp    = cache($cacheDataKey);
             wr("广西快三下期开奖时间：".date('Y-m-d H:i:s',$opentimestamp)."\n");
             //未到开奖时间数据不更新
