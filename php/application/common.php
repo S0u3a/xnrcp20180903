@@ -1244,7 +1244,7 @@ if(!function_exists('hk6OddsMoney'))
         }
         else{
         	foreach ($winCode as $key => $value) {
-        		wr($odds[intval($value)]);
+        		wr($odds);
 				$oo 		= isset($odds[intval($value)]) ? $odds[intval($value)] : 0;
 				$orderOdds[]= $oo;
 				$money 		+= $oo*$price*1;
