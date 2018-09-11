@@ -1020,7 +1020,7 @@ if(!function_exists('hk6OddsMoney'))
 					$orderOdds[]	= $oo;
 				}
     		}
-        }elseif (in_array($tag,['99-2-1'])) {
+        }elseif (in_array($tag,['99-2-1','99-3-1'])) {
         	foreach ($winCode as $key => $value) {
         		$wnum 		= intval($value) - 1;
 				$oo 		= isset($odds[$wnum]) ? $odds[$wnum] : 0;
