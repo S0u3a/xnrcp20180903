@@ -1013,7 +1013,7 @@ class Lottery extends Base
             if ($this->nowTime>$this->format_lottery_limit('02:40:00') && $this->nowTime < $this->format_lottery_limit('21:25:00')) {
                 cache($cacheDataKey,$this->format_lottery_limit('21:36:00') + 60*1);
             }
-
+wr('ssssssssssssssss11111111111');
             //不在预售时间范围内 数据不用更新
             if ($this->nowTime < $time_start1 || $this->nowTime > $time_end1) return false;
 
