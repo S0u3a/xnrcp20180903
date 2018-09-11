@@ -158,7 +158,6 @@ class Lottery extends Base
                 if ($isWin[0] > 0 && !empty($isWin[1]))
                 {
                     $lotteryRule   = $ruleModle->getLotterRule($rules);
-wr([$value,$isWin,$lotteryRule]);
                     //计算赔率
                     $odds          = $this->calculatingOdds($value,$isWin,$lotteryRule);
                 }else{
@@ -242,14 +241,14 @@ wr('sssssssssssssssssss111==55555');
             case 99://六合彩
                 $moneyAndOdds       = hk6OddsMoney($tag,$rebate,$lotteryRule,$value['price'],$isWin,0,[],$value);
                 $money              = $moneyAndOdds[0];
-
+wr("ssssssss=99");
                 if ($aid <= 0 || empty($agentOdds)) {
                     $amoney  = 0;
                 }else{
                     $moneyAndOdds   = hk6OddsMoney($tag,$rebate,$lotteryRule,$value['price'],$isWin,$aid,$agentOdds,$value);
                     $amoney         = $moneyAndOdds[0];
                 }
-
+wr("ssssssss=994");
                 $umoney      = ($money-$amoney)*1;
                 break;
             case 102://快3
