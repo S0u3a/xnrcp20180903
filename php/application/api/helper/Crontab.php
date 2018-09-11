@@ -265,7 +265,7 @@ class Crontab extends Base
     public function openPrize()
     {
         $lottery        = new \app\api\lottery\Lottery(0);
-        $lottery->openPrize();wr('sssssssssssssssssss');
+        $lottery->openPrize();
         return true;
     }
 

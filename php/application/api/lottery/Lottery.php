@@ -125,7 +125,7 @@ class Lottery extends Base
                 $lottery_table      = '';
                 if (isset($this->lotteryConfig['lottery_tag'][$value['lottery_id']])) {
                     $lottery_table  = $this->lotteryConfig['lottery_tag'][$value['lottery_id']];
-                }else{
+                }else{wr('sssssssssssssssssss111');
                     continue;
                 }
 
