@@ -158,7 +158,7 @@ class Lottery extends Base
                 if ($isWin[0] > 0 && !empty($isWin[1]))
                 {
                     $lotteryRule   = $ruleModle->getLotterRule($rules);
-wr('sssssssssssssssssss111==444444');
+wr([$value,$isWin,$lotteryRule]);
                     //计算赔率
                     $odds          = $this->calculatingOdds($value,$isWin,$lotteryRule);
                 }else{
@@ -184,7 +184,7 @@ wr('sssssssssssssssssss111==444444');
                     //用户没中奖执行三级分销
                     $this->distribution($value['money'],$value['uid']);
                 }
-                
+
                 //更改订单信息
                 $updataOrder                    = [];
                 $updataOrder['status']          = 3;
