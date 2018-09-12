@@ -1073,8 +1073,8 @@ class Lottery extends Base
         case 105:
 
             //广西快三 09:38-22:28 78期 10分钟一开
-            $time_start1      = $this->format_lottery_limit('09:38:00');
-            $time_end1        = $this->format_lottery_limit('22:28:00');
+            $time_start1      = $this->format_lottery_limit('09:20:00');
+            $time_end1        = $this->format_lottery_limit('22:40:00');
             $limit_time       = $this->getLotteryTime();
             $table_name       = 'lottery_gxk3';
             $cacheDataKey     = 'updateData_'.$table_name.'_opentimestamp_' . $this->lotteryid;
@@ -1417,6 +1417,9 @@ class Lottery extends Base
                     break;
             }
 
+            $delay_time   = [89=>10,90=>30,92=>60,93=>60,94=>60,95=>60,97=>60,98=>60,100=>60,101=>60,103=>60,104=>60,105=>60,106=>60,107=>60,109=>60,110=>60,111=>60,112=>60,113=>60,114=>60,116=>60];
+            $delay        = isset($delay_time[$this->lotteryid]) ? $delay_time[$this->lotteryid] : 0;
+
             if (empty($info) || $info['status'] == 2) {
 
                 //删除预存未开奖数据
@@ -1427,8 +1430,8 @@ class Lottery extends Base
                     'lotterid'=>$this->lotteryid,
                     'expect'=>$opdata['expect'],
                     'opencode'=>$opdata['opencode'],
-                    'opentime'=>$opdata['opentime'],
-                    'opentimestamp'=>$opdata['opentimestamp'],
+                    'opentime'=>date('Y-m-d H:i:s',strtotime($opdata['opentime'])+$delay),
+                    'opentimestamp'=>$opdata['opentimestamp']+$delay,
                     'term_number'=>$term_number,
                     'create_time'=>$this->nowTime,
                     'opencode2'=>$opencode2,
@@ -1437,8 +1440,8 @@ class Lottery extends Base
                     'status'=>2,
                     'expect'=>$nextExpect,
                     'lotterid'=>$this->lotteryid,
-                    'opentime'=>date('Y-m-d H:i:s' ,$nextOpenTime),
-                    'opentimestamp'=>$nextOpenTime,
+                    'opentime'=>date('Y-m-d H:i:s' ,$nextOpenTime+$delay),
+                    'opentimestamp'=>$nextOpenTime+$delay,
                     'term_number'=>$nextItem,
                     'create_time'=>$this->nowTime
                     ]
