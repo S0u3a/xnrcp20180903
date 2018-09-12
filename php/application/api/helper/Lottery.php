@@ -801,7 +801,7 @@ class Lottery extends Base
 
         if ($bets[0] <= 0) return $LotteryRule->getError();
         //if ($bets[0] >= 22000) return ['Code' => '200016', 'Msg'=>lang('200016')];
-        wr(['sss3==','info1.txt');
+        wr(['sss3=='],'info1.txt');
         $betsData                = [];
         $betsData['num5']        = $num5;
         $betsData['num4']        = $num4;
@@ -809,9 +809,9 @@ class Lottery extends Base
         $betsData['num2']        = $num2;
         $betsData['num1']        = $num1;
         $betsData['bets']        = $bets;
-        wr(['sss1==','info1.txt');
+        wr(['sss1=='],'info1.txt');
         cache($cacheKey,$betsData);
-        wr(['sss2==','info1.txt');
+        wr(['sss2=='],'info1.txt');
         return ['Code' => '000000', 'Msg'=>lang('000000'),'Data'=>['id'=>$bets[0]]];
     }
 
