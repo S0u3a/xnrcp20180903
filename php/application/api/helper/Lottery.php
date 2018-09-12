@@ -798,7 +798,7 @@ class Lottery extends Base
 
         //计算用户下注数
         $bets                = $LotteryRule->getLotteryBetNumber($lottery_rule,$num5,$num4,$num3,$num2,$num1);
-        wr([$bets[0],$lottery_rule],'info1.txt');
+
         if ($bets[0] <= 0) return $LotteryRule->getError();
         //if ($bets[0] >= 22000) return ['Code' => '200016', 'Msg'=>lang('200016')];
 
@@ -809,9 +809,9 @@ class Lottery extends Base
         $betsData['num2']        = $num2;
         $betsData['num1']        = $num1;
         $betsData['bets']        = $bets;
-
+        wr(['sss1==','info1.txt');
         cache($cacheKey,$betsData);
-
+        wr(['sss2==','info1.txt');
         return ['Code' => '000000', 'Msg'=>lang('000000'),'Data'=>['id'=>$bets[0]]];
     }
 
