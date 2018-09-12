@@ -377,7 +377,6 @@ class PermutationCombination extends Base
             
         }
         
-        wr([$CN,$star],'info1.txt');
         return [$CN,$C];
     }
 
