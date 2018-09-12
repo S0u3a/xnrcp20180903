@@ -337,7 +337,7 @@ class PermutationCombination extends Base
             $CN         *= count($nums[$i]);
         }
         
-        wr([$num5,$num4,$num3,$num2,$num1,$star],'info1.txt');
+        wr([$CN,$star],'info1.txt');
         $C              = [];
         if($CN > 0){
             switch ($star) {
