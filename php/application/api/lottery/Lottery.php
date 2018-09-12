@@ -1395,7 +1395,13 @@ class Lottery extends Base
                     }else{
 
                         if (isset($lastItem[$this->lotteryid]) && $lastItem[$this->lotteryid]<= $item) {
-                            $nextExpect           = substr(date('Ymd'),0,8) . '001';
+                            //最后一期 快三
+                            if (in_array($this->lotteryid,[103,104,105,106,107])) {
+                                $nextExpect           = substr(date('Ymd',time()+6*3600),0,8) . '001';
+                            }else{
+                                $nextExpect           = substr(date('Ymd'),0,8) . '001';
+                            }
+
                             $nextItem             = substr($nextExpect,-4);
                         }else{
                             $tempNum              = intval(substr($expect,-4))+1;
