@@ -399,7 +399,7 @@ class PermutationCombination extends Base
     public function star_zuxuan($num5 = '',$num=0,$type = 0)
     {
         if (strlen($num5)<=0 || $num <= 0)  return [0,[]];
-
+        wr([$num5 ,$num,$type]);
         $num5       = explode(',',$num5);
         //去重
         $num5       = array_flip(array_flip($num5));
