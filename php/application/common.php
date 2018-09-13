@@ -1020,7 +1020,9 @@ if(!function_exists('hk6OddsMoney'))
 						$money 			+= $oo*$price*1;
 						$orderOdds[]	= $oo;
     				}else{
-    					$money 			+= $price*1;
+    					if ($value != '和局') {
+    						$money 			+= $price*1;
+    					}
     				}
 				}
     		}else{
@@ -1078,7 +1080,11 @@ if(!function_exists('hk6OddsMoney'))
 				$money 			+= $ooo*$price*1;
 				$orderOdds[]	= $ooo;
         	}
-        }else if (in_array($tag,['99-8-1','99-8-2','99-8-3','99-8-4'])) {
+        }elseif (in_array($tag,['99-7-3'])) {
+
+        	print_r([$odds,$winCode]);exit;
+        }
+        else if (in_array($tag,['99-8-1','99-8-2','99-8-3','99-8-4'])) {
         	$ops  = ['鼠','牛','虎','兔','龙','蛇','马','羊','猴','鸡','狗','猪'];
         	$ops  = array_flip($ops);
         	$oo   = 0;
