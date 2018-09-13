@@ -1456,16 +1456,26 @@ class LotteryWin extends Base
 
                     //特串必须一个号码在正码中，一个必须在特码中
                     if ($pos == 1) {
-                        $ok     = ($temp1 == 1 && $temp2 == 1) ? true : false;
-                    }else{
-                        $ok     = ($temp1+$temp2) == 2 ? true : false;
-                    }
 
-                    if ($ok) {
-                        $win++;
-                        $wincode[$scode] = $scode .'|' . $temp1.'#' . $temp2;
+                        $ok     = ($temp1 == 1 && $temp2 == 1) ? true : false;
+                        if ($ok) {
+                            $win++;
+                            $wincode[$scode] = $scode;
+                        }
+                    }else{
+
+                        //中一个特码 一个正码
+                        if ($temp1 == 1 && $temp2 == 1) {
+                            $win++;
+                            $wincode[$scode] = $scode .'|' . $temp1.'#3';
+                        }
+
+                        //中二个正码
+                        if ($temp1 == 2 && $temp2 == 0) {
+                            $win++;
+                            $wincode[$scode] = $scode .'|' . $temp1.'#2';
+                        }
                     }
-                    
                 }
                 break;
             case 9:
