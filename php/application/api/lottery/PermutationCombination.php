@@ -399,7 +399,7 @@ class PermutationCombination extends Base
     public function star_zuxuan($num5 = '',$num=0,$type = 0)
     {
         if (strlen($num5)<=0 || $num <= 0)  return [0,[]];
-        wr([$num5 ,$num,$type]);
+
         $num5       = explode(',',$num5);
         //去重
         $num5       = array_flip(array_flip($num5));
@@ -987,7 +987,7 @@ class PermutationCombination extends Base
         if (empty($num5))  return [0,[]];
         $C        = explode(',',$num5);
         $CN       = 0;
-        $op       = ['单','双','大','小','合单','合双','合大','合小','尾大','尾','红波','绿波','蓝波'];
+        $op       = ['单','双','大','小','合单','合双','合大','合小','尾大','尾小','红波','绿波','蓝波'];
         foreach ($C as $key => $value) {
             if ( !empty($value) && in_array($value,$op)) $CN ++;
         }
