@@ -1311,15 +1311,34 @@ class LotteryWin extends Base
             case 1:
                 $lm         = $this->liangmian($zm,$tm);
                 //首先判断是否和局
-                if (in_array('和局',$lm)) return [1,['和局'=>'和局']];
-
-                foreach ($select_code as $key => $value)
-                {
-                    $scode          = $value[0];
-                    if (in_array($scode,$lm))
+                if (in_array('和局',$lm)){
+                    //如果出现和局 只有总单 总双 总大  总小不能和局 
+                    foreach ($select_code as $key => $value)
                     {
-                        $win++;
-                        $wincode[$scode] = $scode;
+                        $scode          = $value[0];
+                        if (in_array($scode,['总单','总双','总大','总小'])) {
+                            if (in_array($scode,$lm))
+                            {
+                                $win++;
+                                $wincode[$scode] = $scode;
+                            }
+                        }else{
+                            $win++;
+                            $wincode[$scode] = $scode;
+                        }
+                        
+                        $wincode['和局'] = '和局';
+                    }
+                }else{
+                    //如果没有出现和局 按正常中奖规则计算
+                    foreach ($select_code as $key => $value)
+                    {
+                        $scode          = $value[0];
+                        if (in_array($scode,$lm))
+                        {
+                            $win++;
+                            $wincode[$scode] = $scode;
+                        }
                     }
                 }
                 break;
@@ -1762,18 +1781,16 @@ class LotteryWin extends Base
         //特码
         $tm1    = substr($tm,0,1);
         $tm2    = substr($tm,1,1);
-        if ($tm != 49) {
-            $lm[]   = intval($tm)%2 == 0  ? '特双' : '特单';
-            $lm[]   = (intval($tm) >= 25 && intval($tm) <= 48)  ? '特大' : '特小';
 
-            $tmh    = $tm1*1+$tm2*1;
-            $lm[]   = $tmh>= 7 ? '特合大' : '特合小';
-            $lm[]   = $tmh%2 == 0  ? '特合双' : '特合单';
-            $lm[]   = intval($tm2)>= 5 && intval($tm2)<=9 ? '特尾大' : '特尾小';
+        $lm[]   = intval($tm)%2 == 0  ? '特双' : '特单';
+        $lm[]   = (intval($tm) >= 25 && intval($tm) <= 49)  ? '特大' : '特小';
 
-        }else{
-            $lm[]   = '和局';
-        }
+        $tmh    = $tm1*1+$tm2*1;
+        $lm[]   = $tmh>= 7 ? '特合大' : '特合小';
+        $lm[]   = $tmh%2 == 0  ? '特合双' : '特合单';
+        $lm[]   = intval($tm2)>= 5 && intval($tm2)<=9 ? '特尾大' : '特尾小';
+
+        if ($tm == 49 ) $lm[]   = '和局';
 
         //正码
         $zmh        = $zm[0]+$zm[1]+$zm[2]+$zm[3]+$zm[4]+$zm[5];
@@ -1799,9 +1816,6 @@ class LotteryWin extends Base
         if (in_array($tm,$this->shengxiao('野兽'))) {
             $lm[]       = '特野肖';
         }
-
-        /*$sx1     = ['鼠','牛','虎','兔','龙','蛇','马','羊','猴','鸡','狗','猪'];
-        $sx2     = ['野兽','家禽','单','双','前肖','后肖','天肖','地肖'];*/
 
         return $lm;
     }

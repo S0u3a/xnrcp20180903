@@ -1007,13 +1007,24 @@ if(!function_exists('hk6OddsMoney'))
     	$odds           		= $ocount>=2 ? getOddsRebates(0,$odds) : getOddsRebate(0,$odds,0);
     	$orderOdds 				= [];
 
+    	$ops  = ['特单','特双','特大','特小','特合单','特合双','特合大','特合小','特尾大','特尾小','特天肖','特地肖','特前肖','特后肖','特家肖','特野肖','总单','总双','总大','总小'];
+    	$ops  = array_flip($ops);
+    	$oo   = 0;
+
     	if (in_array($tag,['99-1-1'])) {//两面
     		if (in_array('和局',$winCode)) {
-    			$money 		= $orderinfo['money'];
+    			//除了 总单 总双 总大  总小 之外 其余全部退回
+    			foreach ($winCode as $key => $value) {
+    				if (in_array($value,['总单','总双','总大','总小'])) {
+						$oo 			= isset($ops[$value])?(isset($odds[$ops[$value]])?$odds[$ops[$value]]:0):0;
+						$money 			+= $oo*$price*1;
+						$orderOdds[]	= $oo;
+    				}else{
+    					$money 			+= $price*1;
+    				}
+				}
     		}else{
-    			$ops  = ['特单','特双','特大','特小','特合单','特合双','特合大','特合小','特尾大','特尾小','特天肖','特地肖','特前肖','特后肖','特家肖','特野肖','总单','总双','总大','总小'];
-	        	$ops  = array_flip($ops);
-	        	$oo   = 0;
+    			
 				foreach ($winCode as $key => $value) {
 					$oo 			= isset($ops[$value])?(isset($odds[$ops[$value]])?$odds[$ops[$value]]:0):0;
 					$money 			+= $oo*$price*1;
@@ -1248,7 +1259,6 @@ if(!function_exists('hk6OddsMoney'))
 			}
         }
         else{
-        	wr([$tag,$odds,$price,$winBets,$winCode]);
         	$money 			+= $odds*$price*$winBets;
         	$orderOdds[]	= $odds;
         }
