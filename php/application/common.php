@@ -1146,7 +1146,18 @@ if(!function_exists('hk6OddsMoney'))
 				$orderOdds[]	= $minOdds;
 			}
 
-        }else if (in_array($tag,['99-10-1','99-10-2','99-10-3'])) {
+        }elseif (in_array($tag,['99-10-1'])) {
+        	$ops  = ['鼠','牛','虎','兔','龙','蛇','马','羊','猴','鸡','狗','猪'];
+        	$ops  = array_flip($ops);
+        	$oo   = 0;
+        	foreach ($winCode as $key => $value) {
+        		$sx 			= explode('#',$value);
+				$oo 			= isset($ops[$sx[0]])?(isset($odds[$ops[$sx[0]]])?$odds[$ops[$sx[0]]]:0):0;
+				$money 			+= $price * ($oo-1)*$sx[1] + $price;//本金*（赔率-1）*中奖次数+本金
+				$orderOdds[]	= ($oo-1);
+			}
+        }
+        else if (in_array($tag,['99-10-2','99-10-3'])) {
         	$ops  = ['鼠','牛','虎','兔','龙','蛇','马','羊','猴','鸡','狗','猪'];
         	$ops  = array_flip($ops);
         	$oo   = 0;

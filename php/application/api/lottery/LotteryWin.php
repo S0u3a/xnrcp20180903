@@ -1560,14 +1560,15 @@ class LotteryWin extends Base
                     foreach ($opcode as $kk => $vv) {
                         if (in_array($vv,$sx)){
                             $temp ++;
-                            break;
+                            //如果不是生肖-正肖 跳出
+                            if ($pos != 1) break;
                         }
                     }
 
                     if ($temp >=1)
                     {
                         $win++;
-                        $wincode[$scode] = $scode;
+                        $wincode[$scode] = $pos != 1 ? $scode : $scode.'#'.$temp;
                     }
                 }
                 break;
