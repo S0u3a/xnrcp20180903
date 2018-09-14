@@ -1467,13 +1467,13 @@ class LotteryWin extends Base
                         //中一个特码 一个正码
                         if ($temp1 == 1 && $temp2 == 1) {
                             $win++;
-                            $wincode[$scode] = $scode .'|' . $temp1.'#3';
+                            $wincode[$scode] = $scode .'|' . $temp1.'#2';
                         }
 
                         //中二个正码
                         if ($temp1 == 2 && $temp2 == 0) {
                             $win++;
-                            $wincode[$scode] = $scode .'|' . $temp1.'#2';
+                            $wincode[$scode] = $scode .'|' . $temp1.'#3';
                         }
                     }
                 }
