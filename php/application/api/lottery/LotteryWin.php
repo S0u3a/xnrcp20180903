@@ -1599,6 +1599,24 @@ class LotteryWin extends Base
                 }
                 break;
             //14合肖预留
+            case 14:
+                $sx1        = ['鼠','牛','虎','兔','龙','蛇','马','羊','猴','鸡','狗','猪'];
+                $sx2        = '';
+
+                foreach ($sx1 as $sv) {
+                    $sx     = $this->shengxiao($sv);
+                    if (in_array($tm,$sx)){
+                        $sx2 = $sv;
+                        //continue;
+                    }
+                }
+   
+                $select_code    = !empty($select_code) ? explode(',',$select_code) : [];
+                if (in_array($sx2,$select_code)) {
+                    $win++;
+                    $wincode[$sx2] = $sx2.'#'.implode(',',$select_code);
+                }
+                break;
             case 15:
                 if ($tm == 49) {
                     $win++;

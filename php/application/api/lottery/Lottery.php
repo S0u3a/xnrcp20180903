@@ -695,8 +695,8 @@ class Lottery extends Base
                 return $LotteryWin->win_hk6($opencode,$select_code,12,3);break;
             case '99-10-4'://生肖-生肖-总肖
                 return $LotteryWin->win_hk6($opencode,$select_code,13);break;
-            /*case '99-11-1'://合肖-合肖-合肖
-                return $LotteryWin->win_k3($opencode,$select_code,1);break;*/
+            case '99-11-1'://合肖-合肖-合肖
+                return $LotteryWin->win_hk6($opencode,$select_code,14);break;
             case '99-12-1'://色波-色波-三色波
                 return $LotteryWin->win_hk6($opencode,$select_code,15);break;
             case '99-12-2'://色波-色波-半波
