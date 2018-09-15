@@ -890,7 +890,7 @@ if(!function_exists('sscOddsMoney'))
 		$ocount 				= count(explode(',',$odds));
     	$odds           		= $ocount>=2 ? getOddsRebates(0,$odds) : getOddsRebate(0,$odds,0);
     	$orderOdds 				= [];
-
+print_r([$tag]);exit();
         if (in_array($tag,['88-1-3','88-11-3','88-11-10']))
         {
             if (!empty($winCode)) {
