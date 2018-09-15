@@ -1652,10 +1652,8 @@ class LotteryWin extends Base
                     $scode1[]   = $value[0];
                 }
 
-                print_r($scode1);exit();
-                $t          = 0;
-                if ($op == '和局' && !in_array($op, $scode1)) {
-
+                if ($op == '和局' && in_array($op, $scode1)) {
+                    $t          = 0;
                     foreach ($select_code as $key => $value)
                     {
                         $scode      = $value[0];
@@ -1671,6 +1669,9 @@ class LotteryWin extends Base
 
                     $win++;
                     $wincode['和局1'] = '和局1#'.$t;
+                }else if ($op == '和局' && !in_array($op, $scode1)) {
+                    $win++;
+                    $wincode['和局1'] = '和局1#'.count($select_code);
                 }else{
                     foreach ($select_code as $key => $value)
                     {
@@ -1683,6 +1684,7 @@ class LotteryWin extends Base
                         }
                     }
                 }
+                print_r($wincode);exit();
                 break;
             case 17:
                 $op     = [];
