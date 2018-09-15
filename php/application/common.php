@@ -916,6 +916,42 @@ if(!function_exists('sscOddsMoney'))
 				$orderOdds[]	= $oo;
 			}
         }
+        elseif (in_array($tag,['88-8-1','88-8-2','88-8-3','88-8-4','88-8-5','88-8-6'])) {
+        	$ops  = ['大','小','单','双'];
+        	$ops  = array_flip($ops);
+        	$oo   = 0;
+
+        	foreach ($winCode as $key => $value) {
+				$oo 			= isset($ops[$value])?(isset($odds[$ops[$value]])?$odds[$ops[$value]]:0):0;
+				$money 			+= $oo*$price*1*$winBets;
+				$orderOdds[]	= $oo;
+			}
+        }
+        elseif (in_array($tag,['88-9-1','88-9-2','88-9-3'])) {
+        	$ops  = ['豹子','顺子','对子','半顺','杂六'];
+        	$ops  = array_flip($ops);
+        	$oo   = 0;
+
+        	foreach ($winCode as $key => $value) {
+				$oo 			= isset($ops[$value])?(isset($odds[$ops[$value]])?$odds[$ops[$value]]:0):0;
+				$money 			+= $oo*$price*1*$winBets;
+				$orderOdds[]	= $oo;
+			}
+        }
+        elseif (in_array($tag,['88-10-1'])) {
+        	$ops  = ['牛牛','牛九','牛八','牛七','牛六','牛五','牛四','牛三','牛二','牛一','无牛'];
+        	$ops  = array_flip($ops);
+        	$oo   = 0;
+
+        	foreach ($winCode as $key => $value) {
+				$oo 			= isset($ops[$value])?(isset($odds[$ops[$value]])?$odds[$ops[$value]]:0):0;
+				$money 			+= $oo*$price*1*$winBets;
+				$orderOdds[]	= $oo;
+			}
+        }
+        elseif (in_array($tag,['88-8-7'])) {
+        	exit；
+        }
         elseif (in_array($tag,['88-12-8','88-12-24','88-12-16']))
         {
             if (!empty($winCode)) {
