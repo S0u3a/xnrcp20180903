@@ -1219,7 +1219,6 @@ if(!function_exists('hk6OddsMoney'))
 					$money 			+= $oo*$price*1;
 					$orderOdds[]	= $oo;
 				}
-				print_r([$orderOdds,$money]);exit();
     		}
         }else if (in_array($tag,['99-12-3'])) {
         	$ops  = ['红大单','红大双','红小单','红小双','绿大单','绿大双','绿小单','绿小双','蓝大单','蓝大双','蓝小单','蓝小双'];
