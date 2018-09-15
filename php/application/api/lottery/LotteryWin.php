@@ -1684,7 +1684,6 @@ class LotteryWin extends Base
                         }
                     }
                 }
-                print_r($wincode);exit();
                 break;
             case 17:
                 $op     = [];
