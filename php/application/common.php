@@ -1141,7 +1141,7 @@ if(!function_exists('hk6OddsMoney'))
         		}
 
         		//找出最小赔率
-        		$minOdds 		= min($winOdds);
+        		$minOdds 		= max($winOdds);
 				$money 			+= $minOdds*$price*1;
 				$orderOdds[]	= $minOdds;
 			}
