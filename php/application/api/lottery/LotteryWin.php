@@ -857,9 +857,9 @@ class LotteryWin extends Base
 
                     $n4     = [$n1,$n2,$n3];
                     sort($n4);
-print_r([$value,$n4]);exit();
+//print_r([$value,$n4]);exit();
                     $oldVal = implode(',',[$n1,$n2,$n3]);
-                    if (!empty($n4) && $n4 === $opencode)
+                    if (!empty($n4) && $n4 == $opencode)
                     {
                         $win++;
                         $wincode[$oldVal] = $oldVal;
