@@ -915,8 +915,6 @@ if(!function_exists('sscOddsMoney'))
 				$money 			+= $oo*$price*1*$winBets;
 				$orderOdds[]	= $oo;
 			}
-
-			print_r([$orderOdds,$money]);exit();
         }
         elseif (in_array($tag,['88-12-8','88-12-24','88-12-16']))
         {
