@@ -225,6 +225,7 @@ class Lottery extends Base
                 $moneyAndOdds       = sscOddsMoney($tag,$rebate,$lotteryRule,$value['price'],$isWin);
                 $money              = $moneyAndOdds[0];
                 $umoney             = $money;
+                print_r($money);exit();
                 break;
             case 96://PK拾
                 $moneyAndOdds       = pk10OddsMoney($tag,$rebate,$lotteryRule,$value['price'],$isWin);
