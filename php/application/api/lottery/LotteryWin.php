@@ -847,14 +847,19 @@ class LotteryWin extends Base
 
             case 4:
                 // ===修改标记===
+                sort($opencode);
+
                 foreach ($select_code as $key => $value)
                 {   
                     $n1     = substr($value[0],0,1);
                     $n2     = substr($value[0],1,1);
                     $n3     = intval($value[1]);
 
+                    $n4     = [$n1,$n2,$n3];
+                    sort($n4);
+
                     $oldVal = implode(',',[$n1,$n2,$n3]);
-                    if (in_array($n1,$opencode)&&in_array($n2,$opencode)&&in_array($n3,$opencode))
+                    if (!empty($n4) && $n4 === $opencode)
                     {
                         $win++;
                         $wincode[$oldVal] = $oldVal;
