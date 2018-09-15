@@ -1651,9 +1651,25 @@ class LotteryWin extends Base
                 {
                     $scode1[]   = $value[0];
                 }
+
+                $t          = 0;
                 if ($op == '和局' && !in_array($op, $scode1)) {
+
+                    foreach ($select_code as $key => $value)
+                    {
+                        $scode      = $value[0];
+
+                        if ($op == $scode)
+                        {
+                            $win++;
+                            $wincode[$scode] = $scode;
+                        }else{
+                            $t ++;
+                        }
+                    }
+
                     $win++;
-                    $wincode['和局1'] = '和局1';
+                    $wincode['和局1'] = '和局1#'.$t;
                 }else{
                     foreach ($select_code as $key => $value)
                     {
