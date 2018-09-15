@@ -1246,15 +1246,14 @@ if(!function_exists('hk6OddsMoney'))
         			$hnum1 			= explode('#', $value);
         			$hnum2 			= isset($hnum1[1]) ? $hnum1[1] : 0;
         			$money 			+= $hnum2 * $orderinfo['price'];
-        			break;
         		}else{
 					$oo 			= isset($ops[$value])?(isset($odds[$ops[$value]])?$odds[$ops[$value]]:0):0;
 					$money 			+= $oo*$price;
 					$orderOdds[]	= $oo;
 				}
+			}
 
 				print_r([$money,$orderOdds]);exit();
-			}
         }
         else if (in_array($tag,['99-13-1'])) {
         	$ops  = ['头0','头1','头2','头3','头4','尾5','尾6','尾7','尾8','尾9','尾10','尾11','尾12','尾13','尾14'];
