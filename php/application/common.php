@@ -1215,14 +1215,11 @@ if(!function_exists('hk6OddsMoney'))
 	        	$oo   = [];
 
 	        	foreach ($winCode as $key => $value) {
-					$oo[] 		= isset($ops[$value])?(isset($odds[$ops[$value]])?$odds[$ops[$value]]:0):0;
+					$oo 			= isset($ops[$value])?(isset($odds[$ops[$value]])?$odds[$ops[$value]]:0):0;
+					$money 			+= $oo*$price*1*$winBets;
+					$orderOdds[]	= $oo;
 				}
-				print_r($oo);exit();
-				//取较大赔率为计算赔率
-				sort($oo);
-				$ooo 			= $oo[count($oo)-1];
-				$money 			+= $ooo*$price*1*$winBets;
-				$orderOdds[]	= $ooo;
+				print_r([$orderOdds,$money]);exit();
     		}
         }else if (in_array($tag,['99-12-3'])) {
         	$ops  = ['红大单','红大双','红小单','红小双','绿大单','绿大双','绿小单','绿小双','蓝大单','蓝大双','蓝小单','蓝小双'];
