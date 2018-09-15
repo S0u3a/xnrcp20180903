@@ -573,7 +573,7 @@ class LotteryWin extends Base
         $wincode            = [];
         $win                = 0;
 
-        $lhhs               = ['龙'=>1,'虎'=>2,'和'=>3]
+        $lhhs               = ['龙'=>1,'虎'=>2,'和'=>3];
 
         foreach ($select_code as $key => $value)
         {
