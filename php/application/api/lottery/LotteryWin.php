@@ -1652,6 +1652,7 @@ class LotteryWin extends Base
                     $scode1[]   = $value[0];
                 }
 
+                print_r($scode1);exit();
                 $t          = 0;
                 if ($op == '和局' && !in_array($op, $scode1)) {
 
