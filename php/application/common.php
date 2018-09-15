@@ -1285,8 +1285,6 @@ if(!function_exists('hk6OddsMoney'))
 				$money 			+= $oo*$price*1;
 				$orderOdds[]	= $oo;
 			}
-
-			print_r([$ops,$odds]);exit();
         }
         else if (in_array($tag,['99-14-2'])) {
         	$ops  = ['金','木','水','火','土'];
