@@ -899,7 +899,7 @@ if(!function_exists('sscOddsMoney'))
 	                for ($i=$vv; $i > 0; $i--) {
 	                	$oo 			= $odds[(count($odds)-$i)];
 	                    $money 			+= $oo*$price*1;
-        				$orderOdds[]	= $oo;
+        				$orderOdds[$oo]	= $oo;
 	                }
 	            }
             }
