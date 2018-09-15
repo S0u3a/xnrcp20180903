@@ -1693,7 +1693,8 @@ class LotteryWin extends Base
                     $op[]       = '头'.$tm1;
                     $op[]       = '尾'.$tm2;
                 }else{
-                    foreach ($zm as $zv) $op[]       = '尾'.(substr($zv,1,1));
+                    $zt         =array_merge($zm,[$tm]);
+                    foreach ($zt as $zv) $op[]       = '尾'.(substr($zv,1,1));
                 }
 
                 foreach ($select_code as $key => $value)
