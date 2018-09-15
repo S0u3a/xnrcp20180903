@@ -583,7 +583,7 @@ class LotteryWin extends Base
                 $wincode[] = $value[0];
             }
         }
-        
+
         //wr([$win,$wincode,$opencode1,$select_code]);
         return [$win,$wincode];
     }
@@ -637,10 +637,11 @@ class LotteryWin extends Base
                 }
             }
         }else{
+            $dxds   = ['大'=>1,'小'=>2,'单'=>3,'双'=>4];
             foreach ($select_code as $key => $value)
             {
                 $dxds       = $this->dxds($nn,$type);
-                if (in_array(intval($value[0]),$dxds))
+                if (in_array(intval($dxds[$value[0]]),$dxds))
                 {
                     $win++;
                     $wincode[] = $value[0];
@@ -697,10 +698,11 @@ class LotteryWin extends Base
         $wincode            = [];
         $win                = 0;
         $tt                 = $this->tsh($tsh);
+        $tshs               = ['豹子'=>1,'顺子'=>2,'对子'=>3,'半顺'=>4,'杂六'=>5];
 
         foreach ($select_code as $key => $value)
         {
-            if ($tt == intval($value[0])) {
+            if ($tt == intval($tshs[$value[0]])) {
                 $win++;
                 $wincode[] = $value[0];
             }
@@ -752,10 +754,11 @@ class LotteryWin extends Base
 
         $NiuNiuGameHelper   = new \xnrcms\NiuNiuGameHelper();
         $nn                 = $NiuNiuGameHelper->JudgeCowCow($num);
+        $nns                = ['牛牛'=>10,'牛九'=>9,'牛八'=>8,'牛七'=>7,'牛六'=>6,'牛五'=>5,'牛四'=>4,'牛三'=>3,'牛二',=>2'牛一'=>1,'无牛'=>0];
 
         foreach ($select_code as $key => $value)
         {
-           if ($nn == intval($value[0])) {
+           if ($nn == intval($nns[$value[0]])) {
                 $win++;
                 $wincode[] = $value[0];
             }
