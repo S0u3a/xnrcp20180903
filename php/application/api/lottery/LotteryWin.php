@@ -581,7 +581,7 @@ class LotteryWin extends Base
                 $wincode[] = $value[0];
             }
         }
-        print_r($wincode);exit();
+        print_r([$wincode,$select_code]);exit();
         //wr([$win,$wincode,$opencode1,$select_code]);
         return [$win,$wincode];
     }
