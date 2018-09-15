@@ -768,7 +768,7 @@ class Lottery extends Base
     {
         //主表数据库模型
         $dbModel                = model($this->mainTable);
-
+wr($parame);
         //数据ID
         $id                 = isset($parame['lotteryid']) ? intval($parame['lotteryid']) : 0;
         if ($id <= 0) return ['Code' => '200001', 'Msg'=>lang('200001')];
@@ -809,7 +809,7 @@ class Lottery extends Base
         $betsData['num2']        = $num2;
         $betsData['num1']        = $num1;
         $betsData['bets']        = $bets;
-        wr($betsData);
+        
         cache($cacheKey,$betsData);
         
         return ['Code' => '000000', 'Msg'=>lang('000000'),'Data'=>['id'=>$bets[0]]];
