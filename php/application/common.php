@@ -1240,16 +1240,20 @@ if(!function_exists('hk6OddsMoney'))
         	$ops  = ['红波','蓝波','绿波','和局'];
         	$ops  = array_flip($ops);
         	$oo   = 0;
-        	print_r($winCode);exit();
+
         	foreach ($winCode as $key => $value) {
-        		if ($value == '和局1') {
-        			$money 		= $orderinfo['money'];
+        		if ($key == '和局1') {
+        			$hnum1 			= explode('#', $value);
+        			$hnum2 			= isset($hnum1[1]) ? $hnum1[1] : 0;
+        			$money 			+= $hnum2 * $orderinfo['price'];
         			break;
         		}else{
 					$oo 			= isset($ops[$value])?(isset($odds[$ops[$value]])?$odds[$ops[$value]]:0):0;
 					$money 			+= $oo*$price*1*$winBets;
 					$orderOdds[]	= $oo;
 				}
+
+				print_r([$money,$orderOdds]);exit();
 			}
         }
         else if (in_array($tag,['99-13-1'])) {
