@@ -250,8 +250,6 @@ class Lottery extends Base
                 }
 
                 $umoney      = ($money-$amoney)*1;
-
-                print_r([$money,$isWin,$tag]);exit();
                 break;
             case 102://快3
                 $moneyAndOdds       = oneOddsMoney($tag,$rebate,$lotteryRule,$value['price'],$isWin);
