@@ -904,8 +904,7 @@ if(!function_exists('sscOddsMoney'))
 	            }
             }
 
-
-            print_r([$money,$orderOdds,$winCode,$tag]);exit();
+            //print_r([$money,$orderOdds,$winCode,$tag]);exit();
         }
         /*elseif (in_array($tag,['88-3-1'])) {
         	
