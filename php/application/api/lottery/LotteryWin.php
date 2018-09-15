@@ -857,7 +857,7 @@ class LotteryWin extends Base
 
                     $n4     = [$n1,$n2,$n3];
                     sort($n4);
-//print_r([$value,$n4]);exit();
+
                     $oldVal = implode(',',[$n1,$n2,$n3]);
                     if (!empty($n4) && $n4 == $opencode)
                     {
@@ -865,36 +865,7 @@ class LotteryWin extends Base
                         $wincode[$oldVal] = $oldVal;
                     }
                 }
-                print_r([$wincode,$opencode,$select_code]);exit();
-                //根据玩法,判断开奖号码是否属于ABB或AAB形式,如不是,则直接不用判断,一律不中奖
-                $is_effective = 0;  //是否符合开奖条件[0:不符合  1:符合]
-                if($opencode[0] == $opencode[1] && $opencode[0] != $opencode[2]){
-                    $is_effective = 1;
-                }
 
-                if($opencode[0] == $opencode[2] && $opencode[0] != $opencode[1]){
-                    $is_effective = 2;
-                }
-
-                if($opencode[1] == $opencode[2] && $opencode[0] != $opencode[1]){
-                    $is_effective = 3;
-                }
-
-                if($is_effective >= 1){
-                    foreach ($select_code as $key => $value)
-                    {   
-                        $n1     = substr($value[0],0,1);
-                        $n2     = substr($value[0],1,1);
-                        $n3     = intval($value[1]);
-
-                        $oldVal = implode(',',[$n1,$n2,$n3]);
-                        if (in_array($n1,$opencode)&&in_array($n2,$opencode)&&in_array($n3,$opencode))
-                        {
-                            $win++;
-                            $wincode[$oldVal] = $oldVal;
-                        }
-                    }
-                }
                 break;
             case 5:
                 foreach ($select_code as $key => $value)
