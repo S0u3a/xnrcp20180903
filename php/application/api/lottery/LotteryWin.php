@@ -265,6 +265,7 @@ class LotteryWin extends Base
         $wincode            = [];
         $win                = 0;
         $star               = $star-1;
+        print_r($select_code);exit();
         foreach ($select_code as $key => $value) {
             for ($i=$star; $i >= 0; $i--) {
                 if (isset($value[$i]) && isset($opencode[$i])) {
