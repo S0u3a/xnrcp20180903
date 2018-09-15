@@ -905,7 +905,7 @@ if(!function_exists('sscOddsMoney'))
             }
 
         }
-        elseif (in_array($tag,['88-7-1'])) {
+        elseif (in_array($tag,['88-7-1','88-7-2','88-7-3','88-7-4','88-7-5','88-7-6','88-7-7','88-7-8','88-7-9','88-7-10'])) {
         	$ops  = ['龙','虎','和'];
         	$ops  = array_flip($ops);
         	$oo   = 0;
