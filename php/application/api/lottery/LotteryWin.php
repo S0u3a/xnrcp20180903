@@ -575,7 +575,7 @@ class LotteryWin extends Base
 
         foreach ($select_code as $key => $value)
         {
-            
+            print_r($value[0]);
             if ($this->lhh($nn[$type][0],$nn[$type][1]) == $value[0]) {
                 $win++;
                 $wincode[] = $value[0];
