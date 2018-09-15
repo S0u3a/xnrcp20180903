@@ -1252,8 +1252,6 @@ if(!function_exists('hk6OddsMoney'))
 					$orderOdds[]	= $oo;
 				}
 			}
-
-				print_r([$money,$orderOdds]);exit();
         }
         else if (in_array($tag,['99-13-1'])) {
         	$ops  = ['头0','头1','头2','头3','头4','尾5','尾6','尾7','尾8','尾9','尾10','尾11','尾12','尾13','尾14'];
