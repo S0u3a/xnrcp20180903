@@ -950,7 +950,7 @@ if(!function_exists('sscOddsMoney'))
 			}
         }
         elseif (in_array($tag,['88-8-7'])) {
-        	exit；
+        	exit;
         }
         elseif (in_array($tag,['88-12-8','88-12-24','88-12-16']))
         {
