@@ -1217,7 +1217,7 @@ if(!function_exists('hk6OddsMoney'))
 	        	foreach ($winCode as $key => $value) {
 					$oo[] 		= isset($ops[$value])?(isset($odds[$ops[$value]])?$odds[$ops[$value]]:0):0;
 				}
-
+				print_r($oo);exit();
 				//取较大赔率为计算赔率
 				sort($oo);
 				$ooo 			= $oo[count($oo)-1];
