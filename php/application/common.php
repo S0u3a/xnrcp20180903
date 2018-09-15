@@ -890,7 +890,7 @@ if(!function_exists('sscOddsMoney'))
 		$ocount 				= count(explode(',',$odds));
     	$odds           		= $ocount>=2 ? getOddsRebates(0,$odds) : getOddsRebate(0,$odds,0);
     	$orderOdds 				= [];
-print_r([$tag]);exit();
+
         if (in_array($tag,['88-1-3','88-11-3','88-11-10']))
         {
             if (!empty($winCode)) {
@@ -905,9 +905,19 @@ print_r([$tag]);exit();
             }
 
         }
-        /*elseif (in_array($tag,['88-3-1'])) {
-        	
-        }*/
+        elseif (in_array($tag,['88-7-1'])) {
+        	$ops  = ['龙','虎','和'];
+        	$ops  = array_flip($ops);
+        	$oo   = 0;
+
+        	foreach ($winCode as $key => $value) {
+				$oo 			= isset($ops[$value])?(isset($odds[$ops[$value]])?$odds[$ops[$value]]:0):0;
+				$money 			+= $oo*$price*1*$winBets;
+				$orderOdds[]	= $oo;
+			}
+
+			print_r([$orderOdds,$money]);exit();
+        }
         elseif (in_array($tag,['88-12-8','88-12-24','88-12-16']))
         {
             if (!empty($winCode)) {
