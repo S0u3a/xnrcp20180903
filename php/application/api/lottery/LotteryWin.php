@@ -573,10 +573,12 @@ class LotteryWin extends Base
         $wincode            = [];
         $win                = 0;
 
+        $lhhs               = ['龙'=>1,'虎'=>2,'和'=>3]
+
         foreach ($select_code as $key => $value)
         {
-            print_r($value[0]);
-            if ($this->lhh($nn[$type][0],$nn[$type][1]) == $value[0]) {
+            $lhnum          = $lhhs[$value[0]];
+            if ($this->lhh($nn[$type][0],$nn[$type][1]) == $lhnum) {
                 $win++;
                 $wincode[] = $value[0];
             }
