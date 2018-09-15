@@ -1240,7 +1240,7 @@ if(!function_exists('hk6OddsMoney'))
         	$ops  = ['红波','蓝波','绿波','和局'];
         	$ops  = array_flip($ops);
         	$oo   = 0;
-
+        	print_r($winCode);exit();
         	foreach ($winCode as $key => $value) {
         		if ($value == '和局1') {
         			$money 		= $orderinfo['money'];
