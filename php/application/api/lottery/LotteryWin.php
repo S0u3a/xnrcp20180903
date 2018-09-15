@@ -858,7 +858,6 @@ class LotteryWin extends Base
                     $n4     = [$n1,$n2,$n3];
                     sort($n4);
 
-                    print_r([$n4,$opencode]);exit();
                     $oldVal = implode(',',[$n1,$n2,$n3]);
                     if (!empty($n4) && $n4 === $opencode)
                     {
@@ -866,7 +865,7 @@ class LotteryWin extends Base
                         $wincode[$oldVal] = $oldVal;
                     }
                 }
-                
+                print_r([$wincode,$opencode,$select_code]);exit();
                 //根据玩法,判断开奖号码是否属于ABB或AAB形式,如不是,则直接不用判断,一律不中奖
                 $is_effective = 0;  //是否符合开奖条件[0:不符合  1:符合]
                 if($opencode[0] == $opencode[1] && $opencode[0] != $opencode[2]){
