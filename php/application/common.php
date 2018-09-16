@@ -960,7 +960,6 @@ if(!function_exists('sscOddsMoney'))
 
         		$orderOdds[]	= $oo;
         	}
-        	exit;
         }
         elseif (in_array($tag,['88-12-8','88-12-24','88-12-16']))
         {
