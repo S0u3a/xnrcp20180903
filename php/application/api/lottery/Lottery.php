@@ -157,7 +157,7 @@ class Lottery extends Base
                 $odds           = '';
                 $win_umoney     = 0;
                 $win_amoney     = 0;
-
+wr($isWin);
                 if ($isWin[0] > 0 && !empty($isWin[1]))
                 {
                     $lotteryRule   = $ruleModle->getLotterRule($rules);
