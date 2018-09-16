@@ -644,7 +644,7 @@ class LotteryWin extends Base
         }else{
             $dxds   = ['大'=>1,'小'=>2,'单'=>3,'双'=>4];
             foreach ($select_code as $key => $value)
-            {
+            {wr($value);
                 $dxds       = $this->dxds($nn,$type);
                 if (in_array(intval($dxds[$value[0]]),$dxds))
                 {
