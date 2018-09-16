@@ -138,9 +138,9 @@ class Lottery extends Base
 
                 //防止多次执行
                 $cacheKey       = 'lottery_order_id_create_time_'.$value['id'].$value['create_time'];
-                $cacheVal       = $value['id'].$value['create_time'];wr($cacheKey);
+                $cacheVal       = $value['id'].$value['create_time'];
                 $iscache        = cache($cacheKey);
-                if (!empty($iscache) && $iscache == $cacheVal) continue;
+                ////if (!empty($iscache) && $iscache == $cacheVal) continue;
                 cache($cacheKey,$cacheVal);
 
                 //执行中奖判断
