@@ -135,12 +135,12 @@ class Lottery extends Base
                 if (empty($lotteryInfo) || empty($lotteryInfo['opencode']) || $lotteryInfo['opentimestamp'] >= time()){
                     continue;
                 }
-
+                
                 //防止多次执行
                 $cacheKey       = 'lottery_order_id_create_time_'.$value['id'].$value['create_time'];
                 $cacheVal       = $value['id'].$value['create_time'];
                 $iscache        = cache($cacheKey);
-                ////if (!empty($iscache) && $iscache == $cacheVal) continue;
+                if (!empty($iscache) && $iscache == $cacheVal) continue;
                 cache($cacheKey,$cacheVal);
 
                 //执行中奖判断
@@ -157,7 +157,7 @@ class Lottery extends Base
                 $odds           = '';
                 $win_umoney     = 0;
                 $win_amoney     = 0;
-wr($isWin);
+                
                 if ($isWin[0] > 0 && !empty($isWin[1]))
                 {
                     $lotteryRule   = $ruleModle->getLotterRule($rules);
