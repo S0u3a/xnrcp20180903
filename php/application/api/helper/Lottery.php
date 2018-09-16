@@ -1156,7 +1156,7 @@ class Lottery extends Base
                 if ($v['status'] == 1) {
                     $wins               = "未支付";
                 }else{
-                    $wins               = $v['status'] == 2 ? '未开奖' : ($v['iswin'] == 1 ? '已中奖' : '未中奖');
+                    $wins               = $v['status'] == 2 ? '待开奖' : ($v['iswin'] == 1 ? '中奖'.$v['win_umoney'] ."元" : '未中奖');
                 }
                 
                 $data[$k]['wins']       = $wins;
