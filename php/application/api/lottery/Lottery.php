@@ -135,7 +135,7 @@ class Lottery extends Base
                 if (empty($lotteryInfo) || empty($lotteryInfo['opencode']) || $lotteryInfo['opentimestamp'] >= time()){
                     continue;
                 }
-                
+
                 //防止多次执行
                 $cacheKey       = 'lottery_order_id_create_time_'.$value['id'].$value['create_time'];
                 $cacheVal       = $value['id'].$value['create_time'];
@@ -157,7 +157,7 @@ class Lottery extends Base
                 $odds           = '';
                 $win_umoney     = 0;
                 $win_amoney     = 0;
-                
+
                 if ($isWin[0] > 0 && !empty($isWin[1]))
                 {
                     $lotteryRule   = $ruleModle->getLotterRule($rules);
@@ -309,9 +309,10 @@ class Lottery extends Base
             //代理存在 需要分给代理一部分佣金 (时时彩不考虑代理)
             if ($aid > 0 && $amoney > 0)
             {   
-                $agentinfo         = $userModel->getOneByUid($aid);
-                $data              = [];
-                $data['account']   = $agentinfo['account']+$amoney;
+                $agentinfo              = $userModel->getOneByUid($aid);
+                $data                   = [];
+                $data['account']        = $agentinfo['account']+$amoney;
+                $data['cash_money']     = $agentinfo['cash_money']+$amoney;
                 $userModel->updateById($agentinfo['id'],$data);
                 $userModel->delDetailDataCacheByUid($aid);
 
@@ -323,6 +324,7 @@ class Lottery extends Base
         $userinfo              = $userModel->getOneByUid($value['uid']);
         $data                  = [];
         $data['account']       = $userinfo['account']+$umoney;
+        $data['cash_money']    = $userinfo['cash_money']+$umoney;
         $userModel->updateById($userinfo['id'],$data);
         $userModel->delDetailDataCacheByUid($value['uid']);
         

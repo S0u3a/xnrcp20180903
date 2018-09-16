@@ -400,7 +400,7 @@ class Bank extends Base
         $user_bank              = $dbModel->getOneById($isbind);
         
         //判断余额是否足够
-        if ($userinfo['account']<$cash_money)
+        if ($userinfo['cash_mony']<$cash_money || $userinfo['account']<$cash_money)
         return ['Code' => '200006', 'Msg'=>lang('200006')];
         
         //入库提现记录
@@ -418,8 +418,9 @@ class Bank extends Base
         $res                        = model('bank_cash')->addData($saveData);
         if ($res) {
             //减少金额
-            $data               = [];
-            $data['account']    = $userinfo['account']-$cash_money;
+            $data                   = [];
+            $data['account']        = $userinfo['account']-$cash_money;
+            $data['cash_money']     = $userinfo['cash_money']-$cash_money;
             $userModel->updateById($userinfo['id'],$data);
             $userModel->delDetailDataCacheByUid($userinfo['uid']);
             
