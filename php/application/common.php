@@ -927,7 +927,7 @@ if(!function_exists('sscOddsMoney'))
 				$orderOdds[]	= $oo;
 			}
 
-			print_r([$money,$orderOdds]);exit();
+			print_r([$money,$orderOdds,$odds]);exit();
         }
         elseif (in_array($tag,['88-9-1','88-9-2','88-9-3'])) {
         	$ops  = ['豹子','顺子','对子','半顺','杂六'];
