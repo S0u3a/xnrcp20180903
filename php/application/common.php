@@ -921,7 +921,7 @@ if(!function_exists('sscOddsMoney'))
 				$money 			+= $odds*$price;
 			}
 
-			$orderOdds[]	= $oo;
+			$orderOdds[]	= $odds;
 
 			print_r([$money,$orderOdds,$odds]);exit();
         }
