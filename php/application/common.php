@@ -917,15 +917,11 @@ if(!function_exists('sscOddsMoney'))
 			}
         }
         elseif (in_array($tag,['88-8-1','88-8-2','88-8-3','88-8-4','88-8-5','88-8-6'])) {
-        	$ops  = ['大','小','单','双'];
-        	$ops  = array_flip($ops);
-        	$oo   = 0;
-
         	foreach ($winCode as $key => $value) {
-				$oo 			= isset($ops[$value])?(isset($odds[$ops[$value]])?$odds[$ops[$value]]:0):0;
-				$money 			+= $oo*$price*1*$winBets;
-				$orderOdds[]	= $oo;
+				$money 			+= $odds*$price;
 			}
+
+			$orderOdds[]	= $oo;
 
 			print_r([$money,$orderOdds,$odds]);exit();
         }
