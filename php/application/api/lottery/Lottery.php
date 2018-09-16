@@ -155,11 +155,18 @@ class Lottery extends Base
                 }*/
                 //中奖 计算中奖金额
                 $odds           = '';
+                $win_umoney     = 0;
+                $win_amoney     = 0;
+                
                 if ($isWin[0] > 0 && !empty($isWin[1]))
                 {
                     $lotteryRule   = $ruleModle->getLotterRule($rules);
                     //计算赔率
-                    $odds          = $this->calculatingOdds($value,$isWin,$lotteryRule);
+                    $winData          = $this->calculatingOdds($value,$isWin,$lotteryRule);
+
+                    $odds             = isset($winData[0]) ? $winData[0] : '';
+                    $win_umoney       = isset($winData[1]) ? $winData[1] : 0;
+                    $win_amoney       = isset($winData[2]) ? $winData[2] : 0;
                 }else{
 
                     //没中奖 如果有代理 代理拿用户投注金额百分比
@@ -188,6 +195,8 @@ class Lottery extends Base
                 $updataOrder                    = [];
                 $updataOrder['status']          = 3;
                 $updataOrder['win_bets']        = $isWin[0];
+                $updataOrder['win_umoney']      = $win_umoney;
+                $updataOrder['win_amoney']      = $win_amoney;
                 $updataOrder['expect']          = $lotteryInfo['expect'];
                 $updataOrder['opencode']        = $opencode;
                 $updataOrder['odds']            = $odds;
@@ -290,10 +299,10 @@ class Lottery extends Base
                 
                 $umoney      = ($money-$amoney)*1;
                 break;
-            default: return true;break;
+            default: return [];break;
         }
 
-        if ($money <= 0 || $umoney <= 0)  return true;
+        if ($money <= 0 || $umoney <= 0)  return [];
 
         if (in_array($pid,[96,99,102,108,115]))
         {
@@ -321,7 +330,7 @@ class Lottery extends Base
         model('user_account_log')->addAccountLog($value['uid'],$umoney,'彩票中奖',1,4);
 
         $odds                   = isset($moneyAndOdds[1]) ? $moneyAndOdds[1] : '';
-        return $odds;
+        return [$odds,$money,$umoney];
     }
 
     public function winningPrize($opencode,$opentimestamp,$rules,$select_code)
