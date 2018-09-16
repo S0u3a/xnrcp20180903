@@ -400,7 +400,7 @@ class Bank extends Base
         $user_bank              = $dbModel->getOneById($isbind);
         
         //判断余额是否足够
-        if ($userinfo['cash_mony']<$cash_money || $userinfo['account']<$cash_money)
+        if ($userinfo['cash_money']<$cash_money || $userinfo['account']<$cash_money)
         return ['Code' => '200006', 'Msg'=>lang('200006')];
         
         //入库提现记录
