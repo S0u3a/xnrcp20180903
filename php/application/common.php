@@ -950,6 +950,16 @@ if(!function_exists('sscOddsMoney'))
 			}
         }
         elseif (in_array($tag,['88-8-7'])) {
+        	if (!empty($winCode)) {
+	            foreach ($winCode as $kk => $vv)
+	            {
+	            	$winCode1 		= explode(',',$vv);
+	            	$oo 			= pow($odds, count($winCode1));
+	                $money 			+= $oo*$price*1;
+	            }
+
+        		$orderOdds[]	= $oo;
+        	}
         	exit;
         }
         elseif (in_array($tag,['88-12-8','88-12-24','88-12-16']))
@@ -1303,7 +1313,7 @@ if(!function_exists('hk6OddsMoney'))
         	$ops  = array_flip($ops);
         	$oo   = 0;
 
-        	foreach ($winCode as $key => $value) {
+        	foreach ($wiCnode as $key => $value) {
         		$oo 			= isset($ops[$value])?(isset($odds[$ops[$value]])?$odds[$ops[$value]]:0):0;
 				$money 			+= $oo*$price*1;
 				$orderOdds[]	= $oo;

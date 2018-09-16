@@ -613,17 +613,22 @@ class LotteryWin extends Base
 
             $PermutationCombination = new \app\api\lottery\PermutationCombination();
             $permutation = $PermutationCombination->star_zhix_fs($select_code[0],$select_code[1],$select_code[2],$select_code[3],$select_code[4],5);
-            
+
+            $dxdsarr                   = ['大'=>1,'小'=>2,'单'=>3,'双'=>4];
+
             if (isset($permutation[1]) && !empty($permutation[1])) {
                 foreach ($permutation[1] as $kk => $vv) {
                     $ok     = true;
                     $code   = [];
                     foreach ($vv as $kkk => $vvv) {
-                        $code[$kkk]  = $vvv == 8 ? '' : $vvv;
-                        if (intval($vvv) == 8) continue;
-                        
+
+                        $code[$kkk]  = /*$vvv == 8 ? '' :*/ $vvv;
+                        //if (intval($vvv) == 8) continue;
+
+                        $dxdxNum    = $dxdsarr[$vvv];
+                    
                         $dxds       = $this->dxds($nn,$kkk+2);
-                        if (!in_array(intval($vvv),$dxds))
+                        if (!in_array(intval($dxdxNum),$dxds))
                         {
                             $ok = false;
                             break;
@@ -754,7 +759,7 @@ class LotteryWin extends Base
 
         $NiuNiuGameHelper   = new \xnrcms\NiuNiuGameHelper();
         $nn                 = $NiuNiuGameHelper->JudgeCowCow($num);
-        $nns                = ['牛牛'=>10,'牛九'=>9,'牛八'=>8,'牛七'=>7,'牛六'=>6,'牛五'=>5,'牛四'=>4,'牛三'=>3,'牛二',=>2'牛一'=>1,'无牛'=>0];
+        $nns                = ['牛牛'=>10,'牛九'=>9,'牛八'=>8,'牛七'=>7,'牛六'=>6,'牛五'=>5,'牛四'=>4,'牛三'=>3,'牛二'=>2,'牛一'=>1,'无牛'=>0];
 
         foreach ($select_code as $key => $value)
         {
