@@ -759,8 +759,8 @@ class LotteryWin extends Base
 
         $NiuNiuGameHelper   = new \xnrcms\NiuNiuGameHelper();
         $nn                 = $NiuNiuGameHelper->JudgeCowCow($num);
-        $nns                = ['牛牛'=>10,'牛九'=>9,'牛八'=>8,'牛七'=>7,'牛六'=>6,'牛五'=>5,'牛四'=>4,'牛三'=>3,'牛二'=>2,'牛一'=>1,'无牛'=>0];
-print_r([$select_code,$nn]);exit();
+        $nns                = ['牛牛'=>10,'牛九'=>9,'牛八'=>8,'牛七'=>7,'牛六'=>6,'牛五'=>5,'牛四'=>4,'牛三'=>3,'牛二'=>2,'牛一'=>1,'无牛'=>-1];
+
         foreach ($select_code as $key => $value)
         {
            if ($nn == intval($nns[$value[0]])) {
@@ -768,7 +768,7 @@ print_r([$select_code,$nn]);exit();
                 $wincode[] = $value[0];
             }
         }
-
+print_r([$wincode,$nn]);exit();
         //wr([$win,$wincode,$opencode1,$select_code]);
         return [$win,$wincode];
     }
