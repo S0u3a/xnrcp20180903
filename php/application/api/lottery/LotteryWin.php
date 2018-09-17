@@ -47,11 +47,10 @@ class LotteryWin extends Base
         $opencode1          = $opencode;//1,2,3,4,5
         $subnum0            = [5=>-9,4=>-7,3=>-5,2=>-3];
         $subnum1            = [5=>9,4=>7,3=>5,2=>3];
-
         switch ($pos) {
             case 0: $opencode           = substr($opencode,$subnum0[$star]);break;
             case 1: $opencode           = substr($opencode,0,$subnum1[$star]);break;
-            case 2: $opencode           = substr($opencode,1,$star);break;
+            case 2: $opencode           = substr($opencode,2,$subnum1[$star]);break;
             default: return [0,[]];break;
         }
 
