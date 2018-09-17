@@ -76,11 +76,11 @@ class Pay extends Base
             return ['Code' => '200001', 'Msg'=>lang('200001')];
 
             //支付方式为银联支付时需要校验银行是否存在
-            if ($paytype == 3) {
+            /*if ($paytype == 3) {
                 $banktag    = isset($parame['banktag']) ? trim($parame['banktag']) : '';
                 $bank       = $this->bankInfo($banktag);
                 if (empty($bank)) return ['Code' => '200003', 'Msg'=>lang('200003')];
-            }
+            }*/
 
             //订单编号
             $order_sn               = date('ymdHis',time()).substr(time(),-6).randomString(5,0) ;
@@ -91,7 +91,7 @@ class Pay extends Base
             $order_type             = 1 ;
             $uid                    = $parame['uid'];
 
-$fee = 0.02;
+            $fee = 0.02;
 
             $extend                 = [] ;
             $extend['order_sn']     = $order_sn;
@@ -167,40 +167,27 @@ $fee = 0.02;
                     return ['Code'=>'10000','Msg'=>$exception->errorMessage()] ;
                 }
                 break ;
-            case 3:
+            case 3://泰佳科技-聚合通道 H5订单交易接口<微信v1.0>
                 try{
                     //获取配置
-                    $config = config('pay.sslpayment');
+                    $config                     = config('pay.sslpayment');
 
-                    if (empty($config)) return ['Code' => '200002', 'Msg'=>lang('200002')];
+                    //获取配置
+                    $payData                    = [];
+                    $payData['TrCode']          = '4005';
+                    $payData['InstNo']          = $config['InstNo'];
+                    $payData['MchtNo']          = $config['MchtNo'];
+                    $payData['ReturnURL']       = $config['ReturnURL'];
+                    $payData['OrderNo']         = $order_sn;
+                    $payData['OrderAmount']     = $fee;
+                    $payData['Rsv']             = '';
+                    $payData['Mac']             = md5($payData['InstNo'].$payData['OrderNo'].$config['SignKey']);
 
-                    $MerNo          = $config['MerNo'];
-                    $MD5key         = $config['MD5key'];
-                    $Amount         = $fee;// 订单金额，**单位：元**
-                    $BillNo         = $order_sn;
-                    $ReturnURL      = request()->domain().'/api/Crontab/paySuccess/pay_type/3/return_param/'.urlsafe_b64encode(json_encode($extend));
-                    $MD5info        = getSignature($MerNo, $BillNo, $Amount, $ReturnURL, $MD5key);
-                    $NotifyURL      = '';
-                    $PaymentType    = $banktag;
-                    $PayType        = "CSPAY";//CSPAY:个人网银; B2BPAY:企业网银
+                    $url                        = 'http://www.bfhnj.top:8080/TopWeb/HLCNL/HLpay.do';
+                    $res                        = CurlHttp($url,json_encode($payData),'POST');
 
-                    
-
-                    $url        = 'https://www.95epay.cn/sslpayment';
-                    $payInfo = '<form action="'.$url.'" method="post" id="sslpayment">
-<input type="hidden" name="MerNo" value="'.$MerNo.'">
-<input type="hidden" name="BillNo" value="'.$BillNo.'">
-<input type="hidden" name="Amount" value="'.$Amount.'">
-<input type="hidden" name="PayType" value="'.$PayType.'">
-<input type="hidden" name="PaymentType" value="'.$PaymentType.'">
-<input type="hidden" name="ReturnURL" value="'.$ReturnURL.'">
-<input type="hidden" name="NotifyURL" value="'.$NotifyURL.'">
-<input type="hidden" name="MD5info" value="'.$MD5info.'">
-<input type="hidden" name="MerRemark" value="'.$body.'">
-<input type="hidden" name="products" value="'.$attach.'">
-</form>';
-
-                    return ['Code' => '000000','Msg'=>lang('000000'),'Data'=>['alipay'=>$payInfo,'wxpay'=>[]]];
+                    wr($res);
+                    return ['Code' => '000000','Msg'=>lang('000000'),'Data'=>['alipay'=>'','wxpay'=>[]]];
 
                 }catch (PayException $exception){
                     return ['Code'=>'10000','Msg'=>$exception->errorMessage()] ;
