@@ -83,7 +83,7 @@ class Pay extends Base
             }*/
 
             //订单编号
-            $order_sn               = date('ymdHis',time()).substr(time(),-6).randomString(5,0) ;
+            $order_sn               = date('ymdHis',time())/*.randomString(5,0)*/ ;
 
             $body                   = '充值订单' ;
             $attach                 = '充值订单' ;
@@ -91,9 +91,9 @@ class Pay extends Base
             $order_type             = 1 ;
             $uid                    = $parame['uid'];
 
-            $fee = 0.02;
+            //$fee = 50;
 
-            $extend                 = [] ;
+            $extend                  = [] ;
             $extend['order_sn']     = $order_sn;
             $extend['money']        = $fee;
             $extend['order_type']   = $order_type;
@@ -180,14 +180,25 @@ class Pay extends Base
                     $payData['ReturnURL']       = $config['ReturnURL'];
                     $payData['OrderNo']         = $order_sn;
                     $payData['OrderAmount']     = $fee;
-                    $payData['Rsv']             = '';
-                    $payData['Mac']             = md5($payData['InstNo'].$payData['OrderNo'].$config['SignKey']);
+                    $payData['Rsv']             = '0';
+                    $mac                        = md5($config['InstNo'].$payData['OrderNo'].$config['SignKey']);
+                    $payData['Mac']             = strtoupper($mac);
 
                     $url                        = 'http://www.bfhnj.top:8080/TopWeb/HLCNL/HLpay.do';
-                    $res                        = CurlHttp($url,json_encode($payData),'POST');
+                    $payInfo                    = CurlHttp($url,$payData,'POST');
 
-                    wr($res);
-                    return ['Code' => '000000','Msg'=>lang('000000'),'Data'=>['alipay'=>'','wxpay'=>[]]];
+                    $payInfo                    = !empty($payInfo) ? json_decode($payInfo,true) : '';
+                    if (isset($payInfo['PayUrl']) && !empty($payInfo['PayUrl'])) {
+                        
+                        $qrcode     = new \xnrcms\QRcode();
+                        $filename   = './uploads/payqrcode/'. $mac . '.png';
+                        $qrcode->png($payInfo['PayUrl'],$filename,'L',6);
+
+                        $path       = trim(get_domain(),'/') . trim($filename,'.');
+                        return ['Code' => '000000','Msg'=>lang('000000'),'Data'=>['alipay'=>$path,'wxpay'=>[]]];
+                    }
+
+                    return ['Code' => '200004', 'Msg'=>lang('200004')];break ;
 
                 }catch (PayException $exception){
                     return ['Code'=>'10000','Msg'=>$exception->errorMessage()] ;

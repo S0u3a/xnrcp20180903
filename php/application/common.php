@@ -332,7 +332,7 @@ function CurlHttp($url,$body='',$method='DELETE',$headers=array()){
 	$ci=curl_init();
 	/* Curl settings */
 	curl_setopt($ci,CURLOPT_HTTP_VERSION,CURL_HTTP_VERSION_1_0);
-	curl_setopt($ci,CURLOPT_USERAGENT,'toqi.net');
+	//curl_setopt($ci,CURLOPT_USERAGENT,'toqi.net');
 	curl_setopt($ci,CURLOPT_CONNECTTIMEOUT,30);
 	curl_setopt($ci,CURLOPT_TIMEOUT,30);
 	curl_setopt($ci,CURLOPT_RETURNTRANSFER,TRUE);
@@ -343,7 +343,7 @@ function CurlHttp($url,$body='',$method='DELETE',$headers=array()){
 		case 'POST':
 			curl_setopt($ci,CURLOPT_POST,TRUE);
 			if(!empty($body)){
-				curl_setopt($ci,CURLOPT_POSTFIELDS,$body);
+				curl_setopt($ci,CURLOPT_POSTFIELDS,http_build_query($body));
 			}
 			break;
 		case 'DELETE':
