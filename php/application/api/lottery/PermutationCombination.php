@@ -937,10 +937,15 @@ class PermutationCombination extends Base
         }
     }
 
-    public function tx_k3($type=0)
+    public function tx_k3($num5,$type=0)
     {   
+        if (empty($num5) || !in_array($type,[0,1]))  return [0,[]];
+
         $C[0]          = [111,222,333,444,555,666];
         $C[1]          = [123,234,345,456];
+
+        if ($num5 != implode(',',$C[$type])) return [0,[]];
+
         $CN            = 1;
         return [$CN,$C[$type]];
     }

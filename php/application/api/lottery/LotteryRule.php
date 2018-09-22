@@ -527,9 +527,9 @@ class LotteryRule extends Base
             case '102-4-1'://三同号-三同号单选-三同号单选
                 $permutation    = $PermutationCombination->star_zuxuan($num5,1);break;
             case '102-4-2'://三同号-三同号通选-三同号通选
-                $permutation    = $PermutationCombination->tx_k3(0);break;
+                $permutation    = $PermutationCombination->tx_k3($num5,0);break;
             case '102-5-1'://三连号-三连号通选-三连号通选
-                $permutation    = $PermutationCombination->tx_k3(1);break;
+                $permutation    = $PermutationCombination->tx_k3($num5,1);break;
 
             //11选5
             case '108-1-1'://三码-前三直选-复式
