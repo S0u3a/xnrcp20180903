@@ -286,6 +286,21 @@ class Lottery extends Base
 
     /*api:d2a8a5f4ff6cde000cbc13a019cfb436*/
 
+    /*api:e357d94342d157266372ce935ef96cf9*/
+    /**
+     * 小赔率列表
+     * @access public
+     * @param  [array] $parame 扩展参数
+     * @return [json]          接口数据输出
+    */
+    public function ruleList($parame = []){
+
+        //执行接口调用
+        return $this->execApi($parame);
+    }
+
+    /*api:e357d94342d157266372ce935ef96cf9*/
+
     /*接口扩展*/
 
     

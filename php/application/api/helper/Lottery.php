@@ -752,7 +752,7 @@ class Lottery extends Base
             $rules['odds2']      = $odds['odds2'];
             $rules['rebate']     = 0.13;
         }
-
+        wr($rules);
         return ['Code' => '000000', 'Msg'=>lang('000000'),'Data'=>$rules];
     }
 
@@ -1235,6 +1235,47 @@ class Lottery extends Base
     }
 
     /*api:d2a8a5f4ff6cde000cbc13a019cfb436*/
+
+    /*api:e357d94342d157266372ce935ef96cf9*/
+    /**
+     * * 小赔率列表
+     * @param  [array] $parame 接口参数
+     * @return [array]         接口输出数据
+     */
+    private function ruleList($parame)
+    {
+        //主表数据库模型
+        $dbModel                = model($this->mainTable);
+
+        //自行书写业务逻辑代码
+        if (!in_array($parame['dtype'],[1,2,3])) 
+        return ['Code' => '200018', 'Msg'=>lang('200018')];
+
+        $rules[1] = ['99-7-1','99-7-2','99-7-3','99-7-4','99-7-5','99-7-6'];
+        $rules[2] = ['99-9-1','99-9-2','99-9-3','99-9-4','99-9-5','99-9-6','99-9-7','99-9-8'];
+        $rules[3] = ['99-15-1','99-15-2','99-15-3','99-15-4','99-15-5','99-15-6'];
+
+        $lists          = [];
+        foreach ($rules[$parame['dtype']] as $key => $value) {
+            $par                = [];
+            $par['uid']         = $parame['uid'];
+            $par['hashid']      = $parame['hashid'];
+            $par['rule_tag']    = $value;
+            
+            $ruleinfo           = $this->ruleinfo($par);
+            if (isset($ruleinfo['Data']) && !empty($ruleinfo['Data'])) {
+                $rinfo          = $ruleinfo['Data'];
+                $odds           = !empty($rinfo['odds2']) ? $rinfo['odds2'] : $rinfo['odds'];
+                $lists[]        = ['id'=>$rinfo['id'],'tag'=>$rinfo['tag'],'odds'=>$odds];
+            }
+        }
+        //需要返回的数据体
+        $Data['lists']                   = $lists;
+
+        return ['Code' => '000000', 'Msg'=>lang('000000'),'Data'=>$lists];
+    }
+
+    /*api:e357d94342d157266372ce935ef96cf9*/
 
     /*接口扩展*/
 
