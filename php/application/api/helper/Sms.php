@@ -84,7 +84,7 @@ class Sms extends Base
         return ['Code' => '200007', 'Msg'=>lang('200007')];
 
         if (empty($this->smsConfig['sms_service_id']) || empty($this->smsConfig['sms_service_access']) || empty($this->smsConfig['sms_service_pass'])) {
-        return ['Code' => '200009', 'Msg'=>lang('200009')];
+            return ['Code' => '200009', 'Msg'=>lang('200009')];
         }
 
         //自行书写业务逻辑代码
@@ -138,8 +138,9 @@ class Sms extends Base
         //根据不同短信服务商集成
         switch ($sms_service) {
             case 1:
-                $res    = $this->sendCodeMovek($mobile,$content,$sms_sign);
-                break;
+                $res    = $this->sendCodeMovek($mobile,$content,$sms_sign);break;
+            case 2:
+                $res    = $this->sendCodeAliyun($mobile,$content,$sms_sign,$code);break;
             default:
                 return ['Code' => '200008', 'Msg'=>lang('200008')];
         }
@@ -270,6 +271,53 @@ class Sms extends Base
         return $val['returnstatus'] == 'Success' ? [true,'ok'] : [false,$val['message']];
     }
 
+    private function sendCodeAliyun($mobile='',$content='',$sign='',$code=0)
+    {
+        $parame                 = [];
+        $security               = false;
+
+        $userid                 = $this->smsConfig['sms_service_id'];
+        $accessKeyId            = $this->smsConfig['sms_service_access'];
+        $accessKeySecret        = $this->smsConfig['sms_service_pass'];
+
+        // fixme 必填: 短信接收号码
+        $parame["PhoneNumbers"] = $mobile;
+
+        // fixme 必填: 短信签名，应严格按"签名名称"填写，请参考: https://dysms.console.aliyun.com/dysms.htm#/develop/sign
+        $parame["SignName"]         = $sign;
+        $parame["TemplateCode"]     = $userid;
+        $parame['TemplateParam']    = [
+            'code'=>$code,
+            'product'=>'您的验证码为：${code}，5分钟内有效，打死也不能告诉别人'
+        ];
+        $parame['OutId']            = "";
+        $parame['SmsUpExtendCode']  = "";
+
+
+        // *** 需用户填写部分结束, 以下代码若无必要无需更改 ***
+        if(!empty($parame["TemplateParam"]) && is_array($parame["TemplateParam"])) {
+            $parame["TemplateParam"] = json_encode($parame["TemplateParam"], JSON_UNESCAPED_UNICODE);
+        }
+
+        // 初始化SignatureHelper实例用于设置参数，签名以及发送请求
+        $helper = new \xnrcms\SignatureHelper();
+
+        // 此处可能会抛出异常，注意catch
+        $content = $helper->request(
+            $accessKeyId,
+            $accessKeySecret,
+            "dysmsapi.aliyuncs.com",
+            array_merge($parame,[
+                "RegionId" => "cn-hangzhou",
+                "Action" => "SendSms",
+                "Version" => "2017-05-25",
+            ]),
+            $security
+        );
+
+        $content        =  json_decode(json_encode( $content),true);
+        return $content['Code'] == 'OK' ? [true,'ok'] : [false,$content['Message']];
+    }
     private function delCode($parame)
     {
         //主表数据库模型

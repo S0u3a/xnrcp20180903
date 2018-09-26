@@ -188,6 +188,7 @@ class Pay extends Base
                     $payInfo                    = CurlHttp($url,$payData,'POST');
 
                     $payInfo                    = !empty($payInfo) ? json_decode($payInfo,true) : '';
+
                     if (isset($payInfo['PayUrl']) && !empty($payInfo['PayUrl'])) {
                         
                         $qrcode     = new \xnrcms\QRcode();
