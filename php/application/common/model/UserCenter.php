@@ -228,11 +228,11 @@ class UserCenter extends Base
 
     private function checkPassword($pass = '')
     {
-        if (empty($pass) || preg_match_all("/^[a-zA-Z\d_~!@#$%^&*()\-_=+{};:<,.>?]{6,16}$/",$pass,$data) < 1)
+        /*if (empty($pass) || preg_match_all("/^[a-zA-Z\d_~!@#$%^&*()\-_=+{};:<,.>?]{6,16}$/",$pass,$data) < 1)
         return -11;
 
         if (preg_match_all("/[`~!@#$%^&*()\-_=+{};:<,.>?]/",$pass,$data) < 1)
-        return -12;
+        return -12;*/
 
         return 0;
     }
