@@ -91,5 +91,20 @@ class Pay extends Base
 
     /*api:3134925f23ab1238e4a57211b7f16e53*/
 
+    /*api:97a96cfbdb3effe2be005c5df98736af*/
+    /**
+     * 提现代付
+     * @access public
+     * @param  [array] $parame 扩展参数
+     * @return [json]          接口数据输出
+    */
+    public function substitute($parame = []){
+
+        //执行接口调用
+        return $this->execApi($parame);
+    }
+
+    /*api:97a96cfbdb3effe2be005c5df98736af*/
+
     /*接口扩展*/
 }

@@ -15,5 +15,30 @@
 {else /}
 	<div style="text-align: center;margin-top: 20px;"><font color="red" size="5">未找到列表模板</font></div>
 {/notempty}
+
+<form action="https://gateway.handpay.cn/hpayTransGatewayWeb/trans/df/transdf.htm" method="post">
+<input type="text" name="insCode" value="{$testPay.insCode}">
+<input type="text" name="insMerchantCode" value="{$testPay.insMerchantCode}">
+<input type="text" name="hpMerCode" value="{$testPay.hpMerCode}">
+<input type="text" name="orderNo" value="{$testPay.orderNo}">
+<input type="text" name="orderDate" value="{$testPay.orderDate}">
+<input type="text" name="orderTime" value="{$testPay.orderTime}">
+<input type="text" name="currencyCode" value="{$testPay.currencyCode}">
+<input type="text" name="orderAmount" value="{$testPay.orderAmount}">
+<input type="text" name="orderType" value="{$testPay.orderType}">
+<input type="text" name="certType" value="{$testPay.certType}">
+<input type="text" name="certNumber" value="{$testPay.certNumber}">
+<input type="text" name="accountType" value="{$testPay.accountType}">
+<input type="text" name="accountName" value="{$testPay.accountName}">
+<input type="text" name="accountNumber" value="{$testPay.accountNumber}">
+<input type="text" name="mainBankName" value="">
+<input type="text" name="mainBankCode" value="">
+<input type="text" name="openBranchBankName" value="">
+<input type="text" name="mobile" value="{$testPay.mobile}">
+<input type="text" name="attach" value="{$testPay.attach}">
+<input type="text" name="nonceStr" value="{$testPay.nonceStr}">
+<input type="text" name="signature" value="{$testPay.signature}">
+<input type="submit" value="实时付款">
+
 </div>
 {/block}

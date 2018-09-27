@@ -111,6 +111,52 @@ class Pay extends Base
 
     /*api:3134925f23ab1238e4a57211b7f16e53*/
 
+    /*api:97a96cfbdb3effe2be005c5df98736af*/
+    /**
+     * * 提现代付
+     * @param  [array] $parame 接口参数
+     * @return [array]         接口输出数据
+     */
+    private function substitute($parame)
+    {
+        $time                       = time();
+        $data                       = [];
+        $data['insCode']            = '80000384';
+        $data['insMerchantCode']    = '887581298600467';
+        $data['hpMerCode']          = 'WKJGWKQTCS@20180813173307';
+        $data['orderNo']            = date('YmdHis',$time) . randomString(6);;
+        $data['orderDate']          = date('Ymd',$time);
+        $data['orderTime']          = date('YmdHis',$time);
+        $data['currencyCode']       = 156;
+        $data['orderAmount']        = 100;
+        $data['orderType']          = 'D0';
+        $data['certType']           = '01';
+        $data['certNumber']         = '341126197709218366';
+        $data['accountType']        = '01';
+        $data['accountName']        = '互联网';
+        $data['accountNumber']      = '6221558812340000';
+        $data['mainBankName']       = '';
+        $data['mainBankCode']       = '';
+        $data['openBranchBankName'] = '';
+        $data['mobile']             = '13552535506';
+        $data['attach']             = '用户提现';
+        $data['nonceStr']           = randomString(15,7);
+
+        $keys       = '3F7DB75AFBE34A4B40ECD0CC4A8B6492';
+        $signArr    = [$data['insCode'],$data['insMerchantCode'],$data['hpMerCode'],$data['orderNo'],$data['orderDate'],$data['orderTime'],$data['currencyCode'],$data['orderAmount'],$data['orderType'],$data['accountType'],$data['accountName'],$data['accountNumber'],$data['nonceStr'],$keys];
+        $data['signature']          = md5(implode('|',$signArr));
+
+        $url    = 'https://gateway.handpay.cn/hpayTransGatewayWeb/trans/df/transdf.htm';
+print_r($data);exit;
+        $res    = CurlHttp($url,$data,'POST');
+
+        
+
+        return ['Code' => '000000', 'Msg'=>lang('000000'),'Data'=>[]];
+    }
+
+    /*api:97a96cfbdb3effe2be005c5df98736af*/
+
     /*接口扩展*/
 
     private function getPayInfo($order_sn, $body, $attach, $fee, $paytype,$extend,$uid,$banktag='')
