@@ -325,7 +325,7 @@ class Crontab extends Base
                     //获取配置
                     $config            = config('pay.sslpayment');
                     $return            = request()->param();
-
+                    wr(['ssss2',$return]);
                     $sign              = isset($return['Mac']) ? $return['Mac'] : '';
                     $order_sn          = isset($return['OrderNo']) ? $return['OrderNo'] : '';
                     $status            = isset($return['TranStat']) ? $return['TranStat'] : '';
@@ -348,6 +348,7 @@ class Crontab extends Base
                 break ;
         }
 
+        wr(['ssss3',$return,$out_trade_no,$money,$payType]);
         return $this->updateOrder($return,$out_trade_no,$money,$payType) ;
     }
 
@@ -368,7 +369,7 @@ class Crontab extends Base
     private function updateRechargeOrder($passback_params, $out_trade_no, $money, $payType)
     {
         try{
-            wr([$passback_params, $out_trade_no, $money, $payType]);
+            wr(['ssss1',$passback_params, $out_trade_no, $money, $payType]);
             $map                        = [];
             $map['order_sn']            = $passback_params['order_sn'];
             $map['uid']                 = $passback_params['uid'];
