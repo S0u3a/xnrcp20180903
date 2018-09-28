@@ -375,10 +375,10 @@ class Crontab extends Base
             $find_status                = model('order_recharge')->where($map)->value('status');
             if($find_status != 2){
                 //准备用户订单购买数据
-wr(['ssss2',$passback_params, $out_trade_no, $money, $payType]);
+wr(['ssss2',$find_status]);
                 model('order_recharge')->where($map)->update(['status'=>2]);
                 model('user_account_log')->addAccountLog($passback_params['uid'],$money,'余额充值',1,3);
-wr(['ssss3',$passback_params, $out_trade_no, $money, $payType]);
+wr(['ssss3',$map]);
                 //用户收入增加
                 $res = model('user_detail')->where('uid',$passback_params['uid'])->setInc('account',$money) ;
                 model('user_detail')->delDetailDataCacheByUid($passback_params['uid']);
