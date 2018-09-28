@@ -83,7 +83,7 @@ class Pay extends Base
             }*/
 
             //订单编号
-            $order_sn               = date('ymdHis',time())/*.randomString(5,0)*/ ;
+            $order_sn               = date('ymdHis',time()).randomString(3,0) ;
 
             $body                   = '充值订单' ;
             $attach                 = '充值订单' ;

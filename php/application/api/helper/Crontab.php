@@ -368,7 +368,7 @@ class Crontab extends Base
     private function updateRechargeOrder($passback_params, $out_trade_no, $money, $payType)
     {
         try{
-            
+            wr([$passback_params, $out_trade_no, $money, $payType]);
             $map                        = [];
             $map['order_sn']            = $passback_params['order_sn'];
             $map['uid']                 = $passback_params['uid'];
