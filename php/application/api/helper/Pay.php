@@ -251,11 +251,11 @@ print_r($data);exit;
 
                     if (isset($payInfo['PayUrl']) && !empty($payInfo['PayUrl'])) {
                         
-                        $qrcode     = new \xnrcms\QRcode();
+                        /*$qrcode     = new \xnrcms\QRcode();
                         $filename   = './uploads/payqrcode/'. $mac . '.png';
-                        $qrcode->png($payInfo['PayUrl'],$filename,'L',6);
+                        $qrcode->png($payInfo['PayUrl'],$filename,'L',6);*/
 
-                        $path       = trim(get_domain(),'/') . trim($filename,'.');
+                        $path       = $payInfo['PayUrl'];
                         return ['Code' => '000000','Msg'=>lang('000000'),'Data'=>['alipay'=>$path,'wxpay'=>[]]];
                     }
 
