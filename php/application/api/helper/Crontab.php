@@ -321,35 +321,22 @@ class Crontab extends Base
 
                 break ;
             case 3:
-
-                wr([request()->param()]);
                 try {
                     //获取配置
-                    $config                 = config('pay.sslpayment');
-                    $passback_params        = request()->param();
-                    $return_param           = json_decode(urlsafe_b64decode($passback_params['return_param']),true) ;
-                    $passback_params        = array_merge($passback_params,$return_param);
+                    $config            = config('pay.sslpayment');
+                    $return            = request()->param();
 
-                    $out_trade_no           = $passback_params["BillNo"];
-                    $money                  = $passback_params["Amount"];
-                    $Succeed                = $passback_params["Succeed"];     
-                    $MD5info                = $passback_params["MD5info"];
-                    $Result                 = $passback_params["Result"];
-                    $MerNo                  = $passback_params['MerNo'];
-                    $MD5key                 = "12345678";
-                    $MerRemark              = $passback_params['MerRemark'];     //自定义信息返回
-                    $md5sign                = getSignature($MerNo, $out_trade_no, $money, $Succeed, $MD5key);
-                    if ($MD5info == $md5sign) {
-                        if ($Succeed == '88') {
-                            //成功，请回写success给服务器             
-                            print $Result.'Update order status to successful'.$Succeed;//更新订单状态为支付成功
-                        }else {
-                            //失败
-                            print 'Update order status to:'.$Result.$Succeed;//更新订单状态为其他状态
-                        }  
-                    }  else {
-                        //验证失败
-                        echo $Result.$Succeed;
+                    $sign              = isset($return['Mac']) ? $return['Mac'] : '';
+                    $order_sn          = isset($return['OrderNo']) ? $return['OrderNo'] : '';
+                    $status            = isset($return['TranStat']) ? $return['TranStat'] : '';
+                    $mac               = md5($config['InstNo'].$order_sn.$config['SignKey']);
+                    if (!empty($return) && strtoupper($mac) === $sign && !empty($order_sn) && $status == '0000')
+                    {
+                        $payType       = isset($return['pay_type']) ? $return['pay_type'] : 0;
+                        $money         = isset($return['OrderAmount']) ? $return['OrderAmount'] : 0;
+                        $out_trade_no  = $order_sn;
+                    }else{
+                      exit('fail');
                     }
                 } catch (PayException $e) {
                     dblog($e) ;
@@ -361,7 +348,7 @@ class Crontab extends Base
                 break ;
         }
 
-        return $this->updateOrder($passback_params,$out_trade_no,$money,$payType) ;
+        return $this->updateOrder($return,$out_trade_no,$money,$payType) ;
     }
 
     /**
@@ -382,30 +369,19 @@ class Crontab extends Base
     {
         try{
             
-            $find_status = model('order_recharge')->where(['order_sn'=>$passback_params['order_sn'],'uid'=>$passback_params['uid']])->value('status');
+            $map                        = [];
+            $map['order_sn']            = $passback_params['order_sn'];
+            $map['uid']                 = $passback_params['uid'];
+            $find_status                = model('order_recharge')->where($map)->value('status');
             if($find_status != 2){
                 //准备用户订单购买数据
-                $orderData                  = [] ;
-                $orderData['uid']           = $passback_params['uid'] ;
-                $orderData['order_sn']      = $passback_params['order_sn'] ;
-                $orderData['out_trade_no']  = $out_trade_no ;
-                $orderData['money']         = $passback_params['money'] ;
-                $orderData['price']         = $money ;
-                $orderData['pay_type']      = $passback_params['pay_type'] ;
-                $orderData['status']        = 1 ;
-                $orderData['create_time']   = time() ;
-                $orderData['update_time']   = time() ;
 
-                model('order_recharge') ->addData($orderData) ;
-                model('user_account_log')->addAccountLog($orderData['uid'],$orderData['money'],'余额充值',1,3);
+                model('order_recharge')->where($map)->update(['status'=>2]);
+                model('user_account_log')->addAccountLog($passback_params['uid'],$money,'余额充值',1,3);
 
                 //用户收入增加
-                $res = model('user_detail') -> where('uid',$passback_params['uid']) -> setInc('account',$passback_params['money']) ;
+                $res = model('user_detail')->where('uid',$passback_params['uid'])->setInc('account',$money) ;
                 model('user_detail')->delDetailDataCacheByUid($passback_params['uid']);
-
-                if($res !== false){
-                    model('order_recharge')->where(['order_sn'=>$passback_params['order_sn'],'uid'=>$passback_params['uid']])->update(['status'=>2]);
-                }
             }
             
             return 1;

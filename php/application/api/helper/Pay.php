@@ -103,6 +103,20 @@ class Pay extends Base
             $payInfo   = $this->getPayInfo($order_sn,$body,$attach,$fee,$paytype,$extend,$uid,$banktag);
             if($payInfo['Code'] !== '000000') return ['Code' => $payInfo['Code'], 'Msg'=>$payInfo['Msg']];
 
+            //事先写入订单数据 未支付状态
+            $orderData                  = [] ;
+            $orderData['uid']           = $uid ;
+            $orderData['order_sn']      = $order_sn;
+            $orderData['out_trade_no']  = $order_sn ;
+            $orderData['money']         = $fee ;
+            $orderData['price']         = $fee ;
+            $orderData['pay_type']      = $paytype;
+            $orderData['status']        = 1 ;
+            $orderData['create_time']   = time() ;
+            $orderData['update_time']   = time() ;
+
+            model('order_recharge') ->addData($orderData) ;
+
             return ['Code' => '000000', 'Msg'=>lang('000000'),'Data'=>$payInfo['Data']];
         }catch (\Exception $exception){
             return ['Code'=>(string)$exception->getCode(),'Msg'=>$exception->getCode()==0?$exception->getMessage().$exception->getLine():$exception->getMessage()] ;
@@ -226,6 +240,7 @@ print_r($data);exit;
                     $payData['ReturnURL']       = $config['ReturnURL'];
                     $payData['OrderNo']         = $order_sn;
                     $payData['OrderAmount']     = $fee;
+                    $payData['uid']             = $uid;
                     $payData['Rsv']             = '0';
                     $mac                        = md5($config['InstNo'].$payData['OrderNo'].$config['SignKey']);
                     $payData['Mac']             = strtoupper($mac);
