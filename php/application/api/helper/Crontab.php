@@ -321,6 +321,8 @@ class Crontab extends Base
 
                 break ;
             case 3:
+
+                wr([request()->param()]);
                 try {
                     //获取配置
                     $config                 = config('pay.sslpayment');
