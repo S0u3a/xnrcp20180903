@@ -134,7 +134,7 @@ class Pay extends Base
     private function substitute($parame)
     {
         $time                       = time();
-        $data                       = [];
+        /*$data                       = [];
         $data['insCode']            = '80000384';
         $data['insMerchantCode']    = '887581298600467';
         $data['hpMerCode']          = 'WKJGWKQTCS@20180813173307';
@@ -161,7 +161,37 @@ class Pay extends Base
         $data['signature']          = md5(implode('|',$signArr));
 
         $url    = 'https://gateway.handpay.cn/hpayTransGatewayWeb/trans/df/transdf.htm';
-print_r($data);exit;
+print_r($data);exit;*/
+        
+        $mid                        = '13010152';
+        $order_sn                   = date('YmdHis',$time) . randomString(6);
+        $money                      = '000000000100';
+        $subject                    = '支付提现转账';
+        $data = [
+            'head' => [
+                'version'           => '1.0',
+                'method'            => 'sandPay.fastPay.quickPay.index',
+                'productId'         => '00000016',
+                'accessType'        => '1',
+                'mid'               => $mid,
+                'channelType'       => '07',
+                'reqTime'           => date('YmdHis', $time)
+            ],
+            'body' => [
+                'userId'            => $_POST['userId'],
+                'orderCode'         => $order_sn,
+                'orderTime'         => date('YmdHis', $time),
+                'totalAmount'       => $money,
+                'subject'           => $_POST['subject'],
+                'body'              => $_POST['body'],
+                'currencyCode'      => $_POST['currencyCode'],
+                'notifyUrl'         => $_POST['notifyUrl'],
+                'frontUrl'          => $_POST['frontUrl'],
+                'clearCycle'        => $_POST['clearCycle'],
+                'extend'            => ''
+            ]
+        ];
+
         $res    = CurlHttp($url,$data,'POST');
 
         

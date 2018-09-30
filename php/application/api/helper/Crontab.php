@@ -342,8 +342,11 @@ class Crontab extends Base
                     dblog($e) ;
                     exit;
                 }
-
                 break ;
+            case 100://代付回调
+                $return            = request()->param();
+                wr($return);return;
+                break;
             default :
                 break ;
         }
