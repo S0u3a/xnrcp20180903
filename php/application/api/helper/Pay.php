@@ -162,7 +162,7 @@ class Pay extends Base
 
         $url    = 'https://gateway.handpay.cn/hpayTransGatewayWeb/trans/df/transdf.htm';
 print_r($data);exit;*/
-        
+        print_r(1);exit;
         $mid                        = '13010152';
         $order_sn                   = date('YmdHis',$time) . randomString(6);
         $money                      = '000000000100';
@@ -192,6 +192,7 @@ print_r($data);exit;*/
             ]
         ];
 
+        print_r($data);exit;
         $res    = CurlHttp($url,$data,'POST');
 
         
