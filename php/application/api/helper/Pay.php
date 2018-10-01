@@ -214,7 +214,7 @@ print_r($data);exit;*/
         );
 
         $url    = 'https://cashier.sandpay.com.cn/fastPay/quickPay/index';
-        $res    = CurlHttp($url,$data,'POST');
+        $res    = CurlHttp($url,$post,'POST');
 
         
         print_r($res);exit;
