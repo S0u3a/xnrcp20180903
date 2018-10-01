@@ -217,7 +217,7 @@ print_r($data);exit;*/
         $res    = CurlHttp($url,$data,'POST');
 
         
-        print_r($post);exit;
+        print_r($res);exit;
 
         return ['Code' => '000000', 'Msg'=>lang('000000'),'Data'=>[]];
     }
