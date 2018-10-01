@@ -343,7 +343,7 @@ function CurlHttp($url,$body='',$method='DELETE',$headers=array()){
 		case 'POST':
 			curl_setopt($ci,CURLOPT_POST,TRUE);
 			if(!empty($body)){
-				curl_setopt($ci,CURLOPT_POSTFIELDS,http_build_query($body));
+				curl_setopt($ci,CURLOPT_POSTFIELDS,$body);
 			}
 			break;
 		case 'DELETE':
