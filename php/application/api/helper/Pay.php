@@ -162,11 +162,16 @@ class Pay extends Base
 
         $url    = 'https://gateway.handpay.cn/hpayTransGatewayWeb/trans/df/transdf.htm';
 print_r($data);exit;*/
-        print_r(1);exit;
+
         $mid                        = '13010152';
         $order_sn                   = date('YmdHis',$time) . randomString(6);
         $money                      = '000000000100';
         $subject                    = '支付提现转账';
+        $body                       = '支付提现转账';
+        $currencyCode               = 156;
+        $frontUrl                   = 'http://xnrcp20180903.php.xnrcms.cn/api/Crontab/paySuccess/pay_type/100';
+        $clearCycle                 = 'T0';
+        $notifyUrl                  = 'http://xnrcp20180903.php.xnrcms.cn/api/Crontab/paySuccess/pay_type/100';
         $data = [
             'head' => [
                 'version'           => '1.0',
@@ -178,19 +183,26 @@ print_r($data);exit;*/
                 'reqTime'           => date('YmdHis', $time)
             ],
             'body' => [
-                'userId'            => $_POST['userId'],
+                'userId'            => $parame['uid'],
                 'orderCode'         => $order_sn,
                 'orderTime'         => date('YmdHis', $time),
                 'totalAmount'       => $money,
-                'subject'           => $_POST['subject'],
-                'body'              => $_POST['body'],
-                'currencyCode'      => $_POST['currencyCode'],
-                'notifyUrl'         => $_POST['notifyUrl'],
-                'frontUrl'          => $_POST['frontUrl'],
-                'clearCycle'        => $_POST['clearCycle'],
+                'subject'           => $subject,
+                'body'              => $body,
+                'currencyCode'      => $currencyCode,
+                'notifyUrl'         => $notifyUrl,
+                'frontUrl'          => $frontUrl,
+                'clearCycle'        => $clearCycle,
                 'extend'            => ''
             ]
         ];
+
+        // step2: 私钥签名
+        $pwd        = '524023';
+        $pub_path   = \Env::get('APP_PATH');print_r($pub_path);exit;
+
+        $prikey = loadPk12Cert($pub_path, $pwd);
+        $sign = sign($data, $prikey);
 
         print_r($data);exit;
         $res    = CurlHttp($url,$data,'POST');
