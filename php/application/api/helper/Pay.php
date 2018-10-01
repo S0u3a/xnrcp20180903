@@ -204,7 +204,16 @@ print_r($data);exit;*/
         $prikey = loadPk12Cert($pub_path, $pwd);
         $sign = sign($data, $prikey);
 
-        print_r($data);exit;
+
+        // step3: 拼接post数据
+        $post = array(
+            'charset' => 'utf-8',
+            'signType' => '01',
+            'data' => json_encode($data),
+            'sign' => urlencode($sign)
+        );
+
+        print_r($post);exit;
         $res    = CurlHttp($url,$data,'POST');
 
         
