@@ -199,7 +199,7 @@ print_r($data);exit;*/
 
         // step2: 私钥签名
         $pwd        = '524023';
-        $pub_path   = \Env::get('APP_PATH').'cert/public.cer';
+        $pub_path   = \Env::get('APP_PATH').'cert/privte.pfx';
 
         $prikey = pd_loadPk12Cert($pub_path, $pwd);
         $sign   = pd_sign($data, $prikey);
@@ -213,10 +213,11 @@ print_r($data);exit;*/
             'sign' => urlencode($sign)
         );
 
-        print_r($post);exit;
+        $url    = 'https://cashier.sandpay.com.cn/fastPay/quickPay/index';
         $res    = CurlHttp($url,$data,'POST');
 
         
+        print_r($post);exit;
 
         return ['Code' => '000000', 'Msg'=>lang('000000'),'Data'=>[]];
     }

@@ -1498,7 +1498,7 @@ if (!function_exists('pd_loadPk12Cert'))
 	            throw new \Exception('loadPk12Cert::file
 						_get_contents');
 	        }
-
+	        
 	        if (!openssl_pkcs12_read($file, $cert, $pwd)) {
 	            throw new \Exception('loadPk12Cert::openssl_pkcs12_read ERROR');
 	        }
