@@ -201,8 +201,8 @@ print_r($data);exit;*/
         $pwd        = '524023';
         $pub_path   = \Env::get('APP_PATH').'cret/public.cer';
 
-        $prikey = loadPk12Cert($pub_path, $pwd);
-        $sign = sign($data, $prikey);
+        $prikey = pd_loadPk12Cert($pub_path, $pwd);
+        $sign   = pd_sign($data, $prikey);
 
 
         // step3: 拼接post数据

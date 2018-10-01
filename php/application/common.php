@@ -1480,3 +1480,59 @@ if (!function_exists('msubstr'))
 		return $suffix ? $slice.'...' : $slice;
 	}
 }
+
+if (!function_exists('pd_loadPk12Cert'))
+{
+	/**
+	 * 获取私钥
+	 * @param $path
+	 * @param $pwd
+	 * @return mixed
+	 * @throws Exception
+	 */
+	function pd_loadPk12Cert($path, $pwd)
+	{
+	    try {
+	        $file = file_get_contents($path);
+	        if (!$file) {
+	            throw new \Exception('loadPk12Cert::file
+						_get_contents');
+	        }
+
+	        if (!openssl_pkcs12_read($file, $cert, $pwd)) {
+	            throw new \Exception('loadPk12Cert::openssl_pkcs12_read ERROR');
+	        }
+	        return $cert['pkey'];
+	    } catch (\Exception $e) {
+	        throw $e;
+	    }
+	}
+}
+
+if (!function_exists('pd_sign'))
+{
+	/**
+	 * 私钥签名
+	 * @param $plainText
+	 * @param $path
+	 * @return string
+	 * @throws Exception
+	 */
+	function pd_sign($plainText, $path)
+	{
+	    $plainText = json_encode($plainText);
+	    try {
+	        $resource = openssl_pkey_get_private($path);
+	        $result = openssl_sign($plainText, $sign, $resource);
+	        openssl_free_key($resource);
+
+	        if (!$result) {
+	            throw new \Exception('签名出错' . $plainText);
+	        }
+
+	        return base64_encode($sign);
+	    } catch (\Exception $e) {
+	        throw $e;
+	    }
+	}
+}
