@@ -199,7 +199,7 @@ print_r($data);exit;*/
 
         // step2: 私钥签名
         $pwd        = '524023';
-        $pub_path   = \Env::get('APP_PATH').'cret/public.cer';print_r($pub_path);exit;
+        $pub_path   = \Env::get('APP_PATH').'cret/public.cer';
 
         $prikey = loadPk12Cert($pub_path, $pwd);
         $sign = sign($data, $prikey);
