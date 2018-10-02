@@ -778,7 +778,7 @@ if(!function_exists('getUserLevel'))
 		$nn 		= count($ll);
 		$ll[$nn] 	= ['L9',1,999999999];
 		for ($i=0; $i < $nn; $i++) {
-			if ($money*1 >= $ll[$i][2]*1 && $money*1 < $ll[$i+1][2]*1) {
+			if ($money*1 >= (int)$ll[$i][2] && $money*1 < (int)$ll[$i+1][2]) {
 				$level 			= [$i,$ll[$i][1],$ll[$i][2]];
 			}
 		}
