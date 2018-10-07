@@ -197,7 +197,7 @@ print_r($data);exit;*/
             ]
         ];
 
-        // step2: 私钥签名
+        //私钥签名
         $pwd        = '524023';
         $pri_path   = \Env::get('APP_PATH').'cert/privte.pfx';
 
@@ -212,12 +212,12 @@ print_r($data);exit;*/
             'data' => json_encode($data),
             'sign' => urlencode($sign)
         );
-print_r($post);exit;
+
         $url    = 'https://cashier.sandpay.com.cn/fastPay/quickPay/index';
         $res    = CurlHttp($url,$post,'POST');
 
         
-        print_r($res);exit;
+        print_r($pri_path);exit;
 
         return ['Code' => '000000', 'Msg'=>lang('000000'),'Data'=>[]];
     }
