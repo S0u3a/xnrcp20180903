@@ -1607,7 +1607,7 @@ if (!function_exists('pd_http_post_json'))
 	    if (empty($url) || empty($param)) {
 	        return false;
 	    }
-	    $param = http_build_query($param);print_r($param);exit;
+	    $param = http_build_query($param);
 	    try {
 
 	        $ch = curl_init();//初始化curl
