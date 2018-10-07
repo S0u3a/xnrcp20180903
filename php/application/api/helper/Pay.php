@@ -133,35 +133,120 @@ class Pay extends Base
      */
     private function substitute($parame)
     {
+        $config                     = config('pay.sandpay');
         $time                       = time();
+        $mid                        = $config['mid'];
+        $currencyCode               = 156;
+        $order_sn                   = date('YmdHis',$time) . randomString(6);
+        
+        $data                       = [
+            'transCode' => 'RTPM', // 实时代付
+            'merId' => $mid, // 此处更换商户号
+            'url' => 'https://caspay.sandpay.com.cn/agent-main/openapi/agentpay',
+            'pt' => [
+                'orderCode' => $order_sn,
+                'version' => '01',
+                'productId' => '00000004',
+                'tranTime' => date('YmdHis', time()),
+                'timeOut' => '20181024120000',
+                'tranAmt' => '000000000500',
+                'currencyCode' => '156',
+                'accAttr' => '0',
+                'accNo' => '6216261000000000018',
+                'accType' => '4',
+                'accName' => '全渠道',
+                'bankName' => 'cbc',
+                'remark' => 'pay',
+                'payMode' => '2',
+                'channelType' => '07'
+            ]
+        ];
+
+        // step1: 拼接报文及配置
+        $transCode          = $data['transCode']; // 交易码
+        $accessType         = '0'; // 接入类型 0-商户接入，默认；1-平台接入
+        $merId              = $data['merId']; // 此处更换商户号
+        $path               = $data['url']; // 服务地址
+        $pt                 = $data['pt']; // 报文
+
+        // 获取公私钥匙
+        $priKey             = pd_loadPk12Cert(\Env::get('APP_PATH').'cert/privte.pfx', $config['CretPwd']);
+        $pubKey             = pd_loadX509Cert(\Env::get('APP_PATH').'cert/public.cer');
+
+        // step2: 生成AESKey并使用公钥加密
+        $AESKey             = pd_aes_generate(16);
+        $encryptKey         = pd_RSAEncryptByPub($AESKey, $pubKey);
+
+        // step3: 使用AESKey加密报文
+        $encryptData        = pd_AESEncrypt($pt, $AESKey);
+
+        // step4: 使用私钥签名报文
+        $sign               = pd_sign($pt, $priKey);
+
+        // step5: 拼接post数据
+        $post = [
+            'transCode'     => $transCode,
+            'accessType'    => $accessType,
+            'merId'         => $merId,
+            'encryptKey'    => $encryptKey,
+            'encryptData'   => $encryptData,
+            'sign'          => $sign
+        ];
+
+        // step6: post请求
+        $result = pd_http_post_json($path, $post);
+        pd_parse_str($result, $arr);
+
+        try {
+            // step7: 使用私钥解密AESKey
+            $decryptAESKey      = pd_RSADecryptByPri($arr['encryptKey'], $priKey);
+
+            // step8: 使用解密后的AESKey解密报文
+            $decryptPlainText = pd_AESDecrypt($arr['encryptData'], $decryptAESKey);
+
+            // step9: 使用公钥验签报文
+            pd_verify($decryptPlainText, $arr['sign'], $pubKey);
+        } catch (\Exception $e) {
+            echo $e->getMessage();
+            exit;
+        }
+
+        print_r($decryptPlainText);exit();
+
         /*$data                       = [];
-        $data['insCode']            = '80000384';
-        $data['insMerchantCode']    = '887581298600467';
-        $data['hpMerCode']          = 'WKJGWKQTCS@20180813173307';
-        $data['orderNo']            = date('YmdHis',$time) . randomString(6);;
-        $data['orderDate']          = date('Ymd',$time);
-        $data['orderTime']          = date('YmdHis',$time);
-        $data['currencyCode']       = 156;
-        $data['orderAmount']        = 100;
-        $data['orderType']          = 'D0';
-        $data['certType']           = '01';
-        $data['certNumber']         = '341126197709218366';
-        $data['accountType']        = '01';
-        $data['accountName']        = '互联网';
-        $data['accountNumber']      = '6221558812340000';
-        $data['mainBankName']       = '';
-        $data['mainBankCode']       = '';
-        $data['openBranchBankName'] = '';
-        $data['mobile']             = '13552535506';
-        $data['attach']             = '用户提现';
-        $data['nonceStr']           = randomString(15,7);
+        $data['version']            = '01';
+        $data['productId']          = '00000004';
+        $data['tranTime']           = date('YmdHis', $time);
+        $data['orderCode']          = date('YmdHis',$time) . randomString(6);
+        $data['timeOut']            = 12;
+        $data['tranAmt']            = '000000000100';
+        $data['currencyCode']       = $currencyCode;
+        $data['accAttr']            = 0;
+        $data['accType']            = 4;
+        $data['accNo']              = '6222021202040713688';
+        $data['accName']            = '王远庆';
+        $data['provNo']             = '';
+        $data['cityNo']             = '';
+        $data['remark']             = '代付';
+        $data['payMode']            = '';
+        $data['channelType']        = '';
+        $data['extendParams']       = '';
+        $data['reqReserved']        = '';
+        $data['noticeUrl']          = 'http://xnrcp20180903.php.xnrcms.cn/api/Crontab/paySuccess/pay_type/100';
+        $data['extend']             = '';
+        $data['phone']              = '';
 
-        $keys       = '3F7DB75AFBE34A4B40ECD0CC4A8B6492';
-        $signArr    = [$data['insCode'],$data['insMerchantCode'],$data['hpMerCode'],$data['orderNo'],$data['orderDate'],$data['orderTime'],$data['currencyCode'],$data['orderAmount'],$data['orderType'],$data['accountType'],$data['accountName'],$data['accountNumber'],$data['nonceStr'],$keys];
-        $data['signature']          = md5(implode('|',$signArr));
+        $post = array(
+            'transCode' => 'utf-8',
+            'accessType' => 0,
+            'merId' => $mid,
+            'plId' => '01',
+            'encryptKey' => json_encode($data),
+            'encryptData' => json_encode($data),
+            'sign' => urlencode($sign),
+            'extend' => urlencode($sign)
+        );
 
-        $url    = 'https://gateway.handpay.cn/hpayTransGatewayWeb/trans/df/transdf.htm';
-print_r($data);exit;*/
 
         $mid                        = '130101521';
         $order_sn                   = date('YmdHis',$time) . randomString(6);
@@ -215,7 +300,7 @@ print_r($data);exit;*/
 
         $url    = 'https://cashier.sandpay.com.cn/fastPay/quickPay/index';
         $res    = CurlHttp($url,$post,'POST');
-
+*/
         
         print_r($pri_path);exit;
 
