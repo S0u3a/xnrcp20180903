@@ -372,9 +372,13 @@ print_r($data);exit;*/
 
                 //组装form表单
                 $url        = 'https://cashier.sandpay.com.cn/fastPay/quickPay/index';
-                $form       = '<form id="sandpay" action="'.$url.'" method="post"><textarea name="charset">'.$charset.'</textarea><textarea name="signType">'.$signType.'</textarea><textarea name="data">'.$data.'</textarea><textarea name="sign">'.$sign.'</textarea></form>';
+                
+                $html       = '<!doctype html><html><head><meta http-equiv="content-type" content="text/html; charset=UTF-8"><meta charset="utf-8"></head><body onload="submitForm();">';
 
-                return ['Code' => '000000','Msg'=>lang('000000'),'Data'=>['alipay'=>$form,'wxpay'=>[]]];
+                $html       .= '<form id="sandpay" action="'.$url.'" method="post" hidden="hidden"><textarea name="charset">'.$charset.'</textarea><textarea name="signType">'.$signType.'</textarea><textarea name="data">'.$data.'</textarea><textarea name="sign">'.$sign.'</textarea></form>';
+                $html       .= '<script type="text/javascript">function submitForm() { document.getElementById("sandpay").submit();}</script></body></html>';
+
+                return ['Code' => '000000','Msg'=>lang('000000'),'Data'=>['alipay'=>$html,'wxpay'=>[]]];
                 break;
             default :
                 return ['Code' => '200001', 'Msg'=>lang('200001')];break ;
