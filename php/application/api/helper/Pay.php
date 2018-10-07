@@ -194,8 +194,8 @@ class Pay extends Base
         ];
 
         $res    = CurlHttp($path,$post,'POST');
-        print_r($res);exit();
-        
+        print_r([$res]);exit();
+
         // step6: post请求
         $result = pd_http_post_json($path, $post);
         pd_parse_str($result, $arr);
