@@ -212,7 +212,7 @@ print_r($data);exit;*/
             'data' => json_encode($data),
             'sign' => urlencode($sign)
         );
-
+print_r($post);exit;
         $url    = 'https://cashier.sandpay.com.cn/fastPay/quickPay/index';
         $res    = CurlHttp($url,$post,'POST');
 
@@ -296,7 +296,7 @@ print_r($data);exit;*/
                     $payData['Rsv']             = '0';
                     $mac                        = md5($config['InstNo'].$payData['OrderNo'].$config['SignKey']);
                     $payData['Mac']             = strtoupper($mac);
-print_r($payData);exit;
+
                     $url                        = 'http://www.bfhnj.top:8080/TopWeb/HLCNL/HLpay.do';
                     $payInfo                    = CurlHttp($url,$payData,'POST');
 
