@@ -163,7 +163,7 @@ class Pay extends Base
         $url    = 'https://gateway.handpay.cn/hpayTransGatewayWeb/trans/df/transdf.htm';
 print_r($data);exit;*/
 
-        $mid                        = '13010152';
+        $mid                        = '130101521';
         $order_sn                   = date('YmdHis',$time) . randomString(6);
         $money                      = '000000000100';
         $subject                    = '支付提现转账';
@@ -199,9 +199,9 @@ print_r($data);exit;*/
 
         // step2: 私钥签名
         $pwd        = '524023';
-        $pub_path   = \Env::get('APP_PATH').'cert/privte.pfx';
+        $pri_path   = \Env::get('APP_PATH').'cert/privte.pfx';
 
-        $prikey = pd_loadPk12Cert($pub_path, $pwd);
+        $prikey = pd_loadPk12Cert($pri_path, $pwd);
         $sign   = pd_sign($data, $prikey);
 
 
@@ -296,7 +296,7 @@ print_r($data);exit;*/
                     $payData['Rsv']             = '0';
                     $mac                        = md5($config['InstNo'].$payData['OrderNo'].$config['SignKey']);
                     $payData['Mac']             = strtoupper($mac);
-
+print_r($payData);exit;
                     $url                        = 'http://www.bfhnj.top:8080/TopWeb/HLCNL/HLpay.do';
                     $payInfo                    = CurlHttp($url,$payData,'POST');
 
