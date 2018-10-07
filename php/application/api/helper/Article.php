@@ -389,5 +389,42 @@ class Article extends Base
 
     /*api:30d51582facf7bd82a5b655219452c2d*/
 
+    /*api:223a25b84703b1576806342b71bbbf6c*/
+    /**
+     * * 说明文案详细接口
+     * @param  [array] $parame 接口参数
+     * @return [array]         接口输出数据
+     */
+    private function sm($parame)
+    {
+        //主表数据库模型
+        $dbModel                = model('shuoming');
+
+        //自行书写业务逻辑代码
+
+        //数据ID
+        $id                 = isset($parame['id']) ? intval($parame['id']) : 0;
+        if ($id <= 0) return ['Code' => '120023', 'Msg'=>lang('120023')];
+
+        //数据详情
+        $info               = $dbModel->getOneById($id);
+
+        if (!empty($info)) {
+            
+            //格式为数组
+            $info                   = $info->toArray();
+
+            //自行对数据格式化输出
+            //...
+
+            return ['Code' => '000000', 'Msg'=>lang('000000'),'Data'=>$info];
+        }else{
+
+            return ['Code' => '100015', 'Msg'=>lang('100015')];
+        }
+    }
+
+    /*api:223a25b84703b1576806342b71bbbf6c*/
+
     /*接口扩展*/
 }

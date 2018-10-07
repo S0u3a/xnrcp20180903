@@ -106,5 +106,20 @@ class Article extends Base
 
     /*api:30d51582facf7bd82a5b655219452c2d*/
 
+    /*api:223a25b84703b1576806342b71bbbf6c*/
+    /**
+     * 说明文案详细接口
+     * @access public
+     * @param  [array] $parame 扩展参数
+     * @return [json]          接口数据输出
+    */
+    public function sm($parame = []){
+
+        //执行接口调用
+        return $this->execApi($parame);
+    }
+
+    /*api:223a25b84703b1576806342b71bbbf6c*/
+
     /*接口扩展*/
 }
