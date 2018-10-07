@@ -72,7 +72,7 @@ class Pay extends Base
             $paytype        = $parame['pay_type'] ;
             $banktag        = '';
 
-            if(!in_array($paytype,[1,2,3]))
+            if(!in_array($paytype,[1,2,3,4,5]))
             return ['Code' => '200001', 'Msg'=>lang('200001')];
 
             //支付方式为银联支付时需要校验银行是否存在
@@ -290,7 +290,7 @@ print_r($data);exit;*/
                     $payData['TrCode']          = '4005';
                     $payData['InstNo']          = $config['InstNo'];
                     $payData['MchtNo']          = $config['MchtNo'];
-                    $payData['ReturnURL']       = 'http://xnrcp20180903.php.xnrcms.cn/api/Crontab/paySuccess/pay_type/3/uid/'.$uid;
+                    $payData['ReturnURL']       = $config['ReturnURL'] . '/3/uid/'.$uid;
                     $payData['OrderNo']         = $order_sn;
                     $payData['OrderAmount']     = $fee;
                     $payData['Rsv']             = '0';
@@ -318,6 +318,63 @@ print_r($data);exit;*/
                     return ['Code'=>'10000','Msg'=>$exception->errorMessage()] ;
                 }
                 break ;
+            case 5://杉德快捷支付
+                //获取配置
+                $config                     = config('pay.sandpay');
+                $time                       = time();
+
+                $mid                        = $config['mid'];
+                $currencyCode               = 156;
+                $order_sn                   = date('YmdHis',$time) . randomString(6);
+                $money                      = '000000000100';
+                $subject                    = '余额充值';
+                $body                       = '余额充值';
+                $frontUrl                   = $config['ReturnURL'] . '/100/uid/'.$uid;
+                $clearCycle                 = 'T0';
+                $notifyUrl                  = $config['ReturnURL'] . '/100/uid/'.$uid;
+                $data = [
+                    'head' => [
+                        'version'           => '1.0',
+                        'method'            => 'sandPay.fastPay.quickPay.index',
+                        'productId'         => '00000016',
+                        'accessType'        => '1',
+                        'mid'               => $mid,
+                        'channelType'       => '07',
+                        'reqTime'           => date('YmdHis', $time)
+                    ],
+                    'body' => [
+                        'userId'            => $uid,
+                        'orderCode'         => $order_sn,
+                        'orderTime'         => date('YmdHis', $time),
+                        'totalAmount'       => $money,
+                        'subject'           => $subject,
+                        'body'              => $body,
+                        'currencyCode'      => $currencyCode,
+                        'notifyUrl'         => $notifyUrl,
+                        'frontUrl'          => $frontUrl,
+                        'clearCycle'        => $clearCycle,
+                        'extend'            => ''
+                    ]
+                ];
+
+                //私钥签名
+                $pri_path   = \Env::get('APP_PATH').'cert/privte.pfx';
+                $prikey     = pd_loadPk12Cert($pri_path, $config['CretPwd']);
+                $sign       = pd_sign($data, $prikey);
+                //拼接post数据
+                /*$post = array(
+                    'charset' => 'utf-8',
+                    'signType' => '01',
+                    'data' => json_encode($data),
+                    'sign' => urlencode($sign)
+                );*/
+
+                //组装form表单
+                $url        = 'https://cashier.sandpay.com.cn/fastPay/quickPay/index';
+                $form       = '<form id="sandpay" action="'.$url.'" method="post"><textarea name="charset">utf-8</textarea><textarea name="signType">01</textarea><textarea name="data">'.json_encode($data).'</textarea><textarea name="sign">'.urlencode($sign).'</textarea></form>';
+
+                return ['Code' => '000000','Msg'=>lang('000000'),'Data'=>['alipay'=>$form,'wxpay'=>[]]];
+                break;
             default :
                 return ['Code' => '200001', 'Msg'=>lang('200001')];break ;
         }
