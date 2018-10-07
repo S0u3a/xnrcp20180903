@@ -361,17 +361,18 @@ print_r($data);exit;*/
                 $pri_path   = \Env::get('APP_PATH').'cert/privte.pfx';
                 $prikey     = pd_loadPk12Cert($pri_path, $config['CretPwd']);
                 $sign       = pd_sign($data, $prikey);
+
+                $charset    = 'utf-8';
+                $signType   = '01';
+                $data       = json_encode($data);
+                $sign       = urlencode($sign);
+
                 //拼接post数据
-                /*$post = array(
-                    'charset' => 'utf-8',
-                    'signType' => '01',
-                    'data' => json_encode($data),
-                    'sign' => urlencode($sign)
-                );*/
+                /*$post     = ['charset'=>$charset,'signType'=>$signType,'data'=>$data,'sign' => $sign];*/
 
                 //组装form表单
                 $url        = 'https://cashier.sandpay.com.cn/fastPay/quickPay/index';
-                $form       = '<form id="sandpay" action="'.$url.'" method="post"><textarea name="charset">utf-8</textarea><textarea name="signType">01</textarea><textarea name="data">'.json_encode($data).'</textarea><textarea name="sign">'.urlencode($sign).'</textarea></form>';
+                $form       = '<form id="sandpay" action="'.$url.'" method="post"><textarea name="charset">'.$charset.'</textarea><textarea name="signType">'.$signType.'</textarea><textarea name="data">'.$data.'</textarea><textarea name="sign">'.$sign.'</textarea></form>';
 
                 return ['Code' => '000000','Msg'=>lang('000000'),'Data'=>['alipay'=>$form,'wxpay'=>[]]];
                 break;
