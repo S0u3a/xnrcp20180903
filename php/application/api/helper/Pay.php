@@ -418,7 +418,7 @@ class Pay extends Base
                 $subject                    = '余额充值';
                 $body                       = '余额充值';
                 $frontUrl                   = $config['ReturnURL'] . '/100/uid/'.$uid;
-                $clearCycle                 = 'T1';
+                $clearCycle                 = '0';
                 $notifyUrl                  = $config['ReturnURL'] . '/100/uid/'.$uid;
                 $data = [
                     'head' => [
