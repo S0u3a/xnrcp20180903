@@ -182,7 +182,7 @@ class Pay extends Base
 
         // step4: 使用私钥签名报文
         $sign               = pd_sign($pt, $priKey);
-
+        print_r([$pt, $priKey]);exit;
         // step5: 拼接post数据
         $post = [
             'transCode'     => $transCode,
@@ -194,7 +194,7 @@ class Pay extends Base
             'sign'          => $sign,
             'extend'        => '',
         ];
-        print_r($post);exit;
+
         // step6: post请求
         $result             = pd_http_post_json($path, $post);
 
