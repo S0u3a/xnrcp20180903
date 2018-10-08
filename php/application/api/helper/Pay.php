@@ -172,7 +172,7 @@ class Pay extends Base
         $merId              = $data['merId']; // 此处更换商户号
         $path               = $data['url']; // 服务地址
         $pt                 = $data['pt']; // 报文
-print_r($data);exit;
+
         // 获取公私钥匙
         $priKey             = pd_loadPk12Cert(\Env::get('APP_PATH').'cert/privte.pfx', $config['CretPwd']);
         $pubKey             = pd_loadX509Cert(\Env::get('APP_PATH').'cert/public.cer');
