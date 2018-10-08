@@ -192,11 +192,11 @@ class Pay extends Base
             'transCode'     => $transCode,
             'accessType'    => $accessType,
             'merId'         => $merId,
-            'plId'          => '',
+            //'plId'          => '',
             'encryptKey'    => $encryptKey,
             'encryptData'   => $encryptData,
             'sign'          => $sign,
-            'extend'        => '',
+            //'extend'        => '',
         ];
 
         // step6: post请求
