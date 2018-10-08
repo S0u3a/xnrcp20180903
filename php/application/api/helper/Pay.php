@@ -414,7 +414,7 @@ class Pay extends Base
                 $mid                        = $config['mid'];
                 $currencyCode               = 156;
                 $order_sn                   = date('YmdHis',$time) . randomString(6);
-                $money                      = '000000000100';
+                $money                      = substr('000000000000' . ($fee*100), -12);;
                 $subject                    = '余额充值';
                 $body                       = '余额充值';
                 $frontUrl                   = $config['ReturnURL'] . '/100/uid/'.$uid;
