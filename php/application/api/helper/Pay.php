@@ -172,7 +172,7 @@ class Pay extends Base
         // 获取公私钥匙
         $priKey             = pd_loadPk12Cert(\Env::get('APP_PATH').'cert/privte.pfx', $config['CretPwd']);
         $pubKey             = pd_loadX509Cert(\Env::get('APP_PATH').'cert/public.cer');
-
+print_r([$priKey, $pubKey]);exit;
         // step2: 生成AESKey并使用公钥加密
         $AESKey             = pd_aes_generate(16);
         $encryptKey         = pd_RSAEncryptByPub($AESKey, $pubKey);
@@ -182,7 +182,7 @@ class Pay extends Base
 
         // step4: 使用私钥签名报文
         $sign               = pd_sign($pt, $priKey);
-        print_r([$pt, $priKey]);exit;
+        
         // step5: 拼接post数据
         $post = [
             'transCode'     => $transCode,
