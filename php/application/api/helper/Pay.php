@@ -198,8 +198,8 @@ class Pay extends Base
 
         // step6: post请求
         $result = pd_http_post_json($path, $post);
-        
-        pd_parse_str($result, $arr);
+
+        parse_str($result, $arr);
 print_r([2,$arr]);exit();
         try {
             // step7: 使用私钥解密AESKey
