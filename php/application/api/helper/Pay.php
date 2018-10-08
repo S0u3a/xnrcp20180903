@@ -149,20 +149,20 @@ class Pay extends Base
                 'productId' => '00000004',
                 'tranTime' => date('YmdHis', $time),
                 'orderCode' => $order_sn,
-                'timeOut' => '',
+                //'timeOut' => '',
                 'tranAmt' => substr('000000000000' . ($fee*100), -12),
                 'currencyCode' => '156',
                 'accAttr' => '0',
                 'accType' => '4',
                 'accNo' => '6216261000000000018',
                 'accName' => '全渠道',
-                'provNo' => '',
-                'cityNo' => '',
-                'bankName' => '',
-                'bankType' => '',
+                //'provNo' => '',
+                //'cityNo' => '',
+                //'bankName' => '',
+                //'bankType' => '',
                 'remark' => 'pay',
-                'payMode' => '2',
-                'channelType' => '07'
+                //'payMode' => '2',
+                //'channelType' => '07'
             ]
         ];
 
