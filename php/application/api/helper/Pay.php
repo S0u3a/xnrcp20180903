@@ -198,6 +198,7 @@ class Pay extends Base
 
         // step6: post请求
         $result = pd_http_post_json($path, $post);
+        print_r([2,$result]);exit();
         pd_parse_str($result, $arr);
 
         try {
@@ -215,97 +216,6 @@ class Pay extends Base
         }
 
         print_r($decryptPlainText);exit();
-
-        /*$data                       = [];
-        $data['version']            = '01';
-        $data['productId']          = '00000004';
-        $data['tranTime']           = date('YmdHis', $time);
-        $data['orderCode']          = date('YmdHis',$time) . randomString(6);
-        $data['timeOut']            = 12;
-        $data['tranAmt']            = '000000000100';
-        $data['currencyCode']       = $currencyCode;
-        $data['accAttr']            = 0;
-        $data['accType']            = 4;
-        $data['accNo']              = '6222021202040713688';
-        $data['accName']            = '王远庆';
-        $data['provNo']             = '';
-        $data['cityNo']             = '';
-        $data['remark']             = '代付';
-        $data['payMode']            = '';
-        $data['channelType']        = '';
-        $data['extendParams']       = '';
-        $data['reqReserved']        = '';
-        $data['noticeUrl']          = 'http://xnrcp20180903.php.xnrcms.cn/api/Crontab/paySuccess/pay_type/100';
-        $data['extend']             = '';
-        $data['phone']              = '';
-
-        $post = array(
-            'transCode' => 'utf-8',
-            'accessType' => 0,
-            'merId' => $mid,
-            'plId' => '01',
-            'encryptKey' => json_encode($data),
-            'encryptData' => json_encode($data),
-            'sign' => urlencode($sign),
-            'extend' => urlencode($sign)
-        );
-
-
-        $mid                        = '130101521';
-        $order_sn                   = date('YmdHis',$time) . randomString(6);
-        $money                      = '000000000100';
-        $subject                    = '支付提现转账';
-        $body                       = '支付提现转账';
-        $currencyCode               = 156;
-        $frontUrl                   = 'http://xnrcp20180903.php.xnrcms.cn/api/Crontab/paySuccess/pay_type/100';
-        $clearCycle                 = 'T0';
-        $notifyUrl                  = 'http://xnrcp20180903.php.xnrcms.cn/api/Crontab/paySuccess/pay_type/100';
-        $data = [
-            'head' => [
-                'version'           => '1.0',
-                'method'            => 'sandPay.fastPay.quickPay.index',
-                'productId'         => '00000016',
-                'accessType'        => '1',
-                'mid'               => $mid,
-                'channelType'       => '07',
-                'reqTime'           => date('YmdHis', $time)
-            ],
-            'body' => [
-                'userId'            => $parame['uid'],
-                'orderCode'         => $order_sn,
-                'orderTime'         => date('YmdHis', $time),
-                'totalAmount'       => $money,
-                'subject'           => $subject,
-                'body'              => $body,
-                'currencyCode'      => $currencyCode,
-                'notifyUrl'         => $notifyUrl,
-                'frontUrl'          => $frontUrl,
-                'clearCycle'        => $clearCycle,
-                'extend'            => ''
-            ]
-        ];
-
-        //私钥签名
-        $pwd        = '524023';
-        $pri_path   = \Env::get('APP_PATH').'cert/privte.pfx';
-
-        $prikey = pd_loadPk12Cert($pri_path, $pwd);
-        $sign   = pd_sign($data, $prikey);
-
-
-        // step3: 拼接post数据
-        $post = array(
-            'charset' => 'utf-8',
-            'signType' => '01',
-            'data' => json_encode($data),
-            'sign' => urlencode($sign)
-        );
-
-        $url    = 'https://cashier.sandpay.com.cn/fastPay/quickPay/index';
-        $res    = CurlHttp($url,$post,'POST');
-*/
-        
-        print_r($pri_path);exit;
 
         return ['Code' => '000000', 'Msg'=>lang('000000'),'Data'=>[]];
     }
