@@ -188,9 +188,11 @@ class Pay extends Base
             'transCode'     => $transCode,
             'accessType'    => $accessType,
             'merId'         => $merId,
+            'plId'          => '',
             'encryptKey'    => $encryptKey,
             'encryptData'   => $encryptData,
-            'sign'          => $sign
+            'sign'          => $sign,
+            'extend'        => '',
         ];
 
         /*$res    = CurlHttp($path,$post,'POST');
