@@ -205,6 +205,7 @@ class Pay extends Base
         parse_str($result, $arr);
 
         try {
+            print_r($arr);exit;
             // step7: 使用私钥解密AESKey
             $decryptAESKey      = pd_RSADecryptByPri($arr['encryptKey'], $priKey);
 
