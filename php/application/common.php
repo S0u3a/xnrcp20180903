@@ -1621,7 +1621,7 @@ if (!function_exists('pd_http_post_json'))
 	        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
 	        $data = curl_exec($ch);//运行curl
 	        curl_close($ch);
-print_r($data);exit;
+
 	        if (!$data) {
 	            throw new \Exception('请求出错');
 	        }
