@@ -194,12 +194,9 @@ class Pay extends Base
             'sign'          => $sign,
             'extend'        => '',
         ];
-
-        /*$res    = CurlHttp($path,$post,'POST');
-        print_r([1,$res]);exit();*/
-
+        print_r($post);exit;
         // step6: post请求
-        $result = pd_http_post_json($path, $post);
+        $result             = pd_http_post_json($path, $post);
 
         parse_str($result, $arr);
 
