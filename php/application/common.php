@@ -1580,7 +1580,7 @@ if (!function_exists('pd_verify'))
 	 * @throws Exception
 	 */
 	function pd_verify($plainText, $sign, $path)
-	{
+	{print_r[$plainText, $sign, $path];exit;
 	    $resource = openssl_pkey_get_public($path);
 	    $result = openssl_verify($plainText, base64_decode($sign), $resource);
 	    openssl_free_key($resource);

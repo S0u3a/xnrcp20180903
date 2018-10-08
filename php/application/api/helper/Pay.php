@@ -210,7 +210,7 @@ class Pay extends Base
             $decryptAESKey      = pd_RSADecryptByPri($arr['encryptKey'], $priKey);
 
             // step8: 使用解密后的AESKey解密报文
-            $decryptPlainText = pd_AESDecrypt($arr['encryptData'], $decryptAESKey);
+            $decryptPlainText   = pd_AESDecrypt($arr['encryptData'], $decryptAESKey);
 
             // step9: 使用公钥验签报文
             pd_verify($decryptPlainText, $arr['sign'], $pubKey);
