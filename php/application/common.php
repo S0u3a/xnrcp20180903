@@ -357,7 +357,7 @@ function CurlHttp($url,$body='',$method='DELETE',$headers=array()){
 	curl_setopt($ci,CURLINFO_HEADER_OUT,TRUE);
 	$response=curl_exec($ci);
 	$httpcode=curl_getinfo($ci,CURLINFO_HTTP_CODE);
-	$httpinfo=array_merge($httpinfo,curl_getinfo($ci));print_r($httpinfo);
+	$httpinfo=array_merge($httpinfo,curl_getinfo($ci));
 	curl_close($ci);
 	return $response;
 }
