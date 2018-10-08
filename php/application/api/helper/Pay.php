@@ -138,24 +138,28 @@ class Pay extends Base
         $mid                        = $config['mid'];
         $currencyCode               = 156;
         $order_sn                   = date('YmdHis',$time) . randomString(6);
-        
+        $fee                        = 1;
+
         $data                       = [
             'transCode' => 'RTPM', // 实时代付
             'merId' => $mid, // 此处更换商户号
             'url' => 'https://caspay.sandpay.com.cn/agent-main/openapi/agentpay',
             'pt' => [
-                'orderCode' => $order_sn,
                 'version' => '01',
                 'productId' => '00000004',
-                'tranTime' => date('YmdHis', time()),
-                'timeOut' => '20181024120000',
-                'tranAmt' => '000000000500',
+                'tranTime' => date('YmdHis', $time),
+                'orderCode' => $order_sn,
+                'timeOut' => '',
+                'tranAmt' => substr('000000000000' . ($fee*100), -12),
                 'currencyCode' => '156',
                 'accAttr' => '0',
-                'accNo' => '6216261000000000018',
                 'accType' => '4',
+                'accNo' => '6216261000000000018',
                 'accName' => '全渠道',
-                'bankName' => 'cbc',
+                'provNo' => '',
+                'cityNo' => '',
+                'bankName' => '',
+                'bankType' => '',
                 'remark' => 'pay',
                 'payMode' => '2',
                 'channelType' => '07'
@@ -323,7 +327,7 @@ print_r($data);exit;
                 $mid                        = $config['mid'];
                 $currencyCode               = 156;
                 $order_sn                   = date('YmdHis',$time) . randomString(6);
-                $money                      = substr('000000000000' . ($fee*100), -12);;
+                $money                      = substr('000000000000' . ($fee*100), -12);
                 $subject                    = '余额充值';
                 $body                       = '余额充值';
                 $frontUrl                   = $config['ReturnURL'] . '/100/uid/'.$uid;
