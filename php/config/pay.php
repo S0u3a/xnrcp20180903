@@ -42,7 +42,7 @@ return [
             'ReturnURL'     => request()->domain().'/api/Crontab/paySuccess/pay_type/3',
         ],
         'sandpay'=>[
-            'mid'           =>'130101521',
+            'mid'           =>'13010152',
             'ReturnURL'     => request()->domain().'/api/Crontab/paySuccess/pay_type/100',
             'CretPwd'       =>'524023',
             'SignKey'       =>'D9C9F95ED5C25B451DD656F7F8DA1573',
