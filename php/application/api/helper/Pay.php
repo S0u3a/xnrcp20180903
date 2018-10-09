@@ -91,7 +91,7 @@ class Pay extends Base
             $order_type             = 1 ;
             $uid                    = $parame['uid'];
 
-            //$fee = 0.01;
+            $fee = 0.01;
 
             $extend                  = [] ;
             $extend['order_sn']     = $order_sn;
