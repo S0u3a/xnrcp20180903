@@ -345,7 +345,7 @@ class Crontab extends Base
                 break ;
             case 100://代付回调
                 $return            = request()->param();
-                wr($return);return;
+                wr($return,'pay.txt');return;
                 break;
             default :
                 break ;
