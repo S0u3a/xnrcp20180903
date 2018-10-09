@@ -337,6 +337,7 @@ class User extends Base
         $Data['face_path']                = get_cover($userDetail['face'],'path');
         $Data['invitation_code']          = get_invitation_code($ucUserInfo['id']);
         $Data['account']                  = $userDetail['account'];
+        $Data['cash_money']               = $userDetail['cash_money'];
         $Data['score']                    = $userDetail['score'];
         $Data['login']                    = $userDetail['login'];
         $Data['last_login_ip']            = $userDetail['last_login_ip'];
