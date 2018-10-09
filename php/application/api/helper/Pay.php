@@ -330,9 +330,9 @@ class Pay extends Base
                 $money                      = substr('000000000000' . ($fee*100), -12);
                 $subject                    = '余额充值';
                 $body                       = '余额充值';
-                $frontUrl                   = $config['ReturnURL'] . '/100/uid/'.$uid;
+                $frontUrl                   = $config['ReturnURL'];
                 $clearCycle                 = '0';
-                $notifyUrl                  = $config['ReturnURL'] . '/100/uid/'.$uid;
+                $notifyUrl                  = $config['ReturnURL'];
                 $data = [
                     'head' => [
                         'version'           => '1.0',
