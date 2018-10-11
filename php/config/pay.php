@@ -46,7 +46,6 @@ return [
             'ReturnURL'     => request()->domain().'/api/Crontab/paySuccess/pay_type/100',
             'CretPwd'       =>'524023',
             'SignKey'       =>'D9C9F95ED5C25B451DD656F7F8DA1573',
-            'ReturnURL'     => request()->domain().'/api/Crontab/paySuccess/pay_type/3',
         ]
     ];
 
