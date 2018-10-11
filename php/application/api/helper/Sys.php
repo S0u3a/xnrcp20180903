@@ -362,6 +362,8 @@ class Sys extends Base
         $config['show_pay']             = 0;
         $config['kf_info_one']          = config('system_config.kf_info_one');
         $config['kf_info_two']          = config('system_config.kf_info_two');
+        $config['share_title']          = config('system_config.share_title');
+        $config['share_desc']           = config('system_config.share_desc');
 
         return ['Code' => '000000', 'Msg'=>lang('000000'),'Data'=>$config];
     }
