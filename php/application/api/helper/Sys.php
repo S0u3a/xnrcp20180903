@@ -359,6 +359,8 @@ class Sys extends Base
         $config['ios_version']          = '1.0.0';
         $config['android_version']      = '1.0.0';
         $config['sys_notice']           = 'xxxxxxxxxx';
+        $config['show_pay']             = 0;
+        $config['kf_info']              = config('system_config.kf_info');
 
         return ['Code' => '000000', 'Msg'=>lang('000000'),'Data'=>$config];
     }
