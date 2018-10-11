@@ -360,7 +360,8 @@ class Sys extends Base
         $config['android_version']      = '1.0.0';
         $config['sys_notice']           = 'xxxxxxxxxx';
         $config['show_pay']             = 0;
-        $config['kf_info']              = config('system_config.kf_info');
+        $config['kf_info_one']          = config('system_config.kf_info_one');
+        $config['kf_info_two']          = config('system_config.kf_info_two');
 
         return ['Code' => '000000', 'Msg'=>lang('000000'),'Data'=>$config];
     }
