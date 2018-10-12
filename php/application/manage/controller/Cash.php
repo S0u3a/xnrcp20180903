@@ -331,20 +331,53 @@ class Cash extends Base
         $ids     = (isset($ids['ids']) && !empty($ids['ids'])) ? $ids['ids'] : $this->error('请选择要操作的数据');
         $ids     = is_array($ids) ? implode($ids,',') : intval($ids);
         
-        $dbModel    = model('bank_cash');
-        $dbModel->updateById($ids,['status'=>3]);
-        $this->success('通过审核成功',Cookie('__forward__')) ;
+        //调用代付接口
+
+        //用户信息
+        $postData                   = [];
+        $postData['uid']            = $this->uid;
+        $postData['hashid']         = $this->hashid;
+        $postData['id']             = intval($ids);
+
+        //请求数据
+        $res       = $this->apiData($postData,'Api/Pay/substitute') ;
+        $data      = $this->getApiData();
+
+        if($res){
+            $this->success('通过审核成功',Cookie('__forward__')) ;
+        }else{
+            $this->error($this->getApiError()) ;
+        }
     }
 
     public function examinen()
     {
-        $ids     = request()->param();
-        $ids     = (isset($ids['ids']) && !empty($ids['ids'])) ? $ids['ids'] : $this->error('请选择要操作的数据');
-        $ids     = is_array($ids) ? implode($ids,',') : intval($ids);
+        $param                      = request()->param();
+        $dbModel                    = model('bank_cash');
+        $id                         = isset($param['id']) ? intval($param['id']) : 0;
+        $cash_info                  = $dbModel->getOneByid($id);
+        $cash_info                  = !empty($cash_info) ? $cash_info->toArray() : [];
+        $money                      = isset($cash_info['money']) ? $cash_info['money']*1 : 0;
 
-        $dbModel    = model('bank_cash');
-        $dbModel->updateById($ids,['status'=>4]);
-        $this->success('驳回审核成功',Cookie('__forward__')) ;
+        if (empty($cash_info) || $money <= 0) $this->error('提现信息异常') ;
+
+        //退还提现金额
+        $userModel   = model('user_detail');
+        $userinfo    = $userModel->getOneByUid($cash_info['uid']);
+
+        if (!empty($userinfo))
+        {    
+            $data                   = [];
+            $data['account']        = $userinfo['account']+$money;
+            $data['cash_money']     = $userinfo['cash_money']+$money;
+            $userModel->updateById($userinfo['id'],$data);
+            $userModel->delDetailDataCacheByUid($userinfo['uid']);
+
+            $dbModel->updateById($id,['status'=>4]);
+            $this->success('驳回审核成功',Cookie('__forward__')) ;
+        }else{
+            $this->error('操作失败！') ;
+        }
     }
 
     public function viewinfo()

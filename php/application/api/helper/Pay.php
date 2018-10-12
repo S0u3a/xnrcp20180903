@@ -133,29 +133,50 @@ class Pay extends Base
      */
     private function substitute($parame)
     {
+        $dbModel                    = model('bank_cash');
+        //获取用户提现信息
+        $id                         = isset($parame['id']) ? intval($parame['id']) : '';
+        $cash_info                  = $dbModel->getOneByid($id);
+        $cash_info                  = !empty($cash_info) ? $cash_info->toArray() : [];
+
+        $accNo                      = '';
+        $accName                    = '';
+        $money                      = 0;
+        $cash_uid                   = 0;
+
+        if (!empty($cash_info)) {
+            $accName                = isset($cash_info['real_name']) ? $cash_info['real_name'] : '';
+            $accNo                  = isset($cash_info['bank_num']) ? $cash_info['bank_num'] : '';
+            $money                  = isset($cash_info['money']) ? $cash_info['money']*1 : 0;
+            $cash_uid               = isset($cash_info['uid']) ? $cash_info['uid']*1 : 0;
+        }
+
+        if (empty($accName) || $cash_uid <= 0) return ['Code' => '200005', 'Msg'=>lang('200005')];
+        if (empty($accNo)) return ['Code' => '200006', 'Msg'=>lang('200006')];
+        if ($money <= 0) return ['Code' => '200007', 'Msg'=>lang('200007')];
+
         $config                     = config('pay.sandpay');
         $time                       = time();
         $mid                        = $config['mid'];
         $currencyCode               = 156;
         $order_sn                   = date('YmdHis',$time) . randomString(6);
-        $fee                        = 1;
 
         $data                       = [
             'transCode' => 'RTPM', // 实时代付
-            'merId' => $mid, // 此处更换商户号
-            'url' => 'https://caspay.sandpay.com.cn/agent-main/openapi/agentpay',
-            'pt' => [
-                'version' => '01',
-                'productId' => '00000004',
-                'tranTime' => date('YmdHis', $time),
-                'orderCode' => $order_sn,
-                'tranAmt' => substr('000000000000' . ($fee*100), -12),
-                'currencyCode' => '156',
-                'accAttr' => '0',
-                'accType' => '4',
-                'accNo' => '6222021202040713688',
-                'accName' => '王远庆',
-                'remark' => 'pay',
+            'merId'     => $mid, // 此处更换商户号
+            'url'       => 'https://caspay.sandpay.com.cn/agent-main/openapi/agentpay',
+            'pt'        => [
+                'version'       => '01',
+                'productId'     => '00000004',
+                'tranTime'      => date('YmdHis', $time),
+                'orderCode'     => $order_sn,
+                'tranAmt'       => substr('000000000000' . ($money*100), -12),
+                'currencyCode'  => '156',
+                'accAttr'       => '0',
+                'accType'       => '4',
+                'accNo'         => $accNo,
+                'accName'       => $accName,
+                'remark'        => '用户ID：【'.$cash_uid.'】余额提现',
             ]
         ];
 
@@ -185,11 +206,9 @@ class Pay extends Base
             'transCode'     => $transCode,
             'accessType'    => $accessType,
             'merId'         => $merId,
-            //'plId'          => '',
             'encryptKey'    => $encryptKey,
             'encryptData'   => $encryptData,
-            'sign'          => $sign,
-            //'extend'        => '',
+            'sign'          => $sign
         ];
 
         // step6: post请求
@@ -205,15 +224,22 @@ class Pay extends Base
             $decryptPlainText   = pd_AESDecrypt($arr['encryptData'], $decryptAESKey);
 
             // step9: 使用公钥验签报文
-            pd_verify($decryptPlainText, $arr['sign'], $pubKey);
+            if (pd_verify($decryptPlainText, $arr['sign'], $pubKey)) {
+                $result         = json_decode($decryptPlainText,true);
+                if (isset($result['respCode']) && $result['respCode'] == '0000') {
+
+                    $dbModel->updateById($id,['status'=>3]);
+                    return ['Code' => '000000', 'Msg'=>lang('000000')];
+                }else{
+                    $msg        = (isset($result['respDesc'])) ? $result['respDesc'] : lang('200009');
+                    return ['Code' => '200007', 'Msg'=>$msg];
+                }
+            }else{
+                return ['Code' => '200007', 'Msg'=>lang('200008')];
+            }
         } catch (\Exception $e) {
-            echo $e->getMessage();
-            exit;
+            return ['Code' => '200007', 'Msg'=>$e->getMessage()];
         }
-
-        print_r($decryptPlainText);exit();
-
-        return ['Code' => '000000', 'Msg'=>lang('000000'),'Data'=>[]];
     }
 
     /*api:97a96cfbdb3effe2be005c5df98736af*/
