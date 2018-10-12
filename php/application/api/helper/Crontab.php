@@ -277,6 +277,7 @@ class Crontab extends Base
     {
         $parame             = is_array($parame) ? $parame : json_decode($parame,true) ;
         $payType            = $parame['pay_type'] ;
+        dblog([$parame,'ssss1']);
         switch ($payType){
             case 1:
                 //获取配置
@@ -345,8 +346,7 @@ class Crontab extends Base
                 break ;
             case 100://代付回调
                 $return            = request()->param();
-                dblog($return);
-                wr($return,'pay.txt');return;
+                dblog([$return,'ssss2']);return;
                 break;
             default :
                 break ;
