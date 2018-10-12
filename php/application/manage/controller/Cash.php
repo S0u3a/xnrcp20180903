@@ -354,7 +354,7 @@ class Cash extends Base
     {
         $param                      = request()->param();
         $dbModel                    = model('bank_cash');
-        $id                         = isset($param['id']) ? intval($param['id']) : 0;
+        $id                         = isset($param['ids']) ? intval($param['ids']) : 0;
         $cash_info                  = $dbModel->getOneByid($id);
         $cash_info                  = !empty($cash_info) ? $cash_info->toArray() : [];
         $money                      = isset($cash_info['money']) ? $cash_info['money']*1 : 0;
