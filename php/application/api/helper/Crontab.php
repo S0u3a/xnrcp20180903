@@ -407,11 +407,12 @@ class Crontab extends Base
             $find_status                = model('order_recharge')->where($map)->value('status');
 
             $cacheKey                   = 'updateRechargeOrder==' . $out_trade_no;
+            dblog($cacheKey);
             if (cache($cacheKey) == 'success') return 1;
 
             if($find_status != 2){
                 cache($cacheKey,'success');
-                
+
                 //准备用户订单购买数据
                 $uid                    = model('order_recharge')->where($map)->value('uid');
                 model('order_recharge')->where($map)->update(['status'=>2]);
