@@ -138,7 +138,7 @@ class Pay extends Base
         $mid                        = $config['mid'];
         $currencyCode               = 156;
         $order_sn                   = date('YmdHis',$time) . randomString(6);
-        $fee                        = 100;
+        $fee                        = 1;
 
         $data                       = [
             'transCode' => 'RTPM', // 实时代付
