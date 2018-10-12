@@ -277,7 +277,8 @@ class Crontab extends Base
     {
         $parame             = is_array($parame) ? $parame : json_decode($parame,true) ;
         $payType            = $parame['pay_type'] ;
- 
+        
+        dblog($parame);
         switch ($payType){
             case 1:
                 //获取配置
