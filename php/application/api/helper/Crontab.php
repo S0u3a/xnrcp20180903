@@ -349,7 +349,7 @@ class Crontab extends Base
                 $return_data       = isset($parame['data']) ? stripslashes($parame['data']) : '';
                 /*$return_signType   = isset($parame['signType']) ? $parame['signType'] : '';
                 $return_charset    = isset($parame['charset']) ? $parame['charset'] : '';*/
-dblog($_POST);
+
                 $sign = $_POST['sign']; //签名
                 $signType = $_POST['signType']; //签名方式
                 $data = stripslashes($_POST['data']); //支付数据
@@ -361,7 +361,7 @@ dblog($_POST);
                 //公钥
                 $pub_path       = \Env::get('APP_PATH').'cert/public.cer';
                 $pubkey         = pd_loadX509Cert($pub_path);
-
+dblog([$data, $sign, $pubkey]);
                 if (pd_verify($data, $sign, $pubkey)) {
                     dblog('pay fail=1111111:return_data or return_sign empty');exit;
                     exit;
