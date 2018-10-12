@@ -153,7 +153,7 @@ class Pay extends Base
                 'currencyCode' => '156',
                 'accAttr' => '0',
                 'accType' => '4',
-                'accNo' => '622021202040713688',
+                'accNo' => '6222021202040713688',
                 'accName' => '王远庆',
                 'remark' => 'pay',
             ]
