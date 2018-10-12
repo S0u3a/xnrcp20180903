@@ -362,7 +362,7 @@ dblog($_POST);
                 $pub_path       = \Env::get('APP_PATH').'cert/public.cer';
                 $pubkey         = pd_loadX509Cert($pub_path);
 
-                if (verify($data, $sign, $pubkey)) {
+                if (pd_verify($data, $sign, $pubkey)) {
                     dblog('pay fail=1111111:return_data or return_sign empty');exit;
                     exit;
                 } else {
@@ -373,7 +373,7 @@ dblog($_POST);
                 /*$return_data       = '{"head":{"respTime":"20181012110730","respMsg":"成功","version":"1.0","respCode":"000000"},"body":{"clearDate":"20181012","tradeNo":"2018101211072802831118056597","payTime":"20181012110730","plMidFee":"000000000000","settleAmount":"000000000002","midFee":"000000000000","mid":"13010152","orderStatus":"1","cardNo":"622****3688","specialFee":"000000000000","totalAmount":"000000000002","creditFlag":"1","buyerPayAmount":"000000000002","orderCode":"181012110639316298","bid":"SDSMP00000001301015220181009093105235577","discAmount":"000000000000","extraFee":"000000000000"}}';
                 $return_sign       = 'MuMSBvIhdCEGbMTf8+mzj7PTmHaPijNCAd6C16jG3XAgrQz1ekGbTOQWU926jh1Mhtj0jwlZhjI4XspEcxXnUfAu6NQgb+iSGN/Oe09GTuewfpJOQ6dZe/2rQFtl+8usmDOAj5spkjuBiUHxtxoE2j18Uk5cjAozPWH+i/7yzyFbPy3kSzcDvJVziCMeGBEeKaiKF0Ce6Cp4ZwTtm4vTqONCatBnZ2vlDCd8Ret9uwzpCtsJ7qRnJ21kl9mZjglzNftHzdqvTDsYoOisg10HGuud6pAc9OljhMEKSduk0JIWTfWjXPG//MfuB+a3wXhWsYS6tkW6FnxTpWssm63gTg==';*/
 
-                if (empty($return_sign) || empty($return_data)) {
+                /*if (empty($return_sign) || empty($return_data)) {
                     dblog('pay fail:return_data or return_sign empty');exit;
                 }
 
@@ -402,7 +402,7 @@ dblog($_POST);
                     dblog('pay fail:return_sign is error');exit;
                 }
 
-                $return            = request()->param();
+                $return            = request()->param();*/
 
                 break;
             default :
