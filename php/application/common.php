@@ -1584,12 +1584,11 @@ if (!function_exists('pd_verify'))
 	    $resource = openssl_pkey_get_public($path);
 	    $result = openssl_verify($plainText, base64_decode($sign), $resource);
 	    openssl_free_key($resource);
-
 	    if (!$result) {
-	        throw new \Exception('签名验证未通过,plainText:' . $plainText . '。sign:' . $sign, '02002');
+	        return false;
 	    }
 
-	    return $result;
+	    return true;
 	}
 }
 
