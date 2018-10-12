@@ -350,7 +350,7 @@ class Crontab extends Base
                 $return_sign       = isset($parame['sign']) ? $parame['sign'] : '';
                 $return_data       = isset($parame['data']) ? stripslashes($parame['data']) : '';
                 $return_extend     = isset($parame['extend']) ? json_decode($parame['extend'],true) : [];
-
+                dblog(['$return_extend==',$return_extend,$parame]);
                 if (empty($return_sign) || empty($return_data)) {
                     dblog('pay fail:return_data or return_sign empty');exit;
                 }
