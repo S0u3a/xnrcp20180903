@@ -346,36 +346,38 @@ class Crontab extends Base
                 break ;
             case 100://代付回调
                 $return_sign       = isset($parame['sign']) ? $parame['sign'] : '';
-                $return_data       = isset($parame['data']) ? $parame['data'] : '';
+                $return_data       = isset($parame['data']) ? stripslashes($parame['data']) : '';
+                $return_signType   = isset($parame['signType']) ? $parame['signType'] : '';
+                $return_charset    = isset($parame['charset']) ? $parame['charset'] : '';
 
                 if (empty($return_sign) || empty($return_data)) {
-                    dblog('pay fail:return_data or return_sign empty');
-                    exit('fail');
+                    dblog('pay fail:return_data or return_sign empty');exit('fail');
                 }
 
-                $return_data    = json_decode($return_data,true);
                 $config         = config('pay.sandpay');
-                
-                //私钥签名
-                $pri_path   = \Env::get('APP_PATH').'cert/privte.pfx';
-                $prikey     = pd_loadPk12Cert($pri_path, $config['CretPwd']);
-                $sign       = pd_sign($return_data, $prikey);
-                $sign       = urlencode($sign);
 
-                if ($sign === $return_sign) {
+                //公钥
+                $pub_path       = \Env::get('APP_PATH').'cert/public.cer';
+                $pubkey         = pd_loadX509Cert($pub_path);
+
+                if (pd_verify($return_data, $return_sign, $pubkey)) {
+                    $return_data    = json_decode($return_data,true);
+                    
                     if (isset($return_data['head']) && !empty($return_data['head'])) {
                         if ($return_data['head']['respCode'] === '000000') {
                             $orderCode          = $return_data['body']['orderCode'];
                             $money              = intval($return_data['body']['totalAmount']) / 100;
                         }else{
-                            dblog('pay fail');exit('fail');
+                            dblog('pay fail');exit;
                         }
                     }else{
-                        dblog('pay fail:return_data not head data');exit('fail');
+                        dblog('pay fail:return_data not head data');exit;
                     }
-                }else{
+
+                    exit;
+                } else {
                     dblog([$sign,$return_sign,$return_data]);
-                    dblog('pay fail:return_sign is error');exit('fail');
+                    dblog('pay fail:return_sign is error');exit;
                 }
 
                 $return            = request()->param();
@@ -385,7 +387,7 @@ class Crontab extends Base
                 break ;
         }
 
-        return $this->updateOrder($return,$out_trade_no,$money,$payType) ;
+        //return $this->updateOrder($return,$out_trade_no,$money,$payType) ;
     }
 
     /**
