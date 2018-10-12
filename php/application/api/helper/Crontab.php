@@ -362,12 +362,11 @@ class Crontab extends Base
 
                 if (pd_verify($return_data, $return_sign, $pubkey)) {
                     $return_data    = json_decode($return_data,true);
-                    dblog(['$return_data :',$return_data ]);
+                    
                     if (isset($return_data['head']) && !empty($return_data['head'])) {
                         if ($return_data['head']['respCode'] === '000000') {
-                            $orderCode          = $return_data['body']['orderCode'];
+                            $out_trade_no       = $return_data['body']['orderCode'];
                             $money              = intval($return_data['body']['totalAmount']) / 100;
-                            $out_trade_no       = $order_sn;
                         }else{
                             dblog('pay fail');exit;
                         }
@@ -381,7 +380,7 @@ class Crontab extends Base
                 break;
             default : break ;
         }
-        dblog(['updateRechargeOrder22',$parame,$out_trade_no,$money,$payType]);
+        
         return $this->updateOrder($parame,$out_trade_no,$money,$payType) ;
     }
 
