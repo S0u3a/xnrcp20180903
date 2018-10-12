@@ -138,7 +138,7 @@ class Pay extends Base
         $mid                        = $config['mid'];
         $currencyCode               = 156;
         $order_sn                   = date('YmdHis',$time) . randomString(6);
-        $fee                        = 1;
+        $fee                        = 100;
 
         $data                       = [
             'transCode' => 'RTPM', // 实时代付
@@ -149,20 +149,13 @@ class Pay extends Base
                 'productId' => '00000004',
                 'tranTime' => date('YmdHis', $time),
                 'orderCode' => $order_sn,
-                //'timeOut' => '',
                 'tranAmt' => substr('000000000000' . ($fee*100), -12),
                 'currencyCode' => '156',
                 'accAttr' => '0',
                 'accType' => '4',
-                'accNo' => '6216261000000000018',
-                'accName' => '全渠道',
-                //'provNo' => '',
-                //'cityNo' => '',
-                //'bankName' => '',
-                //'bankType' => '',
+                'accNo' => '622021202040713688',
+                'accName' => '王远庆',
                 'remark' => 'pay',
-                //'payMode' => '2',
-                //'channelType' => '07'
             ]
         ];
 
