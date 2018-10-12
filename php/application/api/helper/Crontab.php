@@ -349,7 +349,7 @@ class Crontab extends Base
                 $return_data       = isset($parame['data']) ? stripslashes($parame['data']) : '';
                 /*$return_signType   = isset($parame['signType']) ? $parame['signType'] : '';
                 $return_charset    = isset($parame['charset']) ? $parame['charset'] : '';*/
-
+dblog($_POST);
                 $sign = $_POST['sign']; //签名
                 $signType = $_POST['signType']; //签名方式
                 $data = stripslashes($_POST['data']); //支付数据
