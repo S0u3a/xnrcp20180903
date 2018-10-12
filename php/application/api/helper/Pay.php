@@ -228,7 +228,7 @@ class Pay extends Base
                 $result         = json_decode($decryptPlainText,true);
                 if (isset($result['respCode']) && $result['respCode'] == '0000') {
 
-                    $dbModel->updateById($id,['status'=>3]);
+                    $dbModel->updateById($id,['status'=>3,'order_sn'=>$result['orderCode']]);
                     return ['Code' => '000000', 'Msg'=>lang('000000')];
                 }else{
                     $msg        = (isset($result['respDesc'])) ? $result['respDesc'] : lang('200009');
