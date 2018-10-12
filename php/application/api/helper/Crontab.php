@@ -276,9 +276,8 @@ class Crontab extends Base
     private function paySuccess($parame=[])
     {
         $parame             = is_array($parame) ? $parame : json_decode($parame,true) ;
-        $payType            = $parame['pay_type'] ;
-        
-        dblog([$parame,$parame['pay_type'],$payType]);
+        $payType            = intval($parame['pay_type']) ;
+
         switch ($payType){
             case 1:
                 //获取配置
@@ -349,8 +348,8 @@ class Crontab extends Base
                 $return_sign       = isset($parame['sign']) ? $parame['sign'] : '';
                 $return_data       = isset($parame['data']) ? $parame['data'] : '';
 
+                dblog(['return_sign empty',$parame,$return_data,$return_sign]);
                 if (empty($return_sign) || empty($return_data)) {
-                    dblog(['return_sign empty',$parame,$return_data,$return_sign]);
                     dblog('pay fail:return_data or return_sign empty');
                     exit('fail');
                 }
