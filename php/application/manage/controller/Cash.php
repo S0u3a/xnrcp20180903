@@ -376,7 +376,7 @@ class Cash extends Base
             $dbModel->updateById($id,['status'=>4]);
             
             //写日志
-            model('user_account_log')->addAccountLog($userinfo['id'],$cash_money,'提现驳回退还',1,6);
+            model('user_account_log')->addAccountLog($userinfo['id'],$money,'提现驳回退还',1,6);
 
             $this->success('驳回审核成功',Cookie('__forward__')) ;
         }else{
