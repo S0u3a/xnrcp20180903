@@ -348,14 +348,14 @@ class Crontab extends Base
                 $return_sign       = isset($parame['sign']) ? $parame['sign'] : '';
                 $return_data       = isset($parame['data']) ? $parame['data'] : '';
 
-                dblog(['return_sign empty',$parame,$return_data,$return_sign]);
                 if (empty($return_sign) || empty($return_data)) {
                     dblog('pay fail:return_data or return_sign empty');
                     exit('fail');
                 }
 
                 $return_data    = json_decode($return_data,true);
-
+                $config         = config('pay.sandpay');
+                
                 //私钥签名
                 $pri_path   = \Env::get('APP_PATH').'cert/privte.pfx';
                 $prikey     = pd_loadPk12Cert($pri_path, $config['CretPwd']);
