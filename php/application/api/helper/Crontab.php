@@ -277,7 +277,7 @@ class Crontab extends Base
     {
         $parame             = is_array($parame) ? $parame : json_decode($parame,true) ;
         $payType            = $parame['pay_type'] ;
-        dblog([$parame,'ssss1']);
+ 
         switch ($payType){
             case 1:
                 //获取配置
@@ -345,8 +345,39 @@ class Crontab extends Base
                 }
                 break ;
             case 100://代付回调
+                $return_sign       = isset($parame['sign']) ? $parame['sign'] : '';
+                $return_data       = isset($parame['data']) ? $parame['data'] : '';
+                if (empty($return_data) || empty($return_sign)) {
+                    dblog('pay fail:return_data or return_sign empty');
+                    exit('fail');
+                }
+
+                $return_data    = json_decode($return_data,true);
+
+                //私钥签名
+                $pri_path   = \Env::get('APP_PATH').'cert/privte.pfx';
+                $prikey     = pd_loadPk12Cert($pri_path, $config['CretPwd']);
+                $sign       = pd_sign($return_data, $prikey);
+                $sign       = urlencode($sign);
+
+                if ($sign === $return_sign) {
+                    if (isset($return_data['head']) && !empty($return_data['head'])) {
+                        if ($return_data['head']['respCode'] === '000000') {
+                            $orderCode          = $return_data['body']['orderCode'];
+                            $money              = intval($return_data['body']['totalAmount']) / 100;
+                        }else{
+                            dblog('pay fail');exit('fail');
+                        }
+                    }else{
+                        dblog('pay fail:return_data not head data');exit('fail');
+                    }
+                }else{
+                    dblog([$sign,$return_sign,$return_data]);
+                    dblog('pay fail:return_sign is error');exit('fail');
+                }
+
                 $return            = request()->param();
-                dblog([$return,'ssss2']);return;
+
                 break;
             default :
                 break ;
@@ -371,6 +402,7 @@ class Crontab extends Base
 
     private function updateRechargeOrder($passback_params, $out_trade_no, $money, $payType)
     {
+        dblog(['updateRechargeOrder',$passback_params, $out_trade_no, $money, $payType]);
         try{
             $map                        = [];
             $map['order_sn']            = $out_trade_no;

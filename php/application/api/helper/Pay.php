@@ -83,7 +83,7 @@ class Pay extends Base
             }*/
 
             //订单编号
-            $order_sn               = date('ymdHis',time()).randomString(3,0) ;
+            $order_sn               = date('ymdHis',time()).randomString(6,0) ;
 
             $body                   = '充值订单' ;
             $attach                 = '充值订单' ;
@@ -326,7 +326,7 @@ class Pay extends Base
 
                 $mid                        = $config['mid'];
                 $currencyCode               = 156;
-                $order_sn                   = date('YmdHis',$time) . randomString(6);
+                $order_sn                   = $order_sn;
                 $money                      = substr('000000000000' . ($fee*100), -12);
                 $subject                    = '余额充值';
                 $body                       = '余额充值';
@@ -378,7 +378,7 @@ class Pay extends Base
 
                 $html       .= '<form id="sandpay" action="'.$url.'" method="post" hidden="hidden"><textarea name="charset">'.$charset.'</textarea><textarea name="signType">'.$signType.'</textarea><textarea name="data">'.$data.'</textarea><textarea name="sign">'.$sign.'</textarea></form>';
                 $html       .= '<script type="text/javascript">function submitForm() { document.getElementById("sandpay").submit();}</script></body></html>';
-dblog($html);
+
                 return ['Code' => '000000','Msg'=>lang('000000'),'Data'=>['alipay'=>$html,'wxpay'=>[]]];
                 break;
             default :
