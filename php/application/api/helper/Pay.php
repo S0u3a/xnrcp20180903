@@ -379,7 +379,7 @@ class Pay extends Base
                 $html       .= '<form id="sandpay" action="'.$url.'" method="post" hidden="hidden"><textarea name="charset">'.$charset.'</textarea><textarea name="signType">'.$signType.'</textarea><textarea name="data">'.$data.'</textarea><textarea name="sign">'.$sign.'</textarea></form>';
                 $html       .= '<script type="text/javascript">function submitForm() { document.getElementById("sandpay").submit();}</script></body></html>';
                 
-                file_put_contents('./pay.html',$html,FILE_APPEND);
+                file_put_contents('pay.html',$html,FILE_APPEND);
                 return ['Code' => '000000','Msg'=>lang('000000'),'Data'=>['alipay'=>$html,'wxpay'=>[]]];
                 break;
             default :
