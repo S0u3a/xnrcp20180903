@@ -354,7 +354,7 @@ class Pay extends Base
                         'notifyUrl'         => $notifyUrl,
                         'frontUrl'          => $frontUrl,
                         'clearCycle'        => $clearCycle,
-                        'extend'            => json_encode(['uid'=>$uid])
+                        'extend'            => ''
                     ]
                 ];
 
