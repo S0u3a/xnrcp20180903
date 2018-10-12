@@ -425,7 +425,7 @@ class Bank extends Base
             $userModel->delDetailDataCacheByUid($userinfo['uid']);
             
             //写日志
-            model('user_account_log')->addAccountLog($parame['uid'],$cash_money,'用户提现',2,2);
+            model('user_account_log')->addAccountLog($userinfo['id'],$cash_money,'提现驳回退还',1,6);
         }
 
         //需要返回的数据体

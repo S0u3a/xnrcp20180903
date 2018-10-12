@@ -374,6 +374,10 @@ class Cash extends Base
             $userModel->delDetailDataCacheByUid($userinfo['uid']);
 
             $dbModel->updateById($id,['status'=>4]);
+            
+            //写日志
+            model('user_account_log')->addAccountLog($parame['uid'],$cash_money,'用户提现',2,2);
+
             $this->success('驳回审核成功',Cookie('__forward__')) ;
         }else{
             $this->error('操作失败！') ;
