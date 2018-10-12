@@ -347,7 +347,9 @@ class Crontab extends Base
             case 100://代付回调
                 $return_sign       = isset($parame['sign']) ? $parame['sign'] : '';
                 $return_data       = isset($parame['data']) ? $parame['data'] : '';
-                if (empty($return_data) || empty($return_sign)) {
+
+                if (empty($return_sign) || empty($return_data)) {
+                    dblog(['return_sign empty',$parame,$return_data,$return_sign]);
                     dblog('pay fail:return_data or return_sign empty');
                     exit('fail');
                 }
