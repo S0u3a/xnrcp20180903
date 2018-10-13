@@ -443,7 +443,7 @@ class Lottery extends Base
         $id                     = isset($parame['id']) ? intval($parame['id']) : 0;
         $lottery_id             = isset($parame['lottery_id']) ? intval($parame['lottery_id']) : 0;
         $deltype                = isset($parame['deltype']) ? intval($parame['deltype']) : 0;
-        dblog(['$parame==',$parame]);
+ 
         switch ($deltype) {
             case 1:
                 $delCount               = $dbModel->delData($id); break;
