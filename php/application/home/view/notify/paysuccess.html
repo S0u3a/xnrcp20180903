@@ -1,0 +1,31 @@
+<!doctype html>
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width,height=device-height,initial-scale=1.0,user-scalable=no,minimum-scale=1.0,maximum-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+<!--JS File Start-->
+<script type="text/javascript" src="/3.0/package/jquery/jquery.js"></script>
+<script type="text/javascript" src="/3.0/package/layer/layer-min.js"></script>
+<!--JS File End-->
+</head>
+<body style="background-color: #FFF; overflow: auto;height:100%;">
+
+<script type="text/javascript">
+var isAndroid = UA && UA.indexOf('android') > 0;  //是否安卓浏览器
+var isIOS = UA && /iphone|ipad|ipod|ios/.test(UA);  //是否IOS浏览器
+
+layer.msg('充值成功,跳转中,请稍等...',{icon: 6,time:3000,offset:['35%', '13%']},function(){
+	if (isAndroid) {
+		window.android.goBack();
+	}else if(isIOS){
+		 window.webkit.messageHandlers.goBack.postMessage();
+	}
+});
+</script>
+</body>
+</html>
