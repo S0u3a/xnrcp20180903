@@ -293,7 +293,7 @@ class Crontab extends Base
                     $passback_params            = $data['passback_params'] ;
                     $passback_params            = json_decode(urlsafe_b64decode($passback_params),true) ;
 
-                    $out_trade_no               = $data['trade_no'] ;
+                    $out_trade_no               = $data['out_trade_no'] ;
                     $money                      = $data['total_amount'] ;
 
                     print_r($ret);
@@ -313,7 +313,7 @@ class Crontab extends Base
                     $passback_params            = $data['attach'] ;
                     $passback_params            = json_decode(urlsafe_b64decode($passback_params),true) ;
 
-                    $out_trade_no               = $data['transaction_id'] ;
+                    $out_trade_no               = $data['out_trade_no'] ;
                     $money                      = $data['total_fee']/100 ;
 
                     print_r($ret) ;
@@ -407,7 +407,7 @@ class Crontab extends Base
             $find_status                = model('order_recharge')->where($map)->value('status');
 
             $cacheKey                   = 'updateRechargeOrder==' . $out_trade_no;
-            dblog($cacheKey);
+
             if (cache($cacheKey) == 'success') return 1;
 
             if($find_status != 2){

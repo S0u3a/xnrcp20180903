@@ -91,7 +91,7 @@ class Pay extends Base
             $order_type             = 1 ;
             $uid                    = $parame['uid'];
 
-            $fee = 0.02;
+            //$fee = 0.02;
 
             $extend                  = [] ;
             $extend['order_sn']     = $order_sn;
@@ -397,8 +397,8 @@ class Pay extends Base
 
                 $html       .= '<form id="sandpay" action="'.$url.'" method="post" hidden="hidden"><textarea name="charset">'.$charset.'</textarea><textarea name="signType">'.$signType.'</textarea><textarea name="data">'.$data.'</textarea><textarea name="sign">'.$sign.'</textarea></form>';
                 $html       .= '<script type="text/javascript">function submitForm() { document.getElementById("sandpay").submit();}</script></body></html>';
-                unlink('./pay.html');
-                file_put_contents('./pay.html',$html,FILE_APPEND);
+                //unlink('./pay.html');
+                //file_put_contents('./pay.html',$html,FILE_APPEND);
                 return ['Code' => '000000','Msg'=>lang('000000'),'Data'=>['alipay'=>$html,'wxpay'=>[]]];
                 break;
             default :
