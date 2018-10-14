@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+  <script>!function(n){var e=n.document,t=e.documentElement,i=750,d=i/100,o="orientationchange" in n?"orientationchange":"resize",a=function(){var n=t.clientWidth||320;n>750&&(n=750),t.style.fontSize=n/d+"px"};e.addEventListener&&(n.addEventListener(o,a,!1),e.addEventListener("DOMContentLoaded",a,!1))}(window);</script>
+  <link rel="stylesheet" href="h5/share/css/style.css">
+  <title>用户注册</title>
+</head>
+<body>
+<div class="share" style="background: #fdecb4;">
+  <img src="h5/share/img/1.png" alt="" class="top-img">
+  <img src="h5/share/img/2.png" alt="" class="share-title">
+  <div class="share-form">
+    <div class="label">
+      <div class="left">
+        <img src="h5/share/img/dot1.png" alt="">
+      </div>
+      <div class="middle">
+        <input type="text" placeholder="6-18个字母，可使用字母、数字、下划线" class="user">
+      </div>
+    </div>
+    <div class="label">
+      <div class="left">
+        <img src="h5/share/img/dot3.png" alt="">
+      </div>
+      <div class="middle">
+        <input type="password" placeholder="6-16个字符，区分大小写" class="pw">
+      </div>
+    </div>
+    <div class="label">
+      <div class="left">
+        <img src="h5/share/img/dot3.png" alt="">
+      </div>
+      <div class="middle">
+        <input type="password" placeholder="再次输入您的密码" class="repw">
+      </div>
+    </div>
+    <div class="label">
+      <div class="left">
+        <img src="h5/share/img/dot4.png" alt="">
+      </div>
+      <div class="middle">
+        <input type="tel" placeholder="手机号码" class="tel">
+      </div>
+    </div>
+    <div class="label">
+      <div class="left">
+        <img src="h5/share/img/dot2.png" alt="">
+      </div>
+      <div class="middle">
+        <input type="tel" placeholder="您的验证码" class="code">
+      </div>
+      <div class="right">
+        <span class="get-code">发送验证码</span>
+      </div>
+    </div>
+
+    <div class="s-button">注册</div>
+  </div>
+</div>
+<script src="h5/common.js"></script>
+<script src="h5/share/js/jquery.min.js"></script>
+<script src="h5/share/js/md5.js"></script>
+<script>
+const TIME      = 60;
+const SHAREURL  = location.href;
+const Rparam    = GetRequest();
+let telReg      = /^1([3-9][0-9])\d{8}$/;
+$(function(){
+  $('.get-code').on('click',function(){
+    if($(".tel").val() == ''){
+      webTip('请输入手机号码');
+      return false;
+    }
+    if(!telReg.test($(".tel").val())){
+      webTip('手机号不正确');
+      return false;
+    }
+    if($(this).hasClass('gray')){
+      return false;
+    }
+    var parame          = {};
+        parame.time     = Date.parse(new Date());
+        parame.apiId    = APIID;
+        parame.terminal = 6;
+        parame.mobile   = $(".tel").val();
+        parame.type     = 1;
+        parame.hash     = sign(parame,APIKEY);
+
+        $.ajax({
+          url: APIURL+'/Sms/sendMobileCode',
+          type: 'POST',
+          data: parame,
+        }).done(function(data) {
+          if (data.Code == '000000') {
+                let num = TIME;
+                less();
+                let timer = setInterval(function(){ less();},1000);
+                webTip('发送成功',function(){},2000);
+                function less(){
+                  if(num>1){
+                    num--;
+                    $('.get-code').addClass('gray').html('等待'+num+'s');
+                  }else{
+                    clearInterval(timer);
+                    $('.get-code').removeClass('gray').html('发送验证码');
+                  }
+                }
+          }
+          else{
+            webTip(data.Msg);
+          }
+        }).fail(function() {
+          webTip('发送失败');
+        });
+  })
+  
+  $('.s-button').on('click',function(){
+    if($(".user").val() == ''){
+      webTip('请输入账号');
+      return false;
+    }
+    if($(".user").val().length < 6){
+      webTip('账号不能小于6位');
+      return false;
+    }
+    if($(".pw").val() == ''){
+      webTip('请输入密码');
+      return false;
+    }
+    if($(".pw").val().length < 6){
+      webTip('密码不能小于6位');
+      return false;
+    }
+    if($(".repw").val() == ''){
+      webTip('请重复输入密码');
+      return false;
+    }
+    if($(".pw").val() != $(".repw").val()){
+      webTip('两次密码不一致');
+      return false;
+    }
+    if($(".tel").val() == ''){
+      webTip('请输入手机号码');
+      return false;
+    }
+    if(!telReg.test($(".tel").val())){
+      webTip('手机号不正确');
+      return false;
+    }
+    if($(".code").val() == ''){
+      webTip('请输入验证码');
+      return false;
+    }
+
+    var parame                 = {};
+        parame.time            = Date.parse(new Date());
+        parame.apiId           = APIID;
+        parame.terminal        = 6;
+        parame.username        = $(".user").val();
+        parame.password        = $(".pw").val();
+        parame.repeatpwd       = $(".repw").val();
+        parame.mobile          = $(".tel").val();
+        parame.sms_code        = $(".code").val();
+        parame.invitation_code = !Rparam.code ? '1' : Rparam.code;
+        parame.hash            = sign(parame,APIKEY);
+        $.ajax({
+          url: APIURL+'/User/usernameRegister',
+          type: 'POST',
+          data: parame,
+        }).done(function(data) {
+  	     if (data.Code == '000000') {
+              webTip(data.Msg,function(){
+              window.location.href = SHAREURL;
+            },2000);
+         }
+        else{
+          webTip(data.Msg);
+        }
+    }).fail(function() {
+      webTip('注册失败');
+    })
+  })
+
+})
+
+
+function webTip(txt,fn,time){
+  var webTip=document.getElementById("webTip");
+  if(webTip){
+    return false;
+  }
+  var div=document.createElement("div");
+  var body=document.getElementsByTagName("body")[0];
+  var t;
+  if(time){
+    t=time;
+  }else{
+    t=1000;
+  }
+  div.style.cssText="position:fixed;left:50%;top:50%;padding:0.2rem 0.3rem;background:rgba(0,0,0,0.7);-webkit-transform:translate(-50%,-50%);font-size:15px;color:#fff;text-align:center;border-radius:0.08rem;z-index:999;-webkit-transition:all 0.3s;";
+  div.innerHTML=txt;
+  div.id="webTip";
+  body.appendChild(div);
+  setTimeout(function(){
+    body.removeChild(div);
+    if(fn) fn();
+  },t)
+}
+</script>
+</body>
+</html>
