@@ -429,7 +429,7 @@ class LotteryWin extends Base
                     $vv         = $tt;
                 }
                 else{
-                    $oldVal         = implode(',',$value);
+                    $oldVal         = implode(',',$vv);
                 }
 
                 sort($vv);

@@ -438,17 +438,17 @@ class LotteryRule extends Base
             case '99-8-2'://连肖连尾-连肖连尾-三连肖
                 $permutation    = $PermutationCombination->star_zuxuan($num5,3,1);break;
             case '99-8-3'://连肖连尾-连肖连尾-四连肖
-                $permutation    = $PermutationCombination->star_zuxuan($num5,4,1);break;
+                $permutation    = $PermutationCombination->star_zuxuan($num5,4,3);break;
             case '99-8-4'://连肖连尾-连肖连尾-五连肖
-                $permutation    = $PermutationCombination->star_zuxuan($num5,5,1);break;
+                $permutation    = $PermutationCombination->star_zuxuan($num5,5,3);break;
             case '99-8-5'://连肖连尾-连肖连尾-二连尾
                 $permutation    = $PermutationCombination->star_zuxuan($num5,2,1);break;
             case '99-8-6'://连肖连尾-连肖连尾-三连尾
                 $permutation    = $PermutationCombination->star_zuxuan($num5,3,1);break;
             case '99-8-7'://连肖连尾-连肖连尾-四连尾
-                $permutation    = $PermutationCombination->star_zuxuan($num5,4,1);break;
+                $permutation    = $PermutationCombination->star_zuxuan($num5,4,3);break;
             case '99-8-8'://连肖连尾-连肖连尾-五连尾
-                $permutation    = $PermutationCombination->star_zuxuan($num5,5,1);break;
+                $permutation    = $PermutationCombination->star_zuxuan($num5,5,3);break;
 
             case '99-9-1'://自选不中-自选不中-五不中
                 $permutation    = $PermutationCombination->star_zuxuan($num5,5,2);break;
@@ -457,13 +457,13 @@ class LotteryRule extends Base
             case '99-9-3'://自选不中-自选不中-七不中
                 $permutation    = $PermutationCombination->star_zuxuan($num5,7,2);break;
             case '99-9-4'://自选不中-自选不中-八不中
-                $permutation    = $PermutationCombination->star_zuxuan($num5,8,3);break;
+                $permutation    = $PermutationCombination->star_zuxuan($num5,8,5);break;
             case '99-9-5'://自选不中-自选不中-九不中
-                $permutation    = $PermutationCombination->star_zuxuan($num5,9,4);break;
+                $permutation    = $PermutationCombination->star_zuxuan($num5,9,5);break;
             case '99-9-6'://自选不中-自选不中-十不中
                 $permutation    = $PermutationCombination->star_zuxuan($num5,10,5);break;
             case '99-9-7'://自选不中-自选不中-十一不中
-                $permutation    = $PermutationCombination->star_zuxuan($num5,11,5);break;
+                $permutation    = $PermutationCombination->star_zuxuan($num5,11,6);break;
             case '99-9-8'://自选不中-自选不中-十二不中
                 $permutation    = $PermutationCombination->star_zuxuan($num5,12,6);break;
             case '99-10-1'://生肖-生肖-正肖
@@ -501,9 +501,9 @@ class LotteryRule extends Base
             case '99-15-3'://中一-中一-七中一
                 $permutation    = $PermutationCombination->star_zuxuan($num5,7,2);break;
             case '99-15-4'://中一-中一-八中一
-                $permutation    = $PermutationCombination->star_zuxuan($num5,8,3);break;
+                $permutation    = $PermutationCombination->star_zuxuan($num5,8,5);break;
             case '99-15-5'://中一-中一-九中一
-                $permutation    = $PermutationCombination->star_zuxuan($num5,9,4);break;
+                $permutation    = $PermutationCombination->star_zuxuan($num5,9,5);break;
             case '99-15-6'://中一-中一-十中一
                 $permutation    = $PermutationCombination->star_zuxuan($num5,10,5);break;
 

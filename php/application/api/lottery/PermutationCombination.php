@@ -408,17 +408,17 @@ class PermutationCombination extends Base
         //连肖连尾 最多选择6个数字
         $tnum       = explode(',',$num5);
         if ($type == 1 && count($tnum) > 6) return [0,[]];
+        if ($type == 3 && count($tnum) > 8) return [0,[]];
 
         //自选不中-(5-7)
-        if ($type == 2 && count($tnum) > 8) return [0,[]];
-        //自选不中-(8)
-        if ($type == 3 && count($tnum) > 11) return [0,[]];
+        if ($type == 2 && count($tnum) > 10) return [0,[]];
+
         //自选不中-(9)
-        if ($type == 4 && count($tnum) > 12) return [0,[]];
-        //自选不中-(10-11)
+        //if ($type == 4 && count($tnum) > 13) return [0,[]];
+        //自选不中-(8-10)
         if ($type == 5 && count($tnum) > 13) return [0,[]];
-        //自选不中-(12)
-        if ($type == 6 && count($tnum) > 14) return [0,[]];
+        //自选不中-(11-12)
+        if ($type == 6 && count($tnum) > 15) return [0,[]];
 
         $C          = $this->combination($num5,$num);
         $CN         = count($C);
