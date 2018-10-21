@@ -359,7 +359,10 @@ class Sys extends Base
         $config['ios_version']          = '1.0.0';
         $config['android_version']      = '1.0.0';
         $config['sys_notice']           = 'xxxxxxxxxx';
-        $config['show_pay']             = 1;
+
+        $ios_pay                        = config('system_config.ios_pay');
+
+        $config['show_pay']             = $ios_pay == 1 ? 0 : 1;
         $config['kf_info_one']          = config('system_config.kf_info_one');
         $config['kf_info_two']          = config('system_config.kf_info_two');
         $config['share_title']          = config('system_config.share_title');
