@@ -20,7 +20,7 @@ class Config extends Base
 
     	$addData 	= [];
     	foreach ($data as $key => $value) {
-
+            $value          = is_array($value) ? implode(',', $value) : $value;
     		$addData[] 		= ['keys'=>$key,'value'=>$value,'config_type'=>$config_type];
     	}
 

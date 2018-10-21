@@ -1014,11 +1014,21 @@ if(!function_exists('pk10OddsMoney'))
 	                $orderOdds[]	= $oo;
 	            }
         	}
-        }elseif (in_array($tag,['96-8-7'])) {//大小单双
+        }elseif (in_array($tag,['96-8-1','96-8-2','96-8-3','96-8-4','96-8-5','96-8-6','96-8-7'])) {//大小单双
             if (!empty($winCode)) {
+            	if (in_array($tag,['96-8-1','96-8-2','96-8-3'])) {
+            		$ops  = ['大','小'];
+            	}else if ( in_array($tag,['96-8-4','96-8-5','96-8-6']) ) {
+            		$ops  = ['单','双'];
+            	}else{
+            		$ops  = ['大','小','单','双'];
+            	}
+
+        		$ops  = array_flip($ops);
+
         		foreach ($winCode as $kk => $vv)
 	            {
-	            	$oo 			= in_array($vv,['大','小']) ? $odds[0] : $odds[2];
+	            	$oo 			= isset($ops[$vv])?(isset($odds[$ops[$vv]])?$odds[$ops[$vv]]:0):0;
 	                $money 			+= $oo*$price*1;
 	                $orderOdds[]	= $oo;
 	            }
@@ -1308,7 +1318,7 @@ if(!function_exists('hk6OddsMoney'))
         	$ops  = array_flip($ops);
         	$oo   = 0;
 
-        	foreach ($wiCnode as $key => $value) {
+        	foreach ($winCode as $key => $value) {
         		$oo 			= isset($ops[$value])?(isset($odds[$ops[$value]])?$odds[$ops[$value]]:0):0;
 				$money 			+= $oo*$price*1;
 				$orderOdds[]	= $oo;

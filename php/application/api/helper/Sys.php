@@ -364,7 +364,10 @@ class Sys extends Base
         $config['kf_info_two']          = config('system_config.kf_info_two');
         $config['share_title']          = config('system_config.share_title');
         $config['share_desc']           = config('system_config.share_desc');
-        $config['isOpenOtherPayWay']    = 0;
+
+        $paytype                        = config('system_config.paytype');
+        $paytype                        = !empty($paytype) ? json_encode(explode(',', $paytype)) : [];
+        $config['pay_type']             = $paytype;
 
         return ['Code' => '000000', 'Msg'=>lang('000000'),'Data'=>$config];
     }

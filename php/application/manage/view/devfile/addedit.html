@@ -37,6 +37,11 @@
             var name    = field.name;
             var value   = field.value;
 
+            if(name.indexOf("[") != -1){
+              name=name.replace("[","");
+              name=name.replace("]","");
+            }
+
             //数据校验从这里开始
             if ($("#id_"+name+" dt[class='tit']").find("em").length > 0) {
 
