@@ -328,7 +328,7 @@ class Crontab extends Base
                     //获取配置
                     $config            = config('pay.sslpayment');
                     $return            = request()->param();
-                    wr($return,'paylog.txt');
+                    //return,'paylog.txt');
                     $sign              = isset($return['Mac']) ? $return['Mac'] : '';
                     $order_sn          = isset($return['OrderNo']) ? $return['OrderNo'] : '';
                     $status            = isset($return['TranStat']) ? $return['TranStat'] : '';
@@ -336,7 +336,7 @@ class Crontab extends Base
                     if (!empty($return) && strtoupper($mac) === $sign && !empty($order_sn) && $status == '0000')
                     {
                         $payType       = isset($return['pay_type']) ? $return['pay_type'] : 0;
-                        $money         = isset($return['OrderAmount']) ? $return['OrderAmount'] : 0;
+                        $money         = isset($return['PayAmount']) ? $return['PayAmount'] : 0;
                         $out_trade_no  = $order_sn;
                     }else{
                       exit('fail');
