@@ -72,7 +72,10 @@ class Pay extends Base
             $paytype        = $parame['pay_type'] ;
             $banktag        = '';
 
-            if(!in_array($paytype,[1,2,3,4,5]))
+            $pay_type       = config('system_config.paytype');
+            $pay_type       = !empty($pay_type) ? explode(',',$pay_type) : [];
+
+            if(!in_array($paytype,$pay_type))
             return ['Code' => '200001', 'Msg'=>lang('200001')];
 
             //支付方式为银联支付时需要校验银行是否存在
