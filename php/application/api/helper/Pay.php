@@ -331,7 +331,7 @@ class Pay extends Base
                         $path       = $payInfo['PayUrl'];
                         return ['Code' => '000000','Msg'=>lang('000000'),'Data'=>['alipay'=>$path,'wxpay'=>[]]];
                     }
-
+                    wr($payInfo,'pay.txt');
                     return ['Code' => '200004', 'Msg'=>lang('200004')];break ;
 
                 }catch (PayException $exception){
