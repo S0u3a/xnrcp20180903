@@ -366,7 +366,7 @@ class Sys extends Base
         $config['share_desc']           = config('system_config.share_desc');
 
         $paytype                        = config('system_config.paytype');
-        $paytype                        = !empty($paytype) ? json_encode(explode(',', $paytype)) : [];
+        $paytype                        = !empty($paytype) ? (string)$paytype : '';
         $config['pay_type']             = $paytype;
 
         return ['Code' => '000000', 'Msg'=>lang('000000'),'Data'=>$config];
