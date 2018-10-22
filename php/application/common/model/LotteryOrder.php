@@ -52,7 +52,7 @@ class LotteryOrder extends Base
             $model->where('main.status','=',2);
         }
         if (isset($parame['otype']) && $parame['otype'] == 4) {
-            $model->where('main.status','=',1);
+            $model->where('main.status','=',10);
         }
 
         return $model;
