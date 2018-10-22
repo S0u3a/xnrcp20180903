@@ -42,7 +42,7 @@ class LotteryOrder extends Base
         $model->where('main.uid','=',$parame['uid']);
 
         if (isset($parame['otype']) && $parame['otype'] == 1) {
-            $model->where('main.status','>=',1);
+            $model->where('main.status','>',1);
         }
         if (isset($parame['otype']) && $parame['otype'] == 2) {
             $model->where('main.status','=',3);
