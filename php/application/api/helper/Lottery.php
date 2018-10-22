@@ -451,6 +451,9 @@ class Lottery extends Base
  
         switch ($deltype) {
             case 1:
+                $orderInfo              = $dbModel->getOneByid($id);
+                del_select_code(isset($orderInfo['select_code_id']) ? $orderInfo['select_code_id'] : '');
+                
                 $delCount               = $dbModel->delData($id); break;
             case 2:
                 $orderList              = $dbModel->getLotteryOrderListByLotteryid($lottery_id,$parame['uid']);
@@ -459,6 +462,7 @@ class Lottery extends Base
                 if (!empty($orderList)) {
                     foreach ($orderList as $key => $value) {
                         $ids[]          = $value['id'];
+                        del_select_code($value['select_code_id']);
                     }
                 }
 
