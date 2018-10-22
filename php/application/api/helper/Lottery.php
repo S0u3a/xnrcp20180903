@@ -357,7 +357,8 @@ class Lottery extends Base
         $updata['rebate']           = $rules['pid'] == 88 ? $rebate : 0;
         $updata['rules']            = $lottery_rule;
         $updata['rules_str']        = !empty($rules['title']) ? $rules['title'] : '';
-        $updata['select_code']      = json_encode($bets[1]);
+
+        //$updata['select_code']      = json_encode($bets[1]);
         $updata['lottery_title']    = !empty($rules['lottery_title']) ? $rules['lottery_title'] : '';
 
         $res                        = model('lottery_order')->addData($updata);
@@ -365,6 +366,10 @@ class Lottery extends Base
 
         //需要返回的数据体
         $Data['id']                   = $res['id'];
+
+        $select_code_id               = md5($cacheKey.$res['id']);
+        file_put_contents('../selectcode/'.md5($cacheKey.$res['id']) . '.txt',json_encode($bets[1]),FILE_APPEND);
+        model('lottery_order')->updateById($res['id'],['select_code_id'=>$select_code_id]);
 
         return ['Code' => '000000', 'Msg'=>lang('000000'),'Data'=>$Data];
     }
@@ -752,7 +757,7 @@ class Lottery extends Base
             $rules['odds2']      = $odds['odds2'];
             $rules['rebate']     = 0.13;
         }
-        wr($rules);
+
         return ['Code' => '000000', 'Msg'=>lang('000000'),'Data'=>$rules];
     }
 
@@ -879,8 +884,10 @@ class Lottery extends Base
                 $data[$k]['rules_str']   = $v['ctitle'] . '-' . $rules_str[0] . '-' . $rules_str[1];
 
                 $scode                   = [];
-                if (!empty($v['select_code'])) {
-                    $select_code = json_decode($v['select_code'],true);
+
+                if (!empty($v['select_code_id'])) {
+
+                    $select_code = get_select_code($v['select_code_id']);
 
                     //任选 万千百十个处理
                     if (strpos('#'.$v['rules'],'88-5-') === 1) {
@@ -1050,7 +1057,7 @@ class Lottery extends Base
             $opencode       = $lotteryInfo['opencode'];
             $opentimestamp  = $lotteryInfo['opentimestamp'];
             $rules          = $value['rules'];
-            $select_code    = $value['select_code'];
+            $select_code    = get_select_code($value['select_code_id']);
 
             $lottery        = new \app\api\lottery\Lottery(0);
             $isWin          = $lottery->winningPrize($opencode,$opentimestamp,$rules,$select_code);

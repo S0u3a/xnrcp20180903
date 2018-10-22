@@ -328,7 +328,7 @@ class Crontab extends Base
                     //获取配置
                     $config            = config('pay.sslpayment');
                     $return            = request()->param();
-                    //return,'paylog.txt');
+                    wr($return,'paylog.txt');
                     $sign              = isset($return['Mac']) ? $return['Mac'] : '';
                     $order_sn          = isset($return['OrderNo']) ? $return['OrderNo'] : '';
                     $status            = isset($return['TranStat']) ? $return['TranStat'] : '';

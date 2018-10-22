@@ -147,7 +147,7 @@ class Lottery extends Base
                 $opencode       = $lotteryInfo['opencode'];
                 $opentimestamp  = $lotteryInfo['opentimestamp'];
                 $rules          = $value['rules'];
-                $select_code    = $value['select_code'];
+                $select_code    = get_select_code($value['select_code_id']);
 
                 $isWin          = $this->winningPrize($opencode,$opentimestamp,$rules,$select_code);
                 /*if ($rules == '99-15-1') {
@@ -203,6 +203,8 @@ class Lottery extends Base
                 $updataOrder['opentimestamp']   = $opentimestamp;
                 $updataOrder['win_code']        = json_encode($isWin[1]);
                 $updataOrder['iswin']           = $isWin[0] > 0 ? 1 : 0;
+
+                del_select_code($value['select_code_id']);
 
                 $orderModle->updateById($value['id'],$updataOrder);
             }
@@ -342,7 +344,7 @@ class Lottery extends Base
         
         $LotteryWin     = new \app\api\lottery\LotteryWin();
         //用户选择的号码组合
-        $select_code        = json_decode($select_code,true);
+        //$select_code        = json_decode($select_code,true);
         if (empty($select_code)) return [0,[]];
 
         wr("\n\n==================".$rules."===================\n\n");

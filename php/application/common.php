@@ -1759,3 +1759,35 @@ if (!function_exists('pd_aes_generate'))
 	    return implode('', $arr);
 	}
 }
+
+if (!function_exists('get_select_code'))
+{
+	/**
+	 * 生成AESKey
+	 * @param $size
+	 * @return string
+	 */
+	function get_select_code($select_code_id)
+	{
+	    if (file_exists('../selectcode/' . $select_code_id . '.txt')) {
+	    	$con 	= file_get_contents('../selectcode/' . $select_code_id . '.txt');
+	    	return !empty($con) ? json_decode($con,true) : [];
+	    }
+
+	    return [];
+	}
+}
+if (!function_exists('del_select_code'))
+{
+	/**
+	 * 生成AESKey
+	 * @param $size
+	 * @return string
+	 */
+	function del_select_code($select_code_id)
+	{
+	    if (file_exists('../selectcode/' . $select_code_id . '.txt')) {
+	    	unlink('../selectcode/' . $select_code_id . '.txt');
+	    }
+	}
+}
