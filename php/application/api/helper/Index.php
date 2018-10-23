@@ -130,9 +130,9 @@ class Index extends Base
                     $map[]   = ['lotterid','=',$lottery_id];
                     $optime  = model($lottery_table)->where($map)->limit(1)->order('id desc')->value('opentimestamp');
                     $v['optime']  = !empty($optime) ? $optime : 0;
-                    if ($lottery_id == 100) {
+                    /*if ($lottery_id == 100) {
                         $v['optime']  = time() + 86400*1;
-                    }
+                    }*/
                     
                     $catDatas[]     = $v;
                 }
