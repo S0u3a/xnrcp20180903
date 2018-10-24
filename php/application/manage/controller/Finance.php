@@ -26,6 +26,7 @@ class Finance extends Base
         parent::__construct();
 
         $this->apiUrl['index']        = 'Api/AccountLog/listDataForAdmin';
+        $this->apiUrl['index2']       = 'Api/Order/listDataForAdmin';
     }
 
     //返佣明细
@@ -85,7 +86,78 @@ class Finance extends Base
         $arr['title2']             = '充值明细查看与管理';
         $arr['notice']             = ['充值明细是指用户余额充值的金额明细'];
 
-        return $this->index($arr);
+        $menuid     = input('menuid',0) ;
+        $page       = input('page',1);
+        $paramData  = request()->param();
+
+        $search          = isset($paramData['search']) ? $paramData['search'] : [];
+
+        //页面操作功能菜单
+        $topMenu    = formatMenuByPidAndPos($menuid,2, $this->menu);
+        $rightMenu  = formatMenuByPidAndPos($menuid,3, $this->menu);
+
+        //获取表头以及搜索数据
+        $tags       = strtolower('Finance/index2');
+        $listNode   = $this->getListNote($tags) ;
+
+        //获取列表数据
+        $parame['page']     = $page;
+        $parame['search']   = !empty($search) ? json_encode($search) : '' ;
+
+        //请求数据
+        if (!isset($this->apiUrl['index2']) || empty($this->apiUrl['index2']))
+        $this->error('未设置接口地址');
+
+        $res                = $this->apiData($parame,$this->apiUrl['index2']);
+        $data               = $this->getApiData() ;
+
+        $total              = 0;
+        $p                  = '';
+        $listData           = [];
+
+        if ($res){
+
+            //分页信息
+            $page           = new \xnrcms\Page($data['total'], $data['limit']);
+            if($data['total']>=1){
+
+                $page->setConfig('theme','%FIRST% %UP_PAGE% %LINK_PAGE% %DOWN_PAGE% %END% %HEADER%');
+                $page->setConfig('header','');
+            }
+
+            $p              = trim($page->show());
+            $total          = $data['total'];
+            $listData       = $data['lists'];
+        }
+
+        //页面头信息设置
+        $pageData['isback']             = $arr['isback'];
+        $pageData['title1']             = $arr['title1'];
+        $pageData['title2']             = $arr['title2'];
+        $pageData['notice']             = $arr['notice'];
+
+        //渲染数据到页面模板上
+        $assignData['_page']            = $p;
+        $assignData['_total']           = $total;
+        $assignData['topMenu']          = $topMenu;
+        $assignData['rightMenu']        = $rightMenu;
+        $assignData['listId']           = isset($listNode['info']['id']) ? intval($listNode['info']['id']) : 0;
+        $assignData['listNode']         = $listNode;
+        $assignData['listData']         = $listData;
+        $assignData['pageData']         = $pageData;
+        $this->assignData($assignData);
+
+        //记录当前列表页的cookie
+        Cookie('__forward__',$_SERVER['REQUEST_URI']);
+
+        //异步请求处理
+        if(request()->isAjax()){
+
+            echo json_encode(['listData'=>$this->fetch('public/list/listData'),'listPage'=>$p]);exit();
+        }
+
+        //加载视图模板
+        return view('index');
     }
 
 	//列表页面
@@ -202,6 +274,59 @@ class Finance extends Base
         return view('addedit');
 	}
 
+    public function buchong($id)
+    {
+        //数据提交
+        if (request()->isPost()){
+            $param      = request()->param();
+            $info       = model('order_recharge')->getOneByid($param['id']);
+
+            if (empty($info))  $this->error("订单不存在");
+            if ($param['cz_money']*1 <= 0) $this->error("充值金额错误");
+            if ($info['status'] != 1) $this->error("订单状态异常");
+
+            $is_username   = model('user_center')->loginByUserNameAndUid($param['cz_account'],$info['uid']);
+            if ($is_username) {
+                //准备用户订单购买数据
+                model('order_recharge')->updateById($info['id'],['status'=>2]);
+                model('user_account_log')->addAccountLog($info['uid'],$param['cz_money'],'余额充值',1,3);
+
+                //用户收入增加
+                $res = model('user_detail')->where('uid',$info['uid'])->setInc('account',$param['cz_money']) ;
+                model('user_detail')->delDetailDataCacheByUid($info['uid']);
+
+                $this->success('补充成功',Cookie('__forward__'));
+            }else{
+                $this->error("充值账号不存在");
+            }
+        }
+        //表单模板
+        $tags                           = strtolower(request()->controller() . '/buchong');
+        $formData                       = $this->getFormFields($tags,1);
+
+        //数据详情
+        $info                           = model('order_recharge')->getOneByid($id);
+
+        //页面头信息设置
+        $pageData['isback']             = 0;
+        $pageData['title1']             = '';
+        $pageData['title2']             = '';
+        $pageData['notice']             = [];
+        
+        //记录当前列表页的cookie
+        cookie('__forward__',$_SERVER['REQUEST_URI']);
+
+        //渲染数据到页面模板上
+        $assignData['formId']           = isset($formData['info']['id']) ? intval($formData['info']['id']) : 0;
+        $assignData['formFieldList']    = $formData['list'];
+        $assignData['info']             = $info;
+        $assignData['defaultData']      = $this->getDefaultParameData();
+        $assignData['pageData']         = $pageData;
+        $this->assignData($assignData);
+
+        //加载视图模板
+        return view('addedit');
+    }
 	//编辑页面
 	public function edit($id = 0)
     {
