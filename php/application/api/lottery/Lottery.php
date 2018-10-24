@@ -1023,7 +1023,7 @@ class Lottery extends Base
             $cacheDataKey     = 'updateData_'.$table_name.'_opentimestamp_' . $this->lotteryid;
             
             //设置第二天首开时间
-            if ($this->nowTime>$this->format_lottery_limit('02:40:00') && $this->nowTime < $this->format_lottery_limit('21:25:00')) {
+            if ($this->nowTime>$this->format_lottery_limit('02:40:00') && $this->nowTime < $this->format_lottery_limit('23:55:00')) {
                 cache($cacheDataKey,$this->format_lottery_limit('21:36:00') + 60*1);
             }
 
@@ -1470,6 +1470,21 @@ class Lottery extends Base
 
                 //推送开奖信息
                 $this->jpushOpenLotterInfo();
+            }else{
+                //如果是六合彩 需要特殊处理 更新开奖时间
+                if ($this->lotteryid == 100) {
+                    $hk6_info            = $dbmodel->getLotteryInfoByExpect($nextExpect);
+                    if (!empty($hk6_info) && $this->nowTime >= $hk6_info['opentimestamp'] + (5*60)) {
+                        //更新下期开奖时间为 21:35
+                        $updata                     = [];
+                        $optime                     = $hk6_info['opentimestamp'] + 60*$limit_time +$delay;
+                        $updata['opentime']         = date('Y-m-d H:i:s' ,$optime);
+                        $updata['opentimestamp']    = $optime;
+                        $dbmodel->updateById($hk6_info['id'],$updata);
+
+                        cache($cacheDataKey,$optime);
+                    }
+                }
             }
 
             wr("over===========" .date('Y-m-d H:i:s') ."\n");
