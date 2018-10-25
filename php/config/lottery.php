@@ -14,8 +14,8 @@
 // +----------------------------------------------------------------------
 return [
 'lottery_tag'=>[
-    89=>'lottery_ffssc',
-    90=>'lottery_sfssc',
+    89=>'lottery_blsffc',
+    90=>'lottery_viffc5',
     92=>'lottery_cqssc',
     93=>'lottery_xjssc',
     94=>'lottery_hljssc',
