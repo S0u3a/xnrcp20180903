@@ -20,14 +20,17 @@ class Base
       $this->lotteryUrl   = 'http://ho.apiplus.net/newly.do?token=t3a1e89426cd3c6d6k&';
       $this->lotteryid    = $lotteryid;
       $this->domainsUrl   = trim(get_domain(),'/') . '/' . 'api/lottery/getlottery/?';
+      $this->bilishiUrl   = 'http://api.caipiaokong.cn/lottery/?token=8169ea7a59116a2da4bd3383063f1d7d4ff4e37a&';
     }
 
     //彩票接口地址定义
     private function getLotteryUrl()
     {
         $url        = [];
-        $url[89]    = $this->domainsUrl.'code=ffssc&format=json';//分分时时彩
-        $url[90]    = $this->domainsUrl.'code=3fssc&format=json';//3分时时彩
+        //$url[89]    = $this->blsUrl.'code=ffssc&format=json';//分分时时彩
+        //$url[90]    = $this->domainsUrl.'code=3fssc&format=json';//3分时时彩
+        $url[89]    = $this->bilishiUrl.'name=blsffc&format=json&uid=1112929';//分分时时彩
+        $url[90]    = $this->lotteryUrl.'code=viffc5&format=json';//3分时时彩
         $url[92]    = $this->lotteryUrl.'code=cqssc&format=json';//重庆时时彩
         $url[93]    = $this->lotteryUrl.'code=xjssc&format=json';//新疆时时彩
         $url[94]    = $this->lotteryUrl.'code=hljssc&format=json';//黑龙江时时彩
@@ -62,6 +65,20 @@ class Base
 
       $html   = file_get_contents($url);
       $json   = json_decode($html,true);
+
+      if ($this->lotteryid == 89) {
+        $data['data']           = [];
+        foreach ($json as $key => $value) {
+            $data['data'][]     = [
+                "expect"        =>$key,
+                "opencode"      =>$value['number'],
+                "opentime"      =>$value['dateline'],
+                "opentimestamp" =>(int)strtotime($value['dateline'])
+            ];
+        }
+
+        return $data['data'];
+      }
 
       return isset($json['rows']) ? $json['data'] : [];
     }

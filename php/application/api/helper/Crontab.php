@@ -71,7 +71,8 @@ class Crontab extends Base
 
         //时时彩
         $this->ffsscApiData();
-        $this->sfsscApiData();
+        //$this->sfsscApiData();
+        $this->inffc5ApiData();
         $this->cqsscApiData();
         $this->xjsscApiData();
         $this->tjsscApiData();
@@ -116,7 +117,14 @@ class Crontab extends Base
         return true;
     }
     //3分时时彩接口数据采集
-    private function sfsscApiData()
+    /*private function sfsscApiData()
+    {
+        $lottery        = new \app\api\lottery\Lottery(90);
+        $lottery->updateData();
+        return true;
+    }*/
+    //印尼5分时时彩接口数据采集
+    private function inffc5ApiData()
     {
         $lottery        = new \app\api\lottery\Lottery(90);
         $lottery->updateData();

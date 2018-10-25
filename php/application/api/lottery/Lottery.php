@@ -92,7 +92,7 @@ class Lottery extends Base
         $limit_time       = 10;
         switch ($this->lotteryid) {
             case 89:  $limit_time      = 1;     break;
-            case 90:  $limit_time      = 3;     break;
+            case 90:  $limit_time      = 5;     break;
             case 92:
                 $time_start1      = $this->format_lottery_limit('00:00:00');
                 $time_end1        = $this->format_lottery_limit('02:00:00');
@@ -843,7 +843,7 @@ class Lottery extends Base
             $time_end1        = $this->format_lottery_limit('23:59:59');
 
             $limit_time       = $this->getLotteryTime();
-            $table_name       = 'lottery_ffssc';
+            $table_name       = 'lottery_blsffc';
             $cacheDataKey     = 'updateData_'.$table_name.'_opentimestamp_' . $this->lotteryid;
 
             //设置第二天首开时间
@@ -858,7 +858,7 @@ class Lottery extends Base
             wr("分分时彩下期开奖时间：".date('Y-m-d H:i:s',$opentimestamp)."\n");
             //未到开奖时间数据不更新
             if (!empty($opentimestamp) && $opentimestamp > $this->nowTime)  return false;
-            wr('分分时时彩开始开奖');
+            wr('分分时时彩开始开奖'."\n");
             $this->saveLottery(model($table_name),$limit_time,$cacheDataKey);
             break;
         case 90:
@@ -867,7 +867,7 @@ class Lottery extends Base
             $time_end1        = $this->format_lottery_limit('23:59:59');
 
             $limit_time       = $this->getLotteryTime();
-            $table_name       = 'lottery_sfssc';
+            $table_name       = 'lottery_viffc5';
             $cacheDataKey     = 'updateData_'.$table_name.'_opentimestamp_' . $this->lotteryid;
 
             //设置第二天首开时间
@@ -879,10 +879,10 @@ class Lottery extends Base
             if ($this->nowTime < $time_start1 || $this->nowTime > $time_end1) return false;
 
             $opentimestamp    = cache($cacheDataKey);
-            wr("三分时时彩下期开奖时间：".date('Y-m-d H:i:s',$opentimestamp)."\n");
+            wr("越南河内时时彩(快5)下期开奖时间：".date('Y-m-d H:i:s',$opentimestamp)."\n");
             //未到开奖时间数据不更新
             if (!empty($opentimestamp) && $opentimestamp > $this->nowTime)  return false;
-            wr('三分时时彩开始开奖');
+            wr('越南河内时时彩(快5)开始开奖');
             $this->saveLottery(model($table_name),$limit_time,$cacheDataKey);
             break;
         //重庆时时彩
@@ -1328,15 +1328,20 @@ class Lottery extends Base
         $delayKey       = "delay_saveLottery_3s_".$this->lotteryid;
         $delay          = cache($delayKey);
         if (!empty($delay) && $delay > $this->nowTime) {
-            wr($this->lotteryid."：延迟3秒开奖" );return false;
+            wr("\n" .$this->lotteryid."：延迟3秒开奖" ."\n");return false;
         }
 
         cache($delayKey,$this->nowTime+3);
 
         //开始开奖
-        wr("start===========" .date('Y-m-d H:i:s'));
+        wr("start===========" .date('Y-m-d H:i:s')."\n");
         //获取最近一条数据入库
         $data         = $this->getData();
+
+        if ($this->lotteryid == 89) {
+            wr($data);
+        }
+
         if (!empty($data) && isset($data[0])) {
 
             //缓存时间间隔
