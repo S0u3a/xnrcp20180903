@@ -31,9 +31,9 @@ return [
     'apidoc_project_url'        =>'http://dev.xnrcp20180903.com/',
     'apidoc_url'                =>'http://apidoc.php.xnrcms.cn/',
     //站点配置
-    'xnrcms_name'               =>'阳光彩票',
+    'xnrcms_name'               =>'168彩票',
     'xnrcms_var'                =>'1.0',
-    'is_dev'                    => 1,
+    'is_dev'                    => 0,
     'form_type_list'            => [
         'hidden'        => '隐藏域',
         'number'        => '数字',
