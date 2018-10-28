@@ -1,4 +1,4 @@
-const APIURL    = 'http://xmap1803015.php.hzxmnet.com/Api';
+const APIURL    = 'http://168168bc.com/Api';
 const APIID     = 'b542da5132138477af8ab448c6ddd38c';
 const APIKEY    = '9b12d0f61a382e19ffa87ed306ff3c3b';
 function sign(param,key)
