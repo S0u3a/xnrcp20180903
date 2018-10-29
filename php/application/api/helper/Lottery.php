@@ -330,8 +330,29 @@ class Lottery extends Base
         return ['Code' => '200017', 'Msg'=>lang('200017')];
 
         $userModel                  = model('user_detail');
-        $userinfo                   = $userModel->getOneByUid($parame['uid']);
-        $user_level                 = getUserLevel($userinfo['account_all']);
+        $userInfo                   = $userModel->getOneByUid($parame['uid']);
+        $userInfo                   = !empty($userInfo) ? $userInfo->toArray() : [];
+        
+        //代理ID
+        $agent_id               = 0;
+        if ($parame['uid'] >0){
+            if (isset($userInfo['invitation_code']) && !empty($userInfo['invitation_code'])) {
+                $agent_id       = get_invitation_uid($userInfo['invitation_code']);
+            }
+        }
+
+        //判断他的上级是否是代理
+        if ($agent_id > 0) {
+            $agentInfo          = $userModel->getOneByUid($agent_id);
+            $agent_lottery_id   = !empty($agentInfo['lottery_id'])?explode(',',$agentInfo['lottery_id']):[];
+            if (in_array($rules['pid'],$agent_lottery_id)) {
+                $agent_id       = model('user_group_access')->checkGroupByUidAndGid($agent_id,3);
+            }else{
+                $agent_id       = 0;
+            }
+        }
+        
+        $user_level                 = getUserLevel($userInfo['account_all']);
         $level                      = isset($user_level[0]) ? $user_level[0] : 0;
         $rate                       = isset($user_level[1]) ? $user_level[1] : 0;
         $pay_money                  = $rate > 0 ? $money*$rate : $money;
@@ -352,7 +373,7 @@ class Lottery extends Base
         $updata['money']            = $pay_money;
         $updata['order_money']      = $money;
         $updata['order_sn']         = date('YmdHis').randomString(6);
-        //$updata['odds']             = json_encode($odds);
+        $updata['agent_id']         = $agent_id;
         $updata['unit']             = $unit;
         $updata['rebate']           = $rules['pid'] == 88 ? $rebate : 0;
         $updata['rules']            = $lottery_rule;
@@ -528,16 +549,6 @@ class Lottery extends Base
 
         if (!empty($orderList)) {
 
-            //代理ID
-            $agent_id               = 0;
-            if ($parame['uid'] >0){
-                $userInfo           = model('user_detail')->getOneByUid($parame['uid']);
-                $userInfo           = !empty($userInfo) ? $userInfo->toArray() : [];
-                if (isset($userInfo['invitation_code']) && !empty($userInfo['invitation_code'])) {
-                    $agent_id       = get_invitation_uid($userInfo['invitation_code']);
-                }
-            }
-
             //根据彩种ID获取最新一期彩票信息
             $lottery                = new \app\api\lottery\Lottery($lottery_id);
             $list                   = $lottery->getLotteryList(['limit'=>1]);
@@ -550,14 +561,15 @@ class Lottery extends Base
                 $updata[]        = [
                     'id'=>$value['id'],
                     'status'=>2,
-                    'agent_id'=>$agent_id,
                     'expect'=>$lottery_info['expect'],
                     'term_number'=>$lottery_info['term_number'],
                     'opentimestamp'=>$lottery_info['opentimestamp']
                 ];
             }
 
-            $userModel          = model('user_detail');
+            $userModel              = model('user_detail');
+            $userInfo               = $userModel->getOneByUid($parame['uid']);
+            $userInfo               = !empty($userInfo) ? $userInfo->toArray() : [];
 
             //校验用户余额是否充足
             $userinfo           = $userModel->getOneByUid($parame['uid']);
