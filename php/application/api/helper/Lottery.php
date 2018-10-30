@@ -334,14 +334,16 @@ class Lottery extends Base
         $userInfo                   = !empty($userInfo) ? $userInfo->toArray() : [];
         
         //代理ID
-        $agent_id               = 0;
+        $agent_id                   = 0;
         if ($parame['uid'] >0){
             if (isset($userInfo['invitation_code']) && !empty($userInfo['invitation_code'])) {
                 $agent_id       = get_invitation_uid($userInfo['invitation_code']);
             }
         }
 
-        //判断他的上级是否是代理
+        $agent_id       = model('user_group_access')->checkGroupByUidAndGid($agent_id,3);
+
+        /*//判断他的上级是否是代理
         if ($agent_id > 0) {
             $agentInfo          = $userModel->getOneByUid($agent_id);
             $agent_lottery_id   = !empty($agentInfo['lottery_id'])?explode(',',$agentInfo['lottery_id']):[];
@@ -350,7 +352,7 @@ class Lottery extends Base
             }else{
                 $agent_id       = 0;
             }
-        }
+        }*/
         
         $user_level                 = getUserLevel($userInfo['account_all']);
         $level                      = isset($user_level[0]) ? $user_level[0] : 0;
@@ -747,7 +749,8 @@ class Lottery extends Base
                 $agent_id       = get_invitation_uid($userInfo['invitation_code']);
             }
 
-            //判断他的上级是否是代理
+            $agent_id       = model('user_group_access')->checkGroupByUidAndGid($agent_id,3);
+            /*//判断他的上级是否是代理
             if ($agent_id > 0) {
 
                 $agentInfo          = model('user_detail')->getOneByUid($agent_id);
@@ -757,7 +760,7 @@ class Lottery extends Base
                 }else{
                     $agent_id       = 0;
                 }
-            }
+            }*/
         }
 
         if ($agent_id > 0) {
@@ -1301,27 +1304,6 @@ class Lottery extends Base
     /*api:e357d94342d157266372ce935ef96cf9*/
 
     /*接口扩展*/
-
-    private function addDistributionMoney($uid=0,$money=0)
-    {
-        if ($uid > 0)
-        {   
-            $userModel      = model('user_detail');
-            $userinfo       = $userModel->getOneByUid($uid);
-            $userinfo       = !empty($userinfo) ? $userinfo->toArray() : [];
-
-            //增加累计收益金额
-            $data                  = [];
-            $data['account']       = $userinfo['account']+$money;
-            $data['profit_all']    = $userinfo['profit_all']+$money;
-            $userModel->updateById($userinfo['id'],$data);
-            $userModel->delDetailDataCacheByUid($userinfo['uid']);
-
-            //写日志
-            model('user_account_log')->addAccountLog($userinfo['uid'],$money,'分销返佣',1,5);
-        }
-    }
-
     private function getlottery($parame)
     {   
         $cacheKey           = 'getlottery_key_3s';

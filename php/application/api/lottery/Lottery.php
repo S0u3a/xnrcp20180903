@@ -165,13 +165,14 @@ class Lottery extends Base
                     $winData          = $this->calculatingOdds($value,$isWin,$lotteryRule);
 
                     $odds             = isset($winData[0]) ? $winData[0] : '';
-                    $win_umoney       = isset($winData[1]) ? $winData[1] : 0;
-                    $win_amoney       = isset($winData[2]) ? $winData[2] : 0;
+                    $win_money        = isset($winData[1]) ? $winData[1] : 0;
+                    $win_umoney       = isset($winData[2]) ? $winData[2] : 0;
+                    $win_amoney       = isset($winData[3]) ? $winData[3] : 0;
                 }else{
 
                     //没中奖 如果有代理 代理拿用户投注金额百分比
                     $rate          = config('system_config.agent_fen_rate');
-                    $amoney        = !empty($rate) ? $rate*$value['money'] : 0;
+                    $amoney        = !empty($rate) ? ($rate / 100)*$value['money'] : 0;
                     $aid           = !empty($value['agent_id']) ? $value['agent_id'] : 0;
                     
                     if ($aid > 0 && $amoney > 0)
@@ -185,6 +186,10 @@ class Lottery extends Base
 
                         //写日志
                         model('user_account_log')->addAccountLog($aid,$amoney,'代理返佣',1,5);
+
+                        $updata    = [];
+                        $updata[]  = ['uid'=>$aid,'create_time'=>time(),'money'=>$amoney,'uid1'=>$value['uid']];
+                        model('user_distribution')->saveAll($updata);
                     }
 
                     //用户没中奖执行三级分销
@@ -319,7 +324,11 @@ class Lottery extends Base
                 $userModel->delDetailDataCacheByUid($aid);
 
                 //写日志
-                model('user_account_log')->addAccountLog($aid,$amoney,'代理返佣',1,5);
+                model('user_account_log')->addAccountLog($aid,$amoney,'代理赔率差佣金',1,5);
+
+                $updata    = [];
+                $updata[]  = ['uid'=>$aid,'create_time'=>time(),'money'=>$amoney,'uid1'=>$value['uid']];
+                model('user_distribution')->saveAll($updata);
             }
         }
 
@@ -334,7 +343,7 @@ class Lottery extends Base
         model('user_account_log')->addAccountLog($value['uid'],$umoney,'彩票中奖',1,4);
 
         $odds                   = isset($moneyAndOdds[1]) ? $moneyAndOdds[1] : '';
-        return [$odds,$money,$umoney];
+        return [$odds,$money,$umoney,$amoney];
     }
 
     public function winningPrize($opencode,$opentimestamp,$rules,$select_code)
@@ -1542,7 +1551,6 @@ class Lottery extends Base
         if (empty($userinfo) || empty($userinfo['invitation_code']))  return false;
         $invitation_code    = $userinfo['invitation_code'];
 
-
         $rate1          = config('system_config.fen_first_rate');
         $rate2          = config('system_config.fen_second_rate');
         $rate3          = config('system_config.fen_third_rate');
@@ -1562,76 +1570,80 @@ class Lottery extends Base
         //一级分成
         $userinfo2      = [];
         if (!empty($userinfo1) && $rate1 > 0) {
-            $money1     = $money*$rate1;
-            $updata[]   = [
-            'uid'=>$userinfo1['uid'],
-            'create_time'=>time(),
-            'money'=>$money1,
-            'uid1'=>$uid
-            ];
 
-            //增加累计收益金额
-            $data                  = [];
-            $data['account']       = $userinfo1['account']+$money1;
-            $data['profit_all']    = $userinfo1['profit_all']+$money1;
-            $userModel->updateById($userinfo1['id'],$data);
-            $userModel->delDetailDataCacheByUid($userinfo1['uid']);
-
-            //写日志
-            model('user_account_log')->addAccountLog($userinfo1['uid'],$money1,'分销返佣',1,5);
-
-            //二级分销ID
+            //确定二级分销用户
             $uid2       = get_invitation_uid($userinfo1['invitation_code']);
             $userinfo2  = $userModel->getOneByUid($uid2);
             $userinfo2  = !empty($userinfo2) ? $userinfo2->toArray() : [];
+
+            //需要判断是否是代理角色 如果是代理角色不需要参与三级分销 但是需要获取用户信息
+            $agent_id       = model('user_group_access')->checkGroupByUidAndGid($userinfo1['uid'],3);
+
+            if (!$agent_id)
+            {
+                $money1     = $money*$rate1;
+                $updata[]   = ['uid'=>$userinfo1['uid'],'create_time'=>time(),'money'=>$money1,'uid1'=>$uid];
+
+                //增加累计收益金额
+                $data                  = [];
+                $data['account']       = $userinfo1['account']+$money1;
+                $data['profit_all']    = $userinfo1['profit_all']+$money1;
+                $userModel->updateById($userinfo1['id'],$data);
+                $userModel->delDetailDataCacheByUid($userinfo1['uid']);
+
+                //写日志
+                model('user_account_log')->addAccountLog($userinfo1['uid'],$money1,'一级返佣',1,5);
+            }
         }
 
         //二级分成
         $userinfo3      = [];
         if (!empty($userinfo2) && $rate2 > 0) {
-            $money2     = $money*$rate2;
-            $updata[]   = [
-            'uid'=>$userinfo2['uid'],
-            'create_time'=>time(),
-            'money'=>$money2,
-            'uid1'=>$uid
-            ];
 
-            //增加累计收益金额
-            $data                  = [];
-            $data['account']       = $userinfo2['account']+$money2;
-            $data['profit_all']    = $userinfo2['profit_all']+$money2;
-            $userModel->updateById($userinfo2['id'],$data);
-            $userModel->delDetailDataCacheByUid($userinfo2['uid']);
-
-            //写日志
-            model('user_account_log')->addAccountLog($userinfo2['uid'],$money2,'分销返佣',1,5);
-
-            //三级分销ID
+            //确定三级分销用户
             $uid3       = get_invitation_uid($userinfo2['invitation_code']);
             $userinfo3  = $userModel->getOneByUid($uid3);
             $userinfo3  = !empty($userinfo3) ? $userinfo3->toArray() : [];
+
+            //需要判断是否是代理角色 如果是代理角色不需要参与三级分销 但是需要获取用户信息
+            $agent_id       = model('user_group_access')->checkGroupByUidAndGid($userinfo2['uid'],3);
+            if (!$agent_id)
+            {
+                $money2     = $money*$rate2;
+                $updata[]   = ['uid'=>$userinfo2['uid'],'create_time'=>time(),'money'=>$money2,'uid1'=>$uid];
+
+                //增加累计收益金额
+                $data                  = [];
+                $data['account']       = $userinfo2['account']+$money2;
+                $data['profit_all']    = $userinfo2['profit_all']+$money2;
+                $userModel->updateById($userinfo2['id'],$data);
+                $userModel->delDetailDataCacheByUid($userinfo2['uid']);
+
+                //写日志
+                model('user_account_log')->addAccountLog($userinfo2['uid'],$money2,'二级返佣',1,5);
+            }
         }
 
         //三级分成
         if (!empty($userinfo3) && $rate3 > 0) {
-            $money3     = $money*$rate3;
-            $updata[]   = [
-            'uid'=>$userinfo3['uid'],
-            'create_time'=>time(),
-            'money'=>$money3,
-            'uid1'=>$uid
-            ];
 
-            //增加累计收益金额
-            $data                  = [];
-            $data['account']       = $userinfo3['account']+$money3;
-            $data['profit_all']    = $userinfo3['profit_all']+$money3;
-            $userModel->updateById($userinfo3['id'],$data);
-            $userModel->delDetailDataCacheByUid($userinfo3['uid']);
+            //需要判断是否是代理角色 如果是代理角色不需要参与三级分销 但是需要获取用户信息
+            $agent_id       = model('user_group_access')->checkGroupByUidAndGid($userinfo3['uid'],3);
+            if (!$agent_id)
+            {
+                $money3     = $money*$rate3;
+                $updata[]   = ['uid'=>$userinfo3['uid'],'create_time'=>time(),'money'=>$money3,'uid1'=>$uid];
 
-            //写日志
-            model('user_account_log')->addAccountLog($userinfo3['uid'],$money3,'分销返佣',1,5);
+                //增加累计收益金额
+                $data                  = [];
+                $data['account']       = $userinfo3['account']+$money3;
+                $data['profit_all']    = $userinfo3['profit_all']+$money3;
+                $userModel->updateById($userinfo3['id'],$data);
+                $userModel->delDetailDataCacheByUid($userinfo3['uid']);
+
+                //写日志
+                model('user_account_log')->addAccountLog($userinfo3['uid'],$money3,'三级返佣',1,5);
+            }
         }
 
         if (!empty($updata)) {
