@@ -235,6 +235,7 @@ class Lottery extends Base
         $umoney          = 0;
 
         $agentOdds       = $oddsModel->getLotteryAgentOddsByUid($aid,$tag);
+        
         //时时彩
         switch ($pid) {
             case 88://时时彩
@@ -246,65 +247,61 @@ class Lottery extends Base
                 $moneyAndOdds       = pk10OddsMoney($tag,$rebate,$lotteryRule,$value['price'],$isWin);
                 $money              = $moneyAndOdds[0];
                 if ($aid <= 0 || empty($agentOdds)) {
-                    $amoney  = 0;
+                    $umoney         = $money;
                 }else{
                     $moneyAndOdds   = pk10OddsMoney($tag,$rebate,$lotteryRule,$value['price'],$isWin,$aid,$agentOdds);
-                    $amoney         = $moneyAndOdds[0];
+                    $umoney         = $moneyAndOdds[0];
+                    $amoney         = ($money-$umoney)*1;
                 }
                 
-                $umoney      = ($money-$amoney)*1;
                 break;
             case 99://六合彩
                 $moneyAndOdds       = hk6OddsMoney($tag,$rebate,$lotteryRule,$value['price'],$isWin,0,[],$value);
                 $money              = $moneyAndOdds[0];
 
                 if ($aid <= 0 || empty($agentOdds)) {
-                    $amoney  = 0;
+                    $umoney         = $money;
                 }else{
                     $moneyAndOdds   = hk6OddsMoney($tag,$rebate,$lotteryRule,$value['price'],$isWin,$aid,$agentOdds,$value);
-                    $amoney         = $moneyAndOdds[0];
+                    $umoney         = $moneyAndOdds[0];
+                    $amoney         = ($money-$umoney)*1;
                 }
-
-                $umoney      = ($money-$amoney)*1;
                 break;
             case 102://快3
                 $moneyAndOdds       = oneOddsMoney($tag,$rebate,$lotteryRule,$value['price'],$isWin);
                 $money              = $moneyAndOdds[0];
 
                 if ($aid <= 0 || empty($agentOdds)) {
-                    $amoney  = 0;
+                    $umoney         = $money;
                 }else{
                     $moneyAndOdds   = oneOddsMoney($tag,$rebate,$lotteryRule,$value['price'],$isWin,$aid,$agentOdds);
-                    $amoney         = $moneyAndOdds[0];
+                    $umoney         = $moneyAndOdds[0];
+                    $amoney         = ($money-$umoney)*1;
                 }
-                
-                $umoney      = ($money-$amoney)*1;
                 break;
             case 108://11选5
                 $moneyAndOdds       = oneOddsMoney($tag,$rebate,$lotteryRule,$value['price'],$isWin);
                 $money              = $moneyAndOdds[0];
 
                 if ($aid <= 0 || empty($agentOdds)) {
-                    $amoney  = 0;
+                    $umoney         = $money;
                 }else{
                     $moneyAndOdds   = oneOddsMoney($tag,$rebate,$lotteryRule,$value['price'],$isWin,$aid,$agentOdds);
-                    $amoney         = $moneyAndOdds[0];
+                    $umoney         = $moneyAndOdds[0];
+                    $amoney         = ($money-$umoney)*1;
                 }
-                
-                $umoney      = ($money-$amoney)*1;
                 break;
             case 115://PC蛋蛋
                 $moneyAndOdds       = manyOddsMoneyPC($tag,$rebate,$lotteryRule,$value['price'],$isWin);
                 $money              = $moneyAndOdds[0];
 
                 if ($aid <= 0 || empty($agentOdds)) {
-                    $amoney  = 0;
+                    $umoney         = $money;
                 }else{
                     $moneyAndOdds   = manyOddsMoneyPC($tag,$rebate,$lotteryRule,$value['price'],$isWin,$aid,$agentOdds);
-                    $amoney         = $moneyAndOdds[0];
+                    $umoney         = $moneyAndOdds[0];
+                    $amoney         = ($money-$umoney)*1;
                 }
-                
-                $umoney      = ($money-$amoney)*1;
                 break;
             default: return [];break;
         }
