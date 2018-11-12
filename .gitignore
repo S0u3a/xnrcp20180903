@@ -1,2 +1,4 @@
 /.svn
 /php/runtime
+/php/config/database.php
+/php/crontab/crontab.sh
