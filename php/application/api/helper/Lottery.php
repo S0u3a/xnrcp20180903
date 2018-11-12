@@ -192,28 +192,28 @@ class Lottery extends Base
             //已经开奖数据
             $parame                 = [];
             $parame['page']         = 1;
-            $parame['limit']        = 21;
+            $parame['limit']        = 20;
             $list                   = $lottery->getLotteryList($parame);
 
             //待开奖数据
-            $stayOpen               = isset($list[0]) ? $list[0] : [];
+            $stayOpen               = $lottery->getNearInfoExpect();
             //unset($list[0]);
 
             //sort($list);
             //自行对数据格式化输出
             //...
-            if ($id == 100) {
+            /*if ($id == 100) {
                 $table_name                 = 'lottery_hk6';
                 $cacheDataKey               = 'updateData_'.$table_name.'_opentimestamp_' . $id;
                 $opentimestamp              = cache($cacheDataKey);
                 $stayOpen['opentimestamp']  = $opentimestamp;
-            }
-            
+            }*/
+
             $data                       = [];
             $data['lottery_id']         = $info['id'];
             $data['lottery_limit']      = $lottery->getLotteryTime();
-            $data['term_number']        = $stayOpen['term_number'];
-            $data['nearfuture_code']    = isset($list[1]['opencode']) ? $list[1]['opencode'] : '';
+            $data['term_number']        = isset($list[0]['term_number'])?$list[0]['term_number']:'';
+            $data['nearfuture_code']    = isset($list[0]['opencode']) ? $list[0]['opencode'] : '';
             $data['opentimestamp']      = $stayOpen['opentimestamp'];
             $data['lottery_history']    = $list;
 
@@ -414,11 +414,8 @@ class Lottery extends Base
         $lottery_id             = isset($parame['lottery_id']) ? intval($parame['lottery_id']) : 0;
         $lottery                = new \app\api\lottery\Lottery($lottery_id);
 
-        //最近一期数据
-        $list                   = $lottery->getLotteryList(['limit'=>1]);
-
         //待开奖数据
-        $lottery_info           = isset($list[0]) ? $list[0] : [];
+        $lottery_info           = $lottery->getNearInfoExpect();
         $orderList              = model('lottery_order')->getLotteryOrderListByLotteryid($lottery_id,$parame['uid']);
         $pay_money              = 0;
         $order_money            = 0;
@@ -518,11 +515,8 @@ class Lottery extends Base
         $lottery_id             = isset($parame['lottery_id']) ? intval($parame['lottery_id']) : 0;
         $lottery                = new \app\api\lottery\Lottery($lottery_id);
 
-        //最近一期数据
-        $list                   = $lottery->getLotteryList(['limit'=>1]);
-
         //待开奖数据
-        $lottery_info           = isset($list[0]) ? $list[0] : [];
+        $lottery_info           = $lottery->getNearInfoExpect();
         
         //需要返回的数据体
         $Data                   = [];
@@ -553,8 +547,7 @@ class Lottery extends Base
 
             //根据彩种ID获取最新一期彩票信息
             $lottery                = new \app\api\lottery\Lottery($lottery_id);
-            $list                   = $lottery->getLotteryList(['limit'=>1]);
-            $lottery_info           = isset($list[0]) ? $list[0] : [];
+            $lottery_info           = $lottery->getNearInfoExpect();
 
             foreach ($orderList as $key => $value)
             {
@@ -621,8 +614,7 @@ class Lottery extends Base
 
         //最近一期彩票信息
         $lottery                    = new \app\api\lottery\Lottery($lottery_id);
-        $list                       = $lottery->getLotteryList(['limit'=>1]);
-        $near_info                  = isset($list[0]) ? $list[0] : [];
+        $near_info                  = $lottery->getNearInfoExpect();
 
         //获取彩种信息
         $lottery_info               = $dbModel->getOneByid($lottery_id);
@@ -797,6 +789,17 @@ class Lottery extends Base
         $id                 = isset($parame['lotteryid']) ? intval($parame['lotteryid']) : 0;
         if ($id <= 0) return ['Code' => '200001', 'Msg'=>lang('200001')];
 
+        //六合彩 每天21:27-21:40 禁止投注
+        if ($id == 100)
+        {
+            $tt         = time();
+            $st         = strtotime(date('Y-m-d 21:28:00'));
+            $et         = strtotime(date('Y-m-d 21:48:00'));
+            if ($tt >= $st && $tt <= $et) {
+                return ['Code' => '200019', 'Msg'=>lang('200019')];
+            }
+        }
+
         $lottery_rule        = isset($parame['lottery_rule']) ? $parame['lottery_rule'] : '';
         $rules               = model('lottery_rule')->getLotterRule($lottery_rule);
         if (empty($rules))  return ['Code' => '200002', 'Msg'=>lang('200002')];
@@ -824,7 +827,7 @@ class Lottery extends Base
         $bets                = $LotteryRule->getLotteryBetNumber($lottery_rule,$num5,$num4,$num3,$num2,$num1);
 
         if ($bets[0] <= 0) return $LotteryRule->getError();
-        //if ($bets[0] >= 22000) return ['Code' => '200016', 'Msg'=>lang('200016')];
+        if ($bets[0] >= 20000) return ['Code' => '200016', 'Msg'=>lang('200016')];
 
         $betsData                = [];
         $betsData['num5']        = $num5;

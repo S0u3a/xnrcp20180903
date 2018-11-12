@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<meta charset="UTF-8">
+<meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+<title>APP下载</title>
+		<style>
+			*{
+				padding: 0;
+				margin: 0;
+			}
+			body,html{
+				height: 100%;
+				touch-action: auto;
+			}
+			.weichat{
+				width: 100%;
+				height: auto;
+				padding-top: 4.4rem;
+				box-sizing: border-box;
+			}
+			header{
+				background: #ff7b00;
+				color: #fff;
+				height: 4.4rem;
+				line-height: 4.4rem;
+				font-size: 1.6rem;
+				text-align: center;
+				position: fixed;
+				width: 100%;
+			}
+			img{
+				width: 100%;
+			}
+			#btn{
+				background: #ff7b00;
+				color: #fff;
+				height: 3rem;
+				line-height: 3rem;
+				font-size: 1.3rem;
+				text-align: center;
+				width: 10rem;
+				margin: 0 auto;
+				border-radius: 0.4rem;
+			}
+			a{
+				text-decoration: none;
+			}
+		</style>
+
+	<script src="h5/common.js?t=12345"></script>
+	<script src="h5/share/js/jquery.min.js"></script>
+	</head>
+	<body>
+		<header>
+			安装须知
+		</header>
+		<div class="weichat">
+			<img src="/h5/install.png">
+		</div>
+		<footer>
+			
+		</footer>
+		<br>
+		<br>
+		<script type="text/javascript">
+			var inBrowser 	= typeof window !== 'undefined';            
+			var UA 			= inBrowser && window.navigator.userAgent.toLowerCase();
+			var isAndroid 	= UA && UA.indexOf('android') > 0;  //是否安卓浏览器
+			var isIOS 		= UA && /iphone|ipad|ipod|ios/.test(UA);  //是否IOS浏览器
+
+			if (isAndroid) {
+				$("footer").html('<a href="itms-services://?action=download-manifest&amp;url=https://easijar.com/168.plist" target="_blank"><div id="btn">点击安装2</div></a>');
+			}else if(isIOS){
+				$("footer").html('<a href="itms-services://?action=download-manifest&amp;url=https://easijar.com/168.plist" target="_blank"><div id="btn">点击安装1</div></a>');
+			}
+		</script>
+</body>
+</html>

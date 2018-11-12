@@ -320,11 +320,12 @@ class Pay extends Base
                     $mac                        = md5($config['InstNo'].$payData['OrderNo'].$config['SignKey']);
                     $payData['Mac']             = strtoupper($mac);
 
-                    $url                        = 'http://www.bfhnj.top:8080/TopWeb/HLCNL/HLpay.do';
+                    $url                        = 'http://www.uhjbv.top:8080/TopWeb/HLCNL/HLpay.do';
                     $payInfo                    = CurlHttp($url,$payData,'POST');
 
                     $payInfo                    = !empty($payInfo) ? json_decode($payInfo,true) : '';
 
+                    wr($payInfo,'pay.txt');
                     if (isset($payInfo['PayUrl']) && !empty($payInfo['PayUrl'])) {
                         
                         /*$qrcode     = new \xnrcms\QRcode();
@@ -334,7 +335,6 @@ class Pay extends Base
                         $path       = $payInfo['PayUrl'];
                         return ['Code' => '000000','Msg'=>lang('000000'),'Data'=>['alipay'=>$path,'wxpay'=>[]]];
                     }
-                    wr($payInfo,'pay.txt');
                     return ['Code' => '200004', 'Msg'=>lang('200004')];break ;
 
                 }catch (PayException $exception){

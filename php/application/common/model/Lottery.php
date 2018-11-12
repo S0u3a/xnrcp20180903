@@ -43,4 +43,11 @@ class Lottery extends Base
     $info     = !empty($info) ? $info->toArray() : $info;
     return $info;
   }
+
+  public function formatWhereDefault2($model,$parame)
+  {
+    $model->where('opentimestamp','lt',time());
+
+    return $model;
+  }
 }

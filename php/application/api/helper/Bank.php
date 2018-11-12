@@ -385,7 +385,7 @@ class Bank extends Base
         $isbind                 = $dbModel->isBind($parame);
         if ($isbind <= 0) return ['Code' => '200003', 'Msg'=>lang('200003')];
 
-        $minMoney               = 50;
+        $minMoney               = !empty(config('system_config.min_cash')) ? config('system_config.min_cash') : 50;
         $cash_money             = isset($parame['cash_money']) ? $parame['cash_money']*1 : 0;
         $cash_pwd               = isset($parame['cash_pwd']) ? $parame['cash_pwd'] : '1qaz2wsx';
 

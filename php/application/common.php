@@ -1009,7 +1009,7 @@ if(!function_exists('pk10OddsMoney'))
         	if (!empty($winCode)) {
         		foreach ($winCode as $kk => $vv)
 	            {
-	            	$oo 			= $odds[($vv*1-2)];
+	            	$oo 			= $odds[($vv*1-3)];
 	                $money 			+= $oo*$price*1;
 	                $orderOdds[]	= $oo;
 	            }

@@ -37,7 +37,6 @@ class UserCenter extends Base
     public function loginByUserNameAndUid($username, $uid)
     {   
         $user = $this->where('username|mobile|email','eq',$username)->where('id','eq',$uid)->find();
-        wr($this->getLastSql());
         if (!empty($user) && $user->getAttr('id') > 0) {
             return true;
         }

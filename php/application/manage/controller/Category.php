@@ -253,8 +253,17 @@ class Category extends Base
         $this->error('未设置接口地址');
         
         //接口调用
-        if ($this->questBaseEdit($this->apiUrl[request()->action()])) $this->success('更新成功');
-        
+        if ($this->questBaseEdit($this->apiUrl[request()->action()])){
+            $postData                   = input('post.');
+            if ($postData['fieldName'] == 'delay') {
+                $lotterid   = $postData['dataId'];
+                $delay      = $postData['value'];
+                $lottery        = new \app\api\lottery\Lottery($lotterid);
+                $lottery->updataLotteryOpenTime($delay);
+            }
+            $this->success('更新成功');
+        }
+
         $this->error('更新失败');
     }
 

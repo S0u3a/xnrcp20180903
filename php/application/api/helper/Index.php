@@ -92,8 +92,16 @@ class Index extends Base
 
         $noticeList                = $this->helper($adParame,'Api','Article','notice');
         if ($noticeList['Code'] === '000000' && isset($noticeList['Data']['lists']) && !empty($noticeList['Data']['lists'])){
-            
-            $noticeData     = $noticeList['Data']['lists'];
+            $notice     = $noticeList['Data']['lists'];
+            if (!empty($notice) && isset($notice[0])) {
+                $notice[0]['title']     = strip_tags($notice[0]['content']);
+            }
+
+            foreach ($notice as $key => $value) {
+                if ($key >= 1)  unset($notice[$key]);
+            }
+
+            $noticeData     = $notice;
         }
 
         $catParame              = [];

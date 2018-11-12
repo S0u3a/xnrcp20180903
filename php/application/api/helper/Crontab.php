@@ -59,6 +59,13 @@ class Crontab extends Base
         return $this->$aName($parame);
     }
     
+    private function makelottery()
+    {
+        $lottery        = new \app\api\lottery\Lottery(0);
+        $lottery->updateLottery();
+        return;
+    }
+
     /**
      * 接口列表数据
      * @param  [array] $parame 接口参数
@@ -100,8 +107,8 @@ class Crontab extends Base
         $this->bjkl8ApiData();
 
         //分分时时彩彩和三分时时彩
-        $this->ssc1f();
-        $this->ssc3f();
+        /*$this->ssc1f();
+        $this->ssc3f();*/
 
         //开奖
         $this->openPrize();

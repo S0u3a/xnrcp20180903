@@ -47,6 +47,32 @@ class Lottery extends Base
         return [];
     }
 
+    public function getNearInfoExpect()
+    {
+        $lottery_table      = '';
+        if (isset($this->lotteryConfig['lottery_tag'][$this->lotteryid])) {
+            
+            $lottery_table  = $this->lotteryConfig['lottery_tag'][$this->lotteryid];
+        }else{
+            return [];
+        }
+
+        $dbModel       = model($lottery_table);
+
+        $map           = [];
+        $map[]         = ['opencode','neq',''];
+
+        $open_id       = $dbModel->where($map)->order('opentimestamp desc')->limit(1)->value('id');
+        
+        $map           = [];
+        $map[]         = ['opentimestamp','gt',$this->nowTime];
+        $map[]         = ['id','gt',$open_id];
+        $map[]         = ['opencode','eq',''];
+
+        $noOpenInfo                 = $dbModel->where($map)->order('opentimestamp asc')->find();
+
+        return !empty($noOpenInfo) ? $noOpenInfo->toArray() : [];
+    }
     //获取最近
     public function getLotteryList($parame=[])
     {
@@ -70,8 +96,11 @@ class Lottery extends Base
         //主表待查询字段，可以为空，默认全字段
         $modelParame['MainField']   = [];
 
+        //检索条件 需要对应的模型里面定义查询条件 格式为formatWhere...
+        $modelParame['whereFun']    = 'formatWhereDefault2';
+
         //排序定义
-        $modelParame['order']       = 'main.id desc';       
+        $modelParame['order']       = 'main.opentimestamp desc';       
         
         //数据分页步长定义
         $modelParame['limit']       = isset($parame['limit']) ? intval($parame['limit']) : 10;
@@ -81,7 +110,7 @@ class Lottery extends Base
 
         //列表数据
         $lists                      = $dbModel->getPageList($modelParame);
-
+        dblog($lists);
         //数据返回
         return (isset($lists['lists']) && !empty($lists['lists'])) ? $lists['lists'] : [];
     }
@@ -226,13 +255,14 @@ class Lottery extends Base
         $userModel       = model('user_detail');
         $oddsModel       = model('lottery_odds');
         $rebate          = $value['rebate'];
-        $aid             = $value['agent_id'];
+        $aid             = !empty($value['agent_id']) ? $value['agent_id'] : 0;
         $odds            = $lotteryRule['odds'];
         $odds_rebate     = $lotteryRule['odds_rebate'];
         $tag             = $lotteryRule['tag'];
         $pid             = $lotteryRule['pid'];
         $money           = 0;
         $umoney          = 0;
+        $amoney          = 0;
 
         $agentOdds       = $oddsModel->getLotteryAgentOddsByUid($aid,$tag);
         
@@ -504,7 +534,7 @@ class Lottery extends Base
             case '88-9-3'://特殊号-特殊号-后三
                 return $LotteryWin->win_teshuhao($opencode,$select_code,3);break;
             case '88-10-1'://斗牛-斗牛-斗牛
-                return $LotteryWin->win_douniu($opencode,$select_code,4);break;
+                return $LotteryWin->win_douniu($opencode,$select_code);break;
             case '88-11-1'://四星-后四直选-复式
                 return $LotteryWin->win_ssc_sxyz($opencode,$select_code,4);break;
             case '88-11-2'://四星-后四直选-单式
@@ -839,496 +869,237 @@ class Lottery extends Base
         wr("\n\n==================".$rules."===================\n\n");
     }
 
-    public function updateData()
+    public function updateLottery()
     {
-      switch ($this->lotteryid) {
+        //每天03开始准备第二天数据
+        $start_time = [
+            89=>'00:00:01',
+            90=>'00:02:02',
+            92=>'00:00:03',
+            93=>'10:00:04',
+            94=>'08:42:10',
+            95=>'09:01:02',
+            97=>'09:02:02',
+            103=>'08:40:04',
+            104=>'08:19:00',
+            105=>'09:27:00',
+            106=>'08:29:00',
+            107=>'09:01:08',
+            109=>'08:25:30',
+            110=>'09:01:00',
+            111=>'08:50:00',
+            112=>'08:27:00',
+            113=>'08:25:00',
+            114=>'08:52:00',
+            116=>'09:00:00',
+        ];
 
-        case 89:
-            //分分时时彩  09:30-23:30
-            $time_start1      = $this->format_lottery_limit('00:00:00');
-            $time_end1        = $this->format_lottery_limit('23:59:59');
+        $lottery_ids            = array_flip($start_time);
+        sort($lottery_ids);
 
-            $limit_time       = $this->getLotteryTime();
-            $table_name       = 'lottery_blsffc';
-            $cacheDataKey     = 'updateData_'.$table_name.'_opentimestamp_' . $this->lotteryid;
+        $lockModel                  = model('lottery_lock');
+        $lock                       = $lockModel->getOneById(1);
+        if(empty($lock)){
+            $updata                 = [];
+            $updata['stime']        = $this->format_lottery_limit('03:00:00');
+            $updata['etime']        = $this->format_lottery_limit('04:00:00');
+            $updata['lottery_ids']  = json_encode($lottery_ids);
+            $lock                   = $lockModel->addData($updata);
+        }
 
-            //设置第二天首开时间
-            /*if ($this->nowTime>$this->format_lottery_limit('02:40:00') && $this->nowTime < $this->format_lottery_limit('09:20:00')) {
-                cache($cacheDataKey,$time_start1 + 60*1);
-            }*/
+        if (!($lock['stime'] <= $this->nowTime && $lock['etime'] >= $this->nowTime)) {
+            return;
+        }
 
-            //不在预售时间范围内 数据不用更新
-            if ($this->nowTime < $time_start1 || $this->nowTime > $time_end1) return false;
+        $ids                        = json_decode($lock['lottery_ids'],true);
 
-            $opentimestamp    = cache($cacheDataKey);
-            wr("分分时彩下期开奖时间：".date('Y-m-d H:i:s',$opentimestamp)."\n");
-            //未到开奖时间数据不更新
-            if (!empty($opentimestamp) && $opentimestamp > $this->nowTime)  return false;
-            wr('分分时时彩开始开奖'."\n");
-            $this->saveLottery(model($table_name),$limit_time,$cacheDataKey);
-            break;
-        case 90:
-            //三分时时彩  09:30-23:30
-            $time_start1      = $this->format_lottery_limit('00:00:00');
-            $time_end1        = $this->format_lottery_limit('23:59:59');
+        if (!empty($ids)) {
+            sort($ids);
+        }
 
-            $limit_time       = $this->getLotteryTime();
-            $table_name       = 'lottery_viffc5';
-            $cacheDataKey     = 'updateData_'.$table_name.'_opentimestamp_' . $this->lotteryid;
+        if (isset($ids[0]) && $ids[0] > 0) {
+            $this->lotteryid        = $ids[0];
 
-            //设置第二天首开时间
-            /*if ($this->nowTime>$this->format_lottery_limit('02:40:00') && $this->nowTime < $this->format_lottery_limit('09:20:00')) {
-                cache($cacheDataKey,$time_start1 + 60*1);
-            }*/
+            unset($ids[0]);
 
-            //不在预售时间范围内 数据不用更新
-            if ($this->nowTime < $time_start1 || $this->nowTime > $time_end1) return false;
+            $updata                 = [];
+            $updata['lottery_ids']  = json_encode($ids);
+            $lockModel->updateById(1,$updata);
+        }else{
+            $updata                 = [];
+            $updata['stime']        = $this->format_lottery_limit('03:00:00') + 86400;
+            $updata['etime']        = $this->format_lottery_limit('04:00:00') + 86400;
+            $updata['lottery_ids']  = json_encode($lottery_ids);
+            $lockModel->updateById(1,$updata);
+            return;
+        }
 
-            $opentimestamp    = cache($cacheDataKey);
-            wr("越南河内时时彩(快5)下期开奖时间：".date('Y-m-d H:i:s',$opentimestamp)."\n");
-            //未到开奖时间数据不更新
-            if (!empty($opentimestamp) && $opentimestamp > $this->nowTime)  return false;
-            wr('越南河内时时彩(快5)开始开奖');
-            $this->saveLottery(model($table_name),$limit_time,$cacheDataKey);
-            break;
-        //重庆时时彩
-        case 92:
-            //重庆时时彩售卖规则 00-02 10-22 22-00
-            $time_start1      = $this->format_lottery_limit('00:00:00');
-            $time_end1        = $this->format_lottery_limit('02:00:00');
+        //每一期时间间隔
+        $updata                 = [];
+        $lotteryTag             = config('lottery.lottery_tag');
+        if (!isset($lotteryTag[$this->lotteryid]) ) return true;
 
-            $time_start2      = $this->format_lottery_limit('10:00:00');
-            $time_end2        = $this->format_lottery_limit('22:00:00');
+        //每一期时间间隔
+        $updata                 = [];
+        $lastItem               = config('lottery.lottery_expect');
+        if (!(isset($lastItem[$this->lotteryid]) && $lastItem[$this->lotteryid] > 0)){
+            return true;
+        }
 
-            $time_start3      = $this->format_lottery_limit('22:00:00');
-            $time_end3        = $this->format_lottery_limit('23:59:59')+1;
+        $limit_time             = $this->getLotteryTime() * 60;
+        $dbModel                = model($lotteryTag[$this->lotteryid]);
 
-            //开奖间隔
-            $limit_time       = $this->getLotteryTime();
+        //删除3天前的数据
+        if ($this->lotteryid != 100) {
+            $del_time           = $this->format_lottery_limit('00:00:00') - 86400*3;
+            $dbModel->where('create_time','elt',$del_time)->delete();
+        }
 
-            $table_name       = 'lottery_cqssc';
-            $cacheDataKey     = 'updateData_'.$table_name.'_opentimestamp_' . $this->lotteryid;
+        $delay                  = model('category')->where('id','=',$this->lotteryid)->value('delay');
+        $delay                  = !empty($delay) ? intval($delay) : 0;
+        
+        $stime                  = isset($start_time[$this->lotteryid]) ? $start_time[$this->lotteryid] : '00:00:00';
 
-            //设置第二天首开时间
-            if ($this->nowTime>$this->format_lottery_limit('02:40:00') && $this->nowTime < $this->format_lottery_limit('09:50:00')) {
-                cache($cacheDataKey,$time_start2 + 60*1);
+        $days                   = 86400*1;
+        $first_expect_time      = $this->format_lottery_limit($stime) + $days;
+        $first_expect_time1     = $this->format_lottery_limit('22:00:00') + $days + $delay;
+        $first_expect_time2     = $this->format_lottery_limit('09:51:00') + $days + $delay;
+
+        //查找是否正常生成完数据
+        $code                   = md5($first_expect_time.'-'.$this->lotteryid);
+        $count                  = $dbModel->where('code','=',$code)->count('id');
+        if ($count != $lastItem[$this->lotteryid]) {
+            $dbModel->where('code','=',$code)->delete();
+        }else{
+            return true;
+        }
+
+        $delay_expect_time      = $first_expect_time + $delay;
+
+        for ($i=1; $i <= $lastItem[$this->lotteryid]; $i++) {
+            switch ($this->lotteryid) {
+                case 89:
+                    $opentimestamp          = $delay_expect_time + $i*$limit_time;
+                    $expect                 = date('Ymd',$first_expect_time) . substr('0000' . $i, -4);
+                    $opentime               = date('Y-m-d H:i:s' ,$opentimestamp - $delay);
+                    $term_number            = substr($expect, -4);
+                    break;
+                case 90:
+                    $opentimestamp          = $delay_expect_time + $i*$limit_time;
+                    $expect                 = date('Ymd',$first_expect_time) . substr('000' . $i, -3);
+                    $opentime               = date('Y-m-d H:i:s' ,$opentimestamp - $delay);
+                    $term_number            = substr($expect, -4);
+                    break;
+                case 92:
+                    if($i <= 23 || $i>= 97){
+                        $limit_time              = 5*60;
+                        if ($i <= 23) {
+                            $opentimestamp       = $delay_expect_time + $i*$limit_time;
+                        }else{
+                            $opentimestamp       = $first_expect_time1 + ($i - 96)*$limit_time;
+                        }
+                    }else{
+                        $limit_time             = 10*60;
+                        $opentimestamp          = $first_expect_time2 + ($i - 23)*$limit_time;
+                    }
+
+                    $expect             = date('Ymd',$first_expect_time) . substr('000' . $i, -3);
+                    $opentime           = date('Y-m-d H:i:s' ,$opentimestamp - $delay);
+                    $term_number        = substr($expect, -4);
+                    break;
+                case 93:
+                    $opentimestamp          = $delay_expect_time + $i*$limit_time;
+                    $expect                 = date('Ymd',$first_expect_time) . substr('000' . $i, -3);
+                    $opentime               = date('Y-m-d H:i:s' ,$opentimestamp - $delay);
+                    $term_number            = substr($expect, -4);
+                    break;
+                case 94:
+                    $initial_expect         = 281096;
+                    $initial_time           = strtotime('2018-11-09 00:00:00');
+                    $expect                 = $initial_expect + ($this->format_lottery_limit('00:00:00')-$initial_time)/86400 * $lastItem[$this->lotteryid];
+
+                    $opentimestamp   = $delay_expect_time + $i*$limit_time;
+                    $expect          = $expect > 9999999 ? $expect : substr('0000000' . ($i+$expect), -7);
+                    $opentime        = date('Y-m-d H:i:s' ,$opentimestamp - $delay);
+                    $term_number     = intval($expect);
+                    break;
+                case 95:
+                    $opentimestamp          = $delay_expect_time + $i*$limit_time;
+                    $expect                 = date('Ymd',$first_expect_time) . substr('000' . $i, -3);
+                    $opentime               = date('Y-m-d H:i:s' ,$opentimestamp - $delay);
+                    $term_number            = substr($expect, -4);
+                    break;
+                case 97:
+                    $initial_expect         = 713818;
+                    $initial_time           = strtotime('2018-11-09 00:00:00');
+                    $expect                 = $initial_expect + ($this->format_lottery_limit('00:00:00')-$initial_time)/86400 * $lastItem[$this->lotteryid];
+
+                    $opentimestamp   = $delay_expect_time + $i*$limit_time;
+                    $expect          = intval($i+$expect);
+                    $opentime        = date('Y-m-d H:i:s' ,$opentimestamp - $delay);
+                    $term_number     = intval($expect);
+                    break;
+                case 99:
+                    # code...
+                    break;
+                case 103:
+                case 104:
+                case 105:
+                case 106:
+                case 107:
+                    
+                    $opentimestamp          = $delay_expect_time + $i*$limit_time;
+                    $expect                 = date('Ymd',$first_expect_time) . substr('000' . $i, -3);
+                    $opentime               = date('Y-m-d H:i:s' ,$opentimestamp - $delay);
+                    $term_number            = substr($expect, -4);
+                    break;
+                case 109:
+                case 110:
+                case 111:
+                case 112:
+                case 113:
+                case 114:
+                    $opentimestamp          = $delay_expect_time + $i*$limit_time;
+                    $expect                 = date('Ymd',$first_expect_time) . substr('00' . $i, -2);
+                    $opentime               = date('Y-m-d H:i:s' ,$opentimestamp - $delay);
+                    $term_number            = substr($expect, -4);
+                    break;
+                case 116:
+                    $initial_expect         = 919795;
+                    $initial_time           = strtotime('2018-11-09 00:00:00');
+                    $expect                 = $initial_expect + ($this->format_lottery_limit('00:00:00')-$initial_time)/86400 * $lastItem[$this->lotteryid];
+
+                    $opentimestamp   = $delay_expect_time + $i*$limit_time;
+                    $expect          = intval($i+$expect);
+                    $opentime        = date('Y-m-d H:i:s' ,$opentimestamp - $delay);
+                    $term_number     = intval($expect);
+                    break;
+                default:
+                    echo $this->lotteryid;exit;break;
             }
 
-            //不在预售时间范围内 数据不用更新
-            if ($this->nowTime > $time_end1 && $this->nowTime < $time_start2) return false;
+            $updata[]   = [
+                'status'        =>2,
+                'expect'        =>$expect,
+                'lotterid'      =>$this->lotteryid,
+                'opentime'      =>$opentime,
+                'opentimestamp' =>$opentimestamp,
+                'term_number'   =>$term_number,
+                'create_time'   =>$this->nowTime,
+                'code'          =>$code,
+            ];
+        }
 
-            $opentimestamp    = cache($cacheDataKey);
-            wr("重庆时时彩下期开奖时间：".date('Y-m-d H:i:s',$opentimestamp)."\n");
-            //未到开奖时间数据不更新
-            if (!empty($opentimestamp) && $opentimestamp > $this->nowTime)  return false;
-            wr('重庆时时彩开始开奖');
-            $this->saveLottery(model($table_name),$limit_time,$cacheDataKey);
-          break;
-        case 93:
-            //新疆时时彩 00-02 10:10-23:59
-            $time_start1      = $this->format_lottery_limit('00:00:00');
-            $time_end1        = $this->format_lottery_limit('02:00:00');
-
-            $time_start2      = $this->format_lottery_limit('10:10:00');
-            $time_end2        = $this->format_lottery_limit('23:59:59')+1;
-            $limit_time       = $this->getLotteryTime();
-            $table_name       = 'lottery_xjssc';
-            $cacheDataKey     = 'updateData_'.$table_name.'_opentimestamp_' . $this->lotteryid;
-
-            //设置第二天首开时间
-            if ($this->nowTime>$this->format_lottery_limit('02:40:00') && $this->nowTime < $this->format_lottery_limit('10:00:00')) {
-                cache($cacheDataKey,$time_start2 + 60*1);
-            }
-
-            //不在预售时间范围内 数据不用更新
-            if ($this->nowTime > $time_end1 && $this->nowTime < $time_start2) return false;
-            
-            $opentimestamp    = cache($cacheDataKey);
-            wr("新疆时时彩下期开奖时间：".date('Y-m-d H:i:s',$opentimestamp)."\n");
-            //未到开奖时间数据不更新
-            if (!empty($opentimestamp) && $opentimestamp > $this->nowTime)  return false;
-            wr('新疆时时彩开始开奖');
-            $this->saveLottery(model($table_name),$limit_time,$cacheDataKey);
-            break;
-        case 94:
-            //黑龙江时时彩  09:30-23:30
-            $time_start1      = $this->format_lottery_limit('09:30:00');
-            $time_end1        = $this->format_lottery_limit('23:30:00');
-
-            $limit_time       = $this->getLotteryTime();
-            $table_name       = 'lottery_hljssc';
-            $cacheDataKey     = 'updateData_'.$table_name.'_opentimestamp_' . $this->lotteryid;
-
-            //设置第二天首开时间
-            if ($this->nowTime>$this->format_lottery_limit('02:40:00') && $this->nowTime < $this->format_lottery_limit('09:20:00')) {
-                cache($cacheDataKey,$time_start1 + 60*1);
-            }
-
-            //不在预售时间范围内 数据不用更新
-            if ($this->nowTime < $time_start1 || $this->nowTime > $time_end1) return false;
-
-            $opentimestamp    = cache($cacheDataKey);
-            wr("黑龙江时时彩下期开奖时间：".date('Y-m-d H:i:s',$opentimestamp)."\n");
-            //未到开奖时间数据不更新
-            if (!empty($opentimestamp) && $opentimestamp > $this->nowTime)  return false;
-            wr('黑龙江时时彩开始开奖');
-            $this->saveLottery(model($table_name),$limit_time,$cacheDataKey);
-            break;
-        case 95:
-            //天津时时彩 09:10-22:55
-            $time_start1      = $this->format_lottery_limit('09:10:00');
-            $time_end1        = $this->format_lottery_limit('22:55:00');
-            $limit_time       = $this->getLotteryTime();
-            $table_name       = 'lottery_tjssc';
-            $cacheDataKey     = 'updateData_'.$table_name.'_opentimestamp_' . $this->lotteryid;
-
-            //设置第二天首开时间
-            if ($this->nowTime>$this->format_lottery_limit('02:4:00') && $this->nowTime < $this->format_lottery_limit('09:00:00')) {
-                cache($cacheDataKey,$time_start1 + 60*1);
-            }
-
-            //不在预售时间范围内 数据不用更新
-            if ($this->nowTime < $time_start1 || $this->nowTime > $time_end1) return false;
-
-            $opentimestamp    = cache($cacheDataKey);
-            wr("天津时时彩下期开奖时间：".date('Y-m-d H:i:s',$opentimestamp)."\n");
-            //未到开奖时间数据不更新
-            if (!empty($opentimestamp) && $opentimestamp > $this->nowTime)  return false;
-            wr('天津时时彩开始开奖');
-            $this->saveLottery(model($table_name),$limit_time,$cacheDataKey);
-            break;
-        case 97:
-            //北京PK拾 09:02-23:57
-            $time_start1      = $this->format_lottery_limit('09:02:00');
-            $time_end1        = $this->format_lottery_limit('23:57:00');
-            $limit_time       = $this->getLotteryTime();
-            $table_name       = 'lottery_bjpk10';
-            $cacheDataKey     = 'updateData_'.$table_name.'_opentimestamp_' . $this->lotteryid;
-
-            //设置第二天首开时间
-            if ($this->nowTime>$this->format_lottery_limit('02:40:00') && $this->nowTime < $this->format_lottery_limit('08:52:00')) {
-                cache($cacheDataKey,$time_start1 + 60*1);
-            }
-
-            //不在预售时间范围内 数据不用更新
-            if ($this->nowTime < $time_start1 || $this->nowTime > $time_end1) return false;
-
-            $opentimestamp    = cache($cacheDataKey);
-            wr("北京PK拾下期开奖时间：".date('Y-m-d H:i:s',$opentimestamp)."\n");
-            //未到开奖时间数据不更新
-            if (!empty($opentimestamp) && $opentimestamp > $this->nowTime)  return false;
-            wr('北京PK拾开始开奖');
-            $this->saveLottery(model($table_name),$limit_time,$cacheDataKey);
-            break;
-        case 100:
-            //香港六合彩 不定期开奖 系统设置每天 21:35-22:00查询开奖信息
-            $time_start1      = $this->format_lottery_limit('00:00:00');
-            $time_end1        = $this->format_lottery_limit('24:00:00');
-            $limit_time       = $this->getLotteryTime();
-            $table_name       = 'lottery_hk6';
-            $cacheDataKey     = 'updateData_'.$table_name.'_opentimestamp_' . $this->lotteryid;
-            
-            //设置第二天首开时间
-            if ($this->nowTime>$this->format_lottery_limit('02:40:00') && $this->nowTime < $this->format_lottery_limit('23:55:00')) {
-                cache($cacheDataKey,$this->format_lottery_limit('21:36:00') + 60*1);
-            }
-
-            //不在预售时间范围内 数据不用更新
-            if ($this->nowTime < $time_start1 || $this->nowTime > $time_end1) return false;
-
-            $opentimestamp    = cache($cacheDataKey);
-            wr("香港六合彩下期预计开奖时间：".date('Y-m-d H:i:s',$opentimestamp)."\n");
-            //未到开奖时间数据不更新
-            if (!empty($opentimestamp) && $opentimestamp > $this->nowTime)  return false;
-            wr('香港六合彩开始开奖');
-            $this->saveLottery(model($table_name),$limit_time,$cacheDataKey);
-            break;
-        case 103:
-            //安徽快三 08:50-22:00 80期 10分钟一开
-            $time_start1      = $this->format_lottery_limit('08:50:00');
-            $time_end1        = $this->format_lottery_limit('22:00:00');
-            $limit_time       = $this->getLotteryTime();
-            $table_name       = 'lottery_ahk3';
-            $cacheDataKey     = 'updateData_'.$table_name.'_opentimestamp_' . $this->lotteryid;
-
-            //设置第二天首开时间
-            if ($this->nowTime>$this->format_lottery_limit('02:40:00') && $this->nowTime < $this->format_lottery_limit('08:40:00')) {
-                cache($cacheDataKey,$time_start1 + 60*1);
-            }
-
-            //不在预售时间范围内 数据不用更新
-            if ($this->nowTime < $time_start1 || $this->nowTime > $time_end1) return false;
-
-            $opentimestamp    = cache($cacheDataKey);
-            wr("安徽快三下期开奖时间：".date('Y-m-d H:i:s',$opentimestamp)."\n");
-            //未到开奖时间数据不更新
-            if (!empty($opentimestamp) && $opentimestamp > $this->nowTime)  return false;
-            wr('安徽快三开始开奖');
-            $this->saveLottery(model($table_name),$limit_time,$cacheDataKey);
-            break;
-        case 104:
-            //吉林快三 08:30-21:30 87期 9分钟一开
-            $time_start1      = $this->format_lottery_limit('08:30:00');
-            $time_end1        = $this->format_lottery_limit('21:30:00');
-            $limit_time       = $this->getLotteryTime();
-            $table_name       = 'lottery_jlk3';
-            $cacheDataKey     = 'updateData_'.$table_name.'_opentimestamp_' . $this->lotteryid;
-
-            //设置第二天首开时间
-            if ($this->nowTime>$this->format_lottery_limit('02:40:00') && $this->nowTime < $this->format_lottery_limit('08:20:00')) {
-                cache($cacheDataKey,$time_start1 + 60*1);
-            }
-
-            //不在预售时间范围内 数据不用更新
-            if ($this->nowTime < $time_start1 || $this->nowTime > $time_end1) return false;
-
-            $opentimestamp    = cache($cacheDataKey);
-            wr("吉林快三下期开奖时间：".date('Y-m-d H:i:s',$opentimestamp)."\n");
-            //未到开奖时间数据不更新
-            if (!empty($opentimestamp) && $opentimestamp > $this->nowTime)  return false;
-            wr('吉林快三开始开奖');
-            $this->saveLottery(model($table_name),$limit_time,$cacheDataKey);
-            break;
-        case 105:
-
-            //广西快三 09:38-22:28 78期 10分钟一开
-            $time_start1      = $this->format_lottery_limit('09:20:00');
-            $time_end1        = $this->format_lottery_limit('22:40:00');
-            $limit_time       = $this->getLotteryTime();
-            $table_name       = 'lottery_gxk3';
-            $cacheDataKey     = 'updateData_'.$table_name.'_opentimestamp_' . $this->lotteryid;
-
-            //设置第二天首开时间
-            if ($this->nowTime>$this->format_lottery_limit('02:40:00') && $this->nowTime < $this->format_lottery_limit('09:28:00')) {
-                cache($cacheDataKey,$time_start1 + 60*1);
-            }
-
-            //不在预售时间范围内 数据不用更新
-            if ($this->nowTime < $time_start1 || $this->nowTime > $time_end1) return false;
-
-            $opentimestamp    = cache($cacheDataKey);
-            wr("广西快三下期开奖时间：".date('Y-m-d H:i:s',$opentimestamp)."\n");
-            //未到开奖时间数据不更新
-            if (!empty($opentimestamp) && $opentimestamp > $this->nowTime)  return false;
-            wr('广西快三开始开奖');
-            $this->saveLottery(model($table_name),$limit_time,$cacheDataKey);
-            break;
-        case 106:
-            //江苏快三 08:40-22:10 82期 10分钟一开
-            $time_start1      = $this->format_lottery_limit('08:40:00');
-            $time_end1        = $this->format_lottery_limit('22:10:00');
-            $limit_time       = $this->getLotteryTime();
-            $table_name       = 'lottery_jsk3';
-            $cacheDataKey     = 'updateData_'.$table_name.'_opentimestamp_' . $this->lotteryid;
-
-            //设置第二天首开时间
-            if ($this->nowTime>$this->format_lottery_limit('02:40:00') && $this->nowTime < $this->format_lottery_limit('08:30:00')) {
-                cache($cacheDataKey,$time_start1 + 60*1);
-            }
-
-            //不在预售时间范围内 数据不用更新
-            if ($this->nowTime < $time_start1 || $this->nowTime > $time_end1) return false;
-
-            $opentimestamp    = cache($cacheDataKey);
-            wr("江苏快三下期开奖时间：".date('Y-m-d H:i:s',$opentimestamp)."\n");
-            //未到开奖时间数据不更新
-            if (!empty($opentimestamp) && $opentimestamp > $this->nowTime)  return false;
-            wr('江苏快三开始开奖');
-            $this->saveLottery(model($table_name),$limit_time,$cacheDataKey);
-            break;
-        case 107:
-            //湖北快三 09:10-22:00 78期 10分钟一开
-            $time_start1      = $this->format_lottery_limit('09:10:00');
-            $time_end1        = $this->format_lottery_limit('22:00:00');
-            $limit_time       = $this->getLotteryTime();
-            $table_name       = 'lottery_hubk3';
-            $cacheDataKey     = 'updateData_'.$table_name.'_opentimestamp_' . $this->lotteryid;
-
-            //设置第二天首开时间
-            if ($this->nowTime>$this->format_lottery_limit('02:40:00') && $this->nowTime < $this->format_lottery_limit('09:00:00')) {
-                cache($cacheDataKey,$time_start1 + 60*1);
-            }
-
-            //不在预售时间范围内 数据不用更新
-            if ($this->nowTime < $time_start1 || $this->nowTime > $time_end1) return false;
-
-            $opentimestamp    = cache($cacheDataKey);
-            wr("湖北快三下期开奖时间：".date('Y-m-d H:i:s',$opentimestamp)."\n");
-            //未到开奖时间数据不更新
-            if (!empty($opentimestamp) && $opentimestamp > $this->nowTime)  return false;
-            wr('湖北快三开始开奖');
-            $this->saveLottery(model($table_name),$limit_time,$cacheDataKey);
-            break;
-        case 109:
-            //山东11选5 08:31-22:11 78期 10分钟一开
-            $time_start1      = $this->format_lottery_limit('08:31:00');
-            $time_end1        = $this->format_lottery_limit('22:11:00');
-            $limit_time       = $this->getLotteryTime();
-            $table_name       = 'lottery_sd11x5';
-            $cacheDataKey     = 'updateData_'.$table_name.'_opentimestamp_' . $this->lotteryid;
-
-            //设置第二天首开时间
-            if ($this->nowTime>$this->format_lottery_limit('02:40:00') && $this->nowTime < $this->format_lottery_limit('08:21:00')) {
-                cache($cacheDataKey,$time_start1 + 60*1);
-            }
-
-            //不在预售时间范围内 数据不用更新
-            if ($this->nowTime < $time_start1 || $this->nowTime > $time_end1) return false;
-
-            $opentimestamp    = cache($cacheDataKey);
-            wr("山东11选5下期开奖时间：".date('Y-m-d H:i:s',$opentimestamp)."\n");
-            //未到开奖时间数据不更新
-            if (!empty($opentimestamp) && $opentimestamp > $this->nowTime)  return false;
-            wr('山东11选5开始开奖');
-            $this->saveLottery(model($table_name),$limit_time,$cacheDataKey);
-            break;
-        case 110:
-            //广东11选5 09:11-23:01 84期 10分钟一开
-            $time_start1      = $this->format_lottery_limit('09:11:00');
-            $time_end1        = $this->format_lottery_limit('23:01:00');
-            $limit_time       = $this->getLotteryTime();
-            $table_name       = 'lottery_gd11x5';
-            $cacheDataKey     = 'updateData_'.$table_name.'_opentimestamp_' . $this->lotteryid;
-
-            //设置第二天首开时间
-            if ($this->nowTime>$this->format_lottery_limit('02:40:00') && $this->nowTime < $this->format_lottery_limit('09:01:00')) {
-                cache($cacheDataKey,$time_start1 + 60*1);
-            }
-
-            //不在预售时间范围内 数据不用更新
-            if ($this->nowTime < $time_start1 || $this->nowTime > $time_end1) return false;
-
-            $opentimestamp    = cache($cacheDataKey);
-            wr("广东11选5下期开奖时间：".date('Y-m-d H:i:s',$opentimestamp)."\n");
-            //未到开奖时间数据不更新
-            if (!empty($opentimestamp) && $opentimestamp > $this->nowTime)  return false;
-            wr('广东11选5开始开奖');
-            $this->saveLottery(model($table_name),$limit_time,$cacheDataKey);
-            break;
-        case 111:
-            //上海11选5 09:00-23:50 90期 10分钟一开
-            $time_start1      = $this->format_lottery_limit('09:00:00');
-            $time_end1        = $this->format_lottery_limit('23:50:00');
-            $limit_time       = $this->getLotteryTime();
-            $table_name       = 'lottery_sh11x5';
-            $cacheDataKey     = 'updateData_'.$table_name.'_opentimestamp_' . $this->lotteryid;
-
-            //设置第二天首开时间
-            if ($this->nowTime>$this->format_lottery_limit('04:40:00') && $this->nowTime < $this->format_lottery_limit('08:50:00')) {
-                cache($cacheDataKey,$time_start1 + 60*1);
-            }
-
-            //不在预售时间范围内 数据不用更新
-            if ($this->nowTime < $time_start1 || $this->nowTime > $time_end1) return false;
-
-            $opentimestamp    = cache($cacheDataKey);
-            wr("上海11选5下期开奖时间：".date('Y-m-d H:i:s',$opentimestamp)."\n");
-            //未到开奖时间数据不更新
-            if (!empty($opentimestamp) && $opentimestamp > $this->nowTime)  return false;
-            wr('上海11选5开始开奖');
-            $this->saveLottery(model($table_name),$limit_time,$cacheDataKey);
-            break;
-        case 112:
-            //江苏11选5 08:37-22:07 82期 10分钟一开
-            $time_start1      = $this->format_lottery_limit('08:37:00');
-            $time_end1        = $this->format_lottery_limit('22:07:00');
-            $limit_time       = $this->getLotteryTime();
-            $table_name       = 'lottery_js11x5';
-            $cacheDataKey     = 'updateData_'.$table_name.'_opentimestamp_' . $this->lotteryid;
-
-            //设置第二天首开时间
-            if ($this->nowTime>$this->format_lottery_limit('02:40:00') && $this->nowTime < $this->format_lottery_limit('08:27:00')) {
-                cache($cacheDataKey,$time_start1 + 60*1);
-            }
-
-            //不在预售时间范围内 数据不用更新
-            if ($this->nowTime < $time_start1 || $this->nowTime > $time_end1) return false;
-
-            $opentimestamp    = cache($cacheDataKey);
-            wr("江苏11选5下期开奖时间：".date('Y-m-d H:i:s',$opentimestamp)."\n");
-            //未到开奖时间数据不更新
-            if (!empty($opentimestamp) && $opentimestamp > $this->nowTime)  return false;
-            wr('江苏11选5开始开奖');
-            $this->saveLottery(model($table_name),$limit_time,$cacheDataKey);
-            break;
-        case 113:
-            //湖北11选5 08:35-21:56 81期 10分钟一开
-            $time_start1      = $this->format_lottery_limit('08:35:00');
-            $time_end1        = $this->format_lottery_limit('21:56:00');
-            $limit_time       = $this->getLotteryTime();
-            $table_name       = 'lottery_hub11x5';
-            $cacheDataKey     = 'updateData_'.$table_name.'_opentimestamp_' . $this->lotteryid;
-
-            //设置第二天首开时间
-            if ($this->nowTime>$this->format_lottery_limit('04:40:00') && $this->nowTime < $this->format_lottery_limit('08:25:00')) {
-                cache($cacheDataKey,$time_start1 + 60*1);
-            }
-
-            //不在预售时间范围内 数据不用更新
-            if ($this->nowTime < $time_start1 || $this->nowTime > $time_end1) return false;
-
-            $opentimestamp    = cache($cacheDataKey);
-            wr("湖北11选5下期开奖时间：".date('Y-m-d H:i:s',$opentimestamp)."\n");
-            //未到开奖时间数据不更新
-            if (!empty($opentimestamp) && $opentimestamp > $this->nowTime)  return false;
-            wr('湖北11选5开始开奖');
-            $this->saveLottery(model($table_name),$limit_time,$cacheDataKey);
-            break;
-        case 114:
-            //广西11选5 09:02-23:52 90期 10分钟一开
-            $time_start1      = $this->format_lottery_limit('09:02:00');
-            $time_end1        = $this->format_lottery_limit('23:52:00');
-            $limit_time       = $this->getLotteryTime();
-            $table_name       = 'lottery_gx11x5';
-            $cacheDataKey     = 'updateData_'.$table_name.'_opentimestamp_' . $this->lotteryid;
-
-            //设置第二天首开时间
-            if ($this->nowTime>$this->format_lottery_limit('04:40:00') && $this->nowTime < $this->format_lottery_limit('08:52:00')) {
-                cache($cacheDataKey,$time_start1 + 60*1);
-            }
-
-            //不在预售时间范围内 数据不用更新
-            if ($this->nowTime < $time_start1 || $this->nowTime > $time_end1) return false;
-
-            $opentimestamp    = cache($cacheDataKey);
-            wr("广西11选5下期开奖时间：".date('Y-m-d H:i:s',$opentimestamp)."\n");
-            //未到开奖时间数据不更新
-            if (!empty($opentimestamp) && $opentimestamp > $this->nowTime)  return false;
-            wr('广西11选5开始开奖');
-            $this->saveLottery(model($table_name),$limit_time,$cacheDataKey);
-            break;
-        case 116:
-            //北京28 09:05-23:55 179期 5分钟一开
-            $time_start1      = $this->format_lottery_limit('09:05:00');
-            $time_end1        = $this->format_lottery_limit('23:55:00');
-            $limit_time       = $this->getLotteryTime();
-            $table_name       = 'lottery_bjkl8';
-            $cacheDataKey     = 'updateData_'.$table_name.'_opentimestamp_' . $this->lotteryid;
-
-            //设置第二天首开时间
-            if ($this->nowTime>$this->format_lottery_limit('02:40:00') && $this->nowTime < $this->format_lottery_limit('08:55:00')) {
-                cache($cacheDataKey,$time_start1 + 60*1);
-            }
-
-            //不在预售时间范围内 数据不用更新
-            if ($this->nowTime < $time_start1 || $this->nowTime > $time_end1) return false;
-
-            $opentimestamp    = cache($cacheDataKey);
-            wr("北京28下期开奖时间：".date('Y-m-d H:i:s',$opentimestamp)."\n");
-            //未到开奖时间数据不更新
-            if (!empty($opentimestamp) && $opentimestamp > $this->nowTime)  return false;
-            wr('北京28开始开奖');
-            $this->saveLottery(model($table_name),$limit_time,$cacheDataKey);
-            break;
-        default:
-          return true;
-          break;
-      }
-
-      return true;
+        $dbModel->saveLotteryInfoAll($updata);
+        return true;
     }
 
-    private function saveLottery($dbmodel,$limit_time,$cacheDataKey)
+    public function updateData()
+    {
+        $this->saveLottery();
+    }
+
+    private function saveLottery()
     {
         //这里做一个数据请求的延迟保护
         $delayKey       = "delay_saveLottery_3s_".$this->lotteryid;
@@ -1339,166 +1110,107 @@ class Lottery extends Base
 
         cache($delayKey,$this->nowTime+3);
 
-        //开始开奖
-        wr("start===========" .date('Y-m-d H:i:s')."\n");
+        $lotteryTag             = config('lottery.lottery_tag');
+        if (!isset($lotteryTag[$this->lotteryid]) ) return true;
+
+        $dbmodel                = model($lotteryTag[$this->lotteryid]);
+
         //获取最近一条数据入库
-        $data         = $this->getData();
+        $data                   = $this->getData();
 
-        if ($this->lotteryid == 89) {
-            wr($data);
-        }
-
-        if (!empty($data) && isset($data[0])) {
-
-            //缓存时间间隔
-            $nextOpenTime             = $data[0]['opentimestamp'] + 60*$limit_time;
-            cache($cacheDataKey,$nextOpenTime);
-
+        if (!empty($data) && isset($data[0]))
+        {
             $opdata                   = $data[0];
             $expect                   = $opdata['expect'];
             $info                     = $dbmodel->getLotteryInfoByExpect($expect);
-            $lastItem                 = [92=>120,93=>96,95=>84,103=>80,104=>87,105=>78,106=>82,107=>78,109=>78,110=>84,111=>90,112=>82,113=>81,114=>90];
-            $item                     = intval(substr($expect,-3));
             $opencode2                = '';
 
-            //这里判断是不是最后一期
-            switch ($this->lotteryid) {
-                case 94:
-                    //黑龙江期数设置
-                    $nextExpect       = ((intval($expect)+1) >= 1000000)?(intval($expect)+1):'0'.(intval($expect)+1);
-                    $nextItem         = intval($expect)+1;
-                    $term_number      = intval($expect);
-                    break;
-                case 97:
-                    //北京PK拾
-                    $nextExpect       = intval($expect)+1;
-                    $nextItem         = intval($expect)+1;
-                    $term_number      = intval($expect);
-                    break;
-                case 100:
-                    //香港六合彩
-                    $term_number      = substr($expect,-4);
-                    $openyear1        = date('Y',$opdata['opentimestamp']);
-                    $openyear2        = date('Y',$opdata['opentimestamp']+3600*24*2);
-
-                    if ($openyear1 != $openyear2) {
-                        $nextExpect           = substr(date('Ymd'),0,4) . '001';
-                        $nextItem             = substr($nextExpect,-4);
-                    }else{
-                        $nextExpect           = substr(date('Ymd'),0,3) . (substr($expect,-4)+1);
-                        $nextItem             = substr($expect,-4)+1;
-                    }
-                    break;
-                case 116:
-                    //北京28需要特殊处理
-                    $term_number        = substr($expect,-4);
-                    $nextItem           = substr($expect,-4)+1;
-                    $nextExpect         = intval($expect)+1;
-                    $opencode2          = $opdata['opencode'];
-                    $opdata['opencode'] = $this->getbj28code($opencode2);
-                    # code...
-                    break;
-                default:
-                    $term_number          = substr($expect,-4);
-
-                    if ($this->lotteryid >= 109 && $this->lotteryid <= 114) {
-                        //$temp_expect1   = str_replace(substr($expect,0,8), substr($expect,0,8).'0', $expect);
-                        $temp_expect2   = intval(substr($expect,-2))+1;
-                        $temp_expect2   = $temp_expect2 > 9 ? $temp_expect2 : '0'.$temp_expect2;
-
-                        $term_number    = intval("10".substr($term_number,-2));
-
-                        if (isset($lastItem[$this->lotteryid]) && $lastItem[$this->lotteryid]<= $temp_expect2) {
-                            $nextExpect           = substr($expect,0,8) . '01';
-                            $nextItem             = '1001';
-                        }else{
-
-                            $nextExpect           = substr($expect,0,8) . $temp_expect2;
-                            $nextItem             = $term_number+1;
-                        }
-                    }else{
-
-                        if (isset($lastItem[$this->lotteryid]) && $lastItem[$this->lotteryid]<= $item) {
-                            //最后一期 快三
-                            if (in_array($this->lotteryid,[103,104,105,106,107])) {
-                                $nextExpect           = substr(date('Ymd',time()+6*3600),0,8) . '001';
-                            }else{
-                                $nextExpect           = substr(date('Ymd'),0,8) . '001';
-                            }
-
-                            $nextItem             = substr($nextExpect,-4);
-                        }else{
-                            $tempNum              = intval(substr($expect,-4))+1;
-                            if ($tempNum > 0 && $tempNum < 10) {
-                                $tempNum          = '000'.$tempNum;
-                            }elseif($tempNum >10 && $tempNum < 100) {
-                                $tempNum          = '00'.$tempNum;
-                            }elseif ($tempNum >= 100 && $tempNum < 1000) {
-                                $tempNum          = '0'.$tempNum;
-                            }
-                            
-                            $nnn   = $this->lotteryid == 89 ? 8 : 7;
-
-                            $nextExpect           = substr(date('Ymd'),0,$nnn) . $tempNum;
-                            $nextItem             = $tempNum;
-                        }
-                    }
-                    
-                    break;
-            }
-
-            $delay_time   = [];/*[89=>10,90=>30,92=>-90,93=>60,94=>60,95=>60,97=>60,98=>60,100=>60,101=>60,103=>60,104=>60,105=>60,106=>60,107=>60,109=>60,110=>60,111=>60,112=>60,113=>60,114=>60,116=>60]*/;
-            $delay        = isset($delay_time[$this->lotteryid]) ? $delay_time[$this->lotteryid] : 0;
-
-            if (empty($info) || $info['status'] == 2) {
+            if (!empty($info) && $info['status'] == 2 && $this->lotteryid != 100 ) {
 
                 //删除预存未开奖数据
-                $dbmodel->delLotteryInfoByExpect($expect);
+                //$dbmodel->delLotteryInfoByExpect($expect,$this->lotteryid);
                 $updata = [
-                    [
                     'status'=>1,
-                    'lotterid'=>$this->lotteryid,
                     'expect'=>$opdata['expect'],
                     'opencode'=>$opdata['opencode'],
-                    'opentime'=>date('Y-m-d H:i:s',strtotime($opdata['opentime'])+$delay),
-                    'opentimestamp'=>$opdata['opentimestamp']+$delay,
-                    'term_number'=>$term_number,
-                    'create_time'=>$this->nowTime,
-                    'opencode2'=>$opencode2,
-                    ],
-                    [
-                    'status'=>2,
-                    'expect'=>$nextExpect,
-                    'lotterid'=>$this->lotteryid,
-                    'opentime'=>date('Y-m-d H:i:s' ,$nextOpenTime+$delay),
-                    'opentimestamp'=>$nextOpenTime+$delay,
-                    'term_number'=>$nextItem,
-                    'create_time'=>$this->nowTime
-                    ]
+                    'opentime'=>$opdata['opentime'],
+                    'opentimestamp'=>$opdata['opentimestamp'],
+                    'opencode2'=>$opencode2
                 ];
 
-                $dbmodel->saveLotteryInfoAll($updata);
+                if ($this->lotteryid != 116) {
+                    unset($updata['opencode2']);
+                }
+
+                $dbmodel->where('expect','=',$opdata['expect'])->update($updata);
 
                 //推送开奖信息
                 $this->jpushOpenLotterInfo();
-            }else{
-                //如果是六合彩 需要特殊处理 更新开奖时间
-                if ($this->lotteryid == 100) {
-                    $hk6_info            = $dbmodel->getLotteryInfoByExpect($nextExpect);
-                    if (!empty($hk6_info) && $this->nowTime >= $hk6_info['opentimestamp'] + (5*60)) {
-                        //更新下期开奖时间为 21:35
-                        $updata                     = [];
-                        $optime                     = $hk6_info['opentimestamp'] + 60*$limit_time +$delay;
-                        $updata['opentime']         = date('Y-m-d H:i:s' ,$optime);
-                        $updata['opentimestamp']    = $optime;
-                        $dbmodel->updateById($hk6_info['id'],$updata);
+            }
 
-                        cache($cacheDataKey,$optime);
-                    }
+            if ($this->lotteryid == 100)
+            {
+                $delay            = model('category')->where('id','=',$this->lotteryid)->value('delay');
+                $delay            = !empty($delay) ? intval($delay) : 0;
+
+                //香港六合彩
+                $term_number      = substr($expect,-4);
+                $openyear1        = date('Y',$opdata['opentimestamp']);
+                $openyear2        = date('Y',$opdata['opentimestamp']+3600*24*2);
+                $nextOpenTime     = $opdata['opentimestamp'] + 86400;
+
+                if ($openyear1 != $openyear2) {
+                    $nextExpect           = substr(date('Ymd'),0,4) . '001';
+                    $nextItem             = substr($nextExpect,-4);
+                }else{
+                    $nextExpect           = substr(date('Ymd'),0,3) . (substr($expect,-4)+1);
+                    $nextItem             = substr($expect,-4)+1;
+                }
+
+                if (empty($info) || $info['status'] == 2) {
+                    //删除预存未开奖数据
+                    $dbmodel->delLotteryInfoByExpect($expect);
+                    $updata = [
+                        [
+                        'status'        =>1,
+                        'expect'        =>$opdata['expect'],
+                        'lotterid'      =>$this->lotteryid,
+                        'opencode'      =>$opdata['opencode'],
+                        'opentime'      =>date('Y-m-d H:i:s',strtotime($opdata['opentime'])),
+                        'opentimestamp' =>$opdata['opentimestamp'],
+                        'term_number'   =>$term_number,
+                        'create_time'   =>$this->nowTime,
+                        ],
+                        [
+                        'status'        =>2,
+                        'expect'        =>$nextExpect,
+                        'lotterid'      =>$this->lotteryid,
+                        'opencode'      =>'',
+                        'opentime'      =>date('Y-m-d H:i:s' ,$nextOpenTime),
+                        'opentimestamp' =>$nextOpenTime + $delay,
+                        'term_number'   =>$nextItem,
+                        'create_time'   =>$this->nowTime
+                        ]
+                    ];
+
+                    $dbmodel->saveLotteryInfoAll($updata);
+                }
+
+                //如果是六合彩 需要特殊处理 更新开奖时间
+                $hk6_info            = model('lottery_hk6')->getLotteryInfoByExpect($nextExpect);
+                if (!empty($hk6_info) && $this->nowTime >= $hk6_info['opentimestamp'] + (5*60))
+                {
+                    //更新下期开奖时间为 21:35
+                    $opentimestamp              = $hk6_info['opentimestamp'] + 86400;
+                    $opentime                   = strtotime($hk6_info['opentime']) + 86400;
+
+                    $updata                     = [];
+                    $updata['opentime']         = date('Y-m-d H:i:s' ,$opentime);
+                    $updata['opentimestamp']    = $opentime + $delay;
+                    model('lottery_hk6')->where('id','=',$hk6_info['id'])->update($updata);
                 }
             }
 
-            wr("over===========" .date('Y-m-d H:i:s') ."\n");
             return true;
         }
 
@@ -1648,5 +1360,26 @@ class Lottery extends Base
         }
 
         return true;
+    }
+
+    public function updataLotteryOpenTime($delay = 0)
+    {
+        if (isset($this->lotteryConfig['lottery_tag'][$this->lotteryid])) {
+            $delay            = intval($delay);
+
+            $lottery_table    = $this->lotteryConfig['lottery_tag'][$this->lotteryid];
+            $dbModel          = model($lottery_table);
+
+            $map              = [];
+            $map[]            = ['opentimestamp','egt',$this->nowTime];
+            $map[]            = ['opencode','eq',''];
+
+            $lists            = $dbModel->where($map)->field(['id','opentime','opentimestamp'])->select();
+            $lists            = !empty($lists) ? $lists->toArray() : [];
+            foreach ($lists as $value) {
+                $opentime   = strtotime($value['opentime']) + $delay;
+                $dbModel->updateById($value['id'],['opentimestamp'=>$opentime]);
+            }
+        }
     }
 }

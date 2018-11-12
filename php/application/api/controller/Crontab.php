@@ -32,6 +32,12 @@ class Crontab extends Base
         return $this->execInside($parame);
     }
 
+    public function makelottery($parame = [])
+    {
+        //执行接口调用
+        return $this->execInside($parame);
+    }
+
     /**
      * 支付回调
      * @access public

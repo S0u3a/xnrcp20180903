@@ -529,17 +529,14 @@ class LotteryWin extends Base
 
         // ===修改标记===
         //根据玩法,将开奖号码去重
-        $opencode = array_unique($opencode);
-        $opencode = array_values($opencode);
+        /*$opencode = array_unique($opencode);
+        $opencode = array_values($opencode);*/
+
+        $opencode           = implode('',$opencode);
 
         foreach ($select_code as $key => $value)
         {
-            $nn       = 0;
-            foreach ($opencode as $vv)
-            {
-                if (intval($value[0]) === intval($vv)) $nn ++;
-            }
-
+            $nn       = substr_count($opencode,$value[0]);
             if ($nn >= $star) {
                 $win++;
                 $wincode[] = $value[0];
@@ -745,20 +742,18 @@ class LotteryWin extends Base
         $opencode1                 = $opencode;
         $opencode                  = explode(',',$opencode);
 
-        $num[5]             = intval($opencode[0]) == 0 ? 10 : $opencode[0];
-        $num[4]             = intval($opencode[1]) == 0 ? 10 : $opencode[1];
-        $num[3]             = intval($opencode[2]) == 0 ? 10 : $opencode[2];
-        $num[2]             = intval($opencode[3]) == 0 ? 10 : $opencode[3];
-        $num[1]             = intval($opencode[4]) == 0 ? 10 : $opencode[4];
+        $num[0]             = intval($opencode[0]) === 0 ? 10 : intval($opencode[0]);
+        $num[1]             = intval($opencode[1]) === 0 ? 10 : intval($opencode[1]);
+        $num[2]             = intval($opencode[2]) === 0 ? 10 : intval($opencode[2]);
+        $num[3]             = intval($opencode[3]) === 0 ? 10 : intval($opencode[3]);
+        $num[4]             = intval($opencode[4]) === 0 ? 10 : intval($opencode[4]);
 
         $wincode            = [];
         $win                = 0;
 
-        sort($num);
-
         $NiuNiuGameHelper   = new \xnrcms\NiuNiuGameHelper();
         $nn                 = $NiuNiuGameHelper->JudgeCowCow($num);
-        $nns                = ['牛牛'=>10,'牛九'=>9,'牛八'=>8,'牛七'=>7,'牛六'=>6,'牛五'=>5,'牛四'=>4,'牛三'=>3,'牛二'=>2,'牛一'=>1,'无牛'=>-1];
+        $nns                = ['牛牛'=>0,'牛九'=>9,'牛八'=>8,'牛七'=>7,'牛六'=>6,'牛五'=>5,'牛四'=>4,'牛三'=>3,'牛二'=>2,'牛一'=>1,'无牛'=>-1];
 
         foreach ($select_code as $key => $value)
         {
@@ -935,7 +930,7 @@ class LotteryWin extends Base
                 break;
             case 10:
                 $oldVal     = implode(',',$select_code);
-                if (in_array($opencode,$select_code)) {
+                if (in_array(intval(implode('',$opencode)),$select_code)) {
                     $win++;
                     $wincode[$oldVal] = $oldVal;
                 }
@@ -1721,7 +1716,7 @@ class LotteryWin extends Base
                 $dan = $suang = $da = $xiao = 0;
                 foreach ($opcode as $ov){
                     intval($ov)%2 == 0  ? $suang++ : $dan ++;
-                    (intval($ov) >= 25 && intval($ov) <= 48)  ? $da ++ : $xiao++;
+                    (intval($ov) >= 25 && intval($ov) <= 49)  ? $da ++ : $xiao++;
                 }
 
                 $op         = [];
