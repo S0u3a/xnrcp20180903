@@ -201,7 +201,7 @@ class Lottery extends Base
 
             //sort($list);
             //自行对数据格式化输出
-            //...
+            //..
             /*if ($id == 100) {
                 $table_name                 = 'lottery_hk6';
                 $cacheDataKey               = 'updateData_'.$table_name.'_opentimestamp_' . $id;
