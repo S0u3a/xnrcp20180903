@@ -110,7 +110,7 @@ class Lottery extends Base
 
         //列表数据
         $lists                      = $dbModel->getPageList($modelParame);
-        dblog($lists);
+
         //数据返回
         return (isset($lists['lists']) && !empty($lists['lists'])) ? $lists['lists'] : [];
     }
@@ -1124,6 +1124,11 @@ class Lottery extends Base
             $expect                   = $opdata['expect'];
             $info                     = $dbmodel->getLotteryInfoByExpect($expect);
             $opencode2                = '';
+            
+            if ($this->lotteryid == 116) {
+                $opencode2            = $opdata['opencode'];
+                $opdata['opencode']   = $this->getbj28code($opencode2);
+            }
 
             if (!empty($info) && $info['status'] == 2 && $this->lotteryid != 100 ) {
 

@@ -46,7 +46,7 @@ class Lottery extends Base
 
   public function formatWhereDefault2($model,$parame)
   {
-    $model->where('opentimestamp','lt',time());
+    $model->where('opentimestamp','elt',time());
 
     return $model;
   }

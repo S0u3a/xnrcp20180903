@@ -212,7 +212,7 @@ class Lottery extends Base
             $data                       = [];
             $data['lottery_id']         = $info['id'];
             $data['lottery_limit']      = $lottery->getLotteryTime();
-            $data['term_number']        = isset($list[0]['term_number'])?$list[0]['term_number']:'';
+            $data['term_number']        = '近期开奖';
             $data['nearfuture_code']    = isset($list[0]['opencode']) ? $list[0]['opencode'] : '';
             $data['opentimestamp']      = $stayOpen['opentimestamp'];
             $data['lottery_history']    = $list;
