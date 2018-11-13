@@ -195,28 +195,25 @@ class Lottery extends Base
             $parame['limit']        = 20;
             $list                   = $lottery->getLotteryList($parame);
 
+            $term_number            = isset($list[0]['term_number'])?$list[0]['term_number']:'';
+            $nearfuture_code        = isset($list[0]['opencode']) ? $list[0]['opencode'] : '';
+
+            unset($list[0]);
+
+            sort($list);
+            krsort($list);
+
             //待开奖数据
             $stayOpen               = $lottery->getNearInfoExpect();
-            //unset($list[0]);
-
-            //sort($list);
-            //自行对数据格式化输出
-            //..
-            /*if ($id == 100) {
-                $table_name                 = 'lottery_hk6';
-                $cacheDataKey               = 'updateData_'.$table_name.'_opentimestamp_' . $id;
-                $opentimestamp              = cache($cacheDataKey);
-                $stayOpen['opentimestamp']  = $opentimestamp;
-            }*/
 
             $data                       = [];
             $data['lottery_id']         = $info['id'];
             $data['lottery_limit']      = $lottery->getLotteryTime();
-            $data['term_number']        = '近期开奖';
-            $data['nearfuture_code']    = isset($list[0]['opencode']) ? $list[0]['opencode'] : '';
+            $data['term_number']        = $term_number;
+            $data['nearfuture_code']    = $nearfuture_code;
             $data['opentimestamp']      = $stayOpen['opentimestamp'];
             $data['lottery_history']    = $list;
-
+            
     		return ['Code' => '000000', 'Msg'=>lang('000000'),'Data'=>$data];
     	}else{
 

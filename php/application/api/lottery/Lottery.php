@@ -64,8 +64,11 @@ class Lottery extends Base
 
         $open_id       = $dbModel->where($map)->order('opentimestamp desc')->limit(1)->value('id');
         
+        $delay         = model('category')->where('id','=',$this->lotteryid)->value('delay');
+        $delay         = !empty($delay) ? intval($delay) : 0;
+
         $map           = [];
-        $map[]         = ['opentimestamp','gt',$this->nowTime];
+        $map[]         = ['opentimestamp','gt',$this->nowTime - $delay];
         $map[]         = ['id','gt',$open_id];
         $map[]         = ['opencode','eq',''];
 
@@ -84,6 +87,9 @@ class Lottery extends Base
             return [];
         }
 
+        $delay                      = model('category')->where('id','=',$this->lotteryid)->value('delay');
+        $delay                      = !empty($delay) ? intval($delay) : 0;
+
         $dbModel                    = model($lottery_table);
         
         /*定义数据模型参数*/
@@ -95,6 +101,10 @@ class Lottery extends Base
 
         //主表待查询字段，可以为空，默认全字段
         $modelParame['MainField']   = [];
+
+        //接口数据
+        $parame['optime']           = $this->nowTime - $delay;
+        $modelParame['apiParame']   = $parame;
 
         //检索条件 需要对应的模型里面定义查询条件 格式为formatWhere...
         $modelParame['whereFun']    = 'formatWhereDefault2';
