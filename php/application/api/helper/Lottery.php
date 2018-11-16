@@ -218,9 +218,9 @@ class Lottery extends Base
             $cacheTime                  = cache($cacheKey);
 
             if ($interval_time > $limit_time && !empty($cacheTime)) {
-                $opentimestamp          = $cacheTime;
+                $opentimestamp          = $cacheTime;wr("=========1");
             }else{
-                cache($cacheKey,$opentimestamp);
+                cache($cacheKey,$opentimestamp);wr("=========1");
             }
 
             $data                       = [];
