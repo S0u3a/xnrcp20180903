@@ -232,15 +232,15 @@ class Lottery extends Base
             $data['opentimestamp']      = $opentimestamp;
             $data['lottery_history']    = $list;
 
-            
-            wr([
-                $stayOpen['expect'],
-                date('Y-m-d H:i:s',$stayOpen['opentimestamp']),
-                date('Y-m-d H:i:s',$opentimestamp),
-                date('Y-m-d H:i:s',time()),
-                $stayOpen['opentimestamp']-time(),
-            ],'info1.txt');
-            
+            if ($id == 92) {
+                wr([
+                    $stayOpen['expect'],
+                    date('Y-m-d H:i:s',$stayOpen['opentimestamp']),
+                    date('Y-m-d H:i:s',$opentimestamp),
+                    date('Y-m-d H:i:s',time()),
+                    $opentimestamp-time(),
+                ],'info1.txt');
+            }           
 
     		return ['Code' => '000000', 'Msg'=>lang('000000'),'Data'=>$data];
     	}else{
