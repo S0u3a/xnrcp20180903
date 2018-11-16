@@ -977,7 +977,7 @@ class Lottery extends Base
         
         $stime                  = isset($start_time[$this->lotteryid]) ? $start_time[$this->lotteryid] : '00:00:00';
 
-        $days                   = 86400*0;
+        $days                   = 86400*1;
         $first_expect_time      = $this->format_lottery_limit($stime) + $days;
         $first_expect_time1     = $this->format_lottery_limit('22:00:00') + $days + $delay;
         $first_expect_time2     = $this->format_lottery_limit('09:51:00') + $days + $delay;
