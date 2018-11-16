@@ -230,18 +230,19 @@ class Lottery extends Base
             $data['nearfuture_code']    = $nearfuture_code;
             $data['open_number']        = $stayOpen['term_number'];
             $data['opentimestamp']      = $opentimestamp;
-            $data['lottery_history']    = $list;
 
             if ($id == 92) {
                 wr([
-                    $list[0],
+                    $data,
                     $stayOpen,
                     date('Y-m-d H:i:s',$stayOpen['opentimestamp']),
                     date('Y-m-d H:i:s',$opentimestamp),
                     date('Y-m-d H:i:s',time()),
                     $opentimestamp-time(),
                 ],'info1.txt');
-            }           
+            }
+
+            $data['lottery_history']    = $list;
 
     		return ['Code' => '000000', 'Msg'=>lang('000000'),'Data'=>$data];
     	}else{
