@@ -67,14 +67,17 @@ class Base
       $json   = json_decode($html,true);
 
       if ($this->lotteryid == 89) {
+
         $data['data']           = [];
         foreach ($json as $key => $value) {
-            $data['data'][]     = [
-                "expect"        =>$key,
-                "opencode"      =>$value['number'],
-                "opentime"      =>$value['dateline'],
-                "opentimestamp" =>(int)strtotime($value['dateline'])
-            ];
+            if(isset($value['number'])){
+                $data['data'][]     = [
+                    "expect"        =>$key,
+                    "opencode"      =>$value['number'],
+                    "opentime"      =>$value['dateline'],
+                    "opentimestamp" =>(int)strtotime($value['dateline'])
+                ];
+            }
         }
 
         return $data['data'];

@@ -196,24 +196,53 @@ class Lottery extends Base
             $list                   = $lottery->getLotteryList($parame);
 
             $term_number            = isset($list[0]['term_number'])?$list[0]['term_number']:'';
+            $nearfuture_time        = isset($list[0]['opentimestamp'])?$list[0]['opentimestamp']:'';
             $nearfuture_code        = isset($list[0]['opencode']) ? $list[0]['opencode'] : '';
 
-            unset($list[0]);
+            //unset($list[0]);
+
+            foreach ($list as $key => $value) {
+                if (empty($value['opencode'])) unset($list[$key]);
+            }
 
             sort($list);
             krsort($list);
 
             //待开奖数据
-            $stayOpen               = $lottery->getNearInfoExpect();
+            $stayOpen                   = $lottery->getNearInfoExpect();
+            $opentimestamp              = $stayOpen['opentimestamp'];
+
+            $limit_time                 = $lottery->getLotteryTime() * 60;
+            $interval_time              = $opentimestamp - time();
+            $cacheKey                   = 'opentimestamp_' . $info['id'];
+            $cacheTime                  = cache($cacheKey);
+
+            if ($interval_time > $limit_time && !empty($cacheTime)) {
+                $opentimestamp          = $cacheTime;
+            }else{
+                cache($cacheKey,$opentimestamp);
+            }
 
             $data                       = [];
             $data['lottery_id']         = $info['id'];
             $data['lottery_limit']      = $lottery->getLotteryTime();
             $data['term_number']        = $term_number;
             $data['nearfuture_code']    = $nearfuture_code;
-            $data['opentimestamp']      = $stayOpen['opentimestamp'];
+            $data['open_number']        = $stayOpen['term_number'];
+            $data['opentimestamp']      = $opentimestamp;
             $data['lottery_history']    = $list;
-            
+
+            /*if ($info['id'] == 89) {
+                wr([
+                    $stayOpen['expect'],
+                    date('Y-m-d H:i:s',$stayOpen['opentimestamp']),
+                    date('Y-m-d H:i:s',$data['opentimestamp']),
+                    date('Y-m-d H:i:s',time()),
+                    $stayOpen['opentimestamp'],
+                    $stayOpen['opentimestamp']-$nearfuture_time,
+                ],'info1.txt');
+            }*/
+
     		return ['Code' => '000000', 'Msg'=>lang('000000'),'Data'=>$data];
     	}else{
 
@@ -410,9 +439,23 @@ class Lottery extends Base
         //根据彩种ID获取用户选号列表
         $lottery_id             = isset($parame['lottery_id']) ? intval($parame['lottery_id']) : 0;
         $lottery                = new \app\api\lottery\Lottery($lottery_id);
-
+        
         //待开奖数据
-        $lottery_info           = $lottery->getNearInfoExpect();
+        $stayOpen                   = $lottery->getNearInfoExpect();
+        $opentimestamp              = strtotime($stayOpen['opentime']);
+
+        $limit_time                 = $lottery->getLotteryTime() * 60;
+        $interval_time              = $opentimestamp - time();
+        $cacheKey                   = 'opentimestamp_' . $lottery_id;
+        $cacheTime                  = cache($cacheKey);
+
+        if ($interval_time > $limit_time && !empty($cacheTime)) {
+            $opentimestamp          = $cacheTime;
+        }else{
+            cache($cacheKey,$opentimestamp);
+        }
+
+
         $orderList              = model('lottery_order')->getLotteryOrderListByLotteryid($lottery_id,$parame['uid']);
         $pay_money              = 0;
         $order_money            = 0;
@@ -431,6 +474,7 @@ class Lottery extends Base
         $userinfo                   = $userModel->getOneByUid($parame['uid']);
         $user_level                 = getUserLevel($userinfo['account_all']);
         $level                      = isset($user_level[0]) ? $user_level[0] : 0;
+
         //$rate                       = isset($user_level[1]) ? $user_level[1] : 0;
         //$pay_money                  = $rate > 0 ? $pay_money*$rate : $pay_money;
 
@@ -438,9 +482,9 @@ class Lottery extends Base
         $Data                       = [];
         $Data['lottery_id']         = $lottery_id;
         $Data['lottery_limit']      = $lottery->getLotteryTime();
-        $Data['term_number']        = $lottery_info['term_number'];
-        $Data['expect']             = $lottery_info['expect'];
-        $Data['opentimestamp']      = $lottery_info['opentimestamp'];
+        $Data['term_number']        = $stayOpen['term_number'];
+        $Data['expect']             = $stayOpen['expect'];
+        $Data['opentimestamp']      = $opentimestamp;
         $Data['lists']              = $orderList;
         $Data['user_level']         = $level;
         $Data['pay_money']          = sprintf("%.2f",$pay_money);

@@ -911,13 +911,14 @@ class Lottery extends Base
         $lock                       = $lockModel->getOneById(1);
         if(empty($lock)){
             $updata                 = [];
-            $updata['stime']        = $this->format_lottery_limit('03:00:00');
-            $updata['etime']        = $this->format_lottery_limit('04:00:00');
+            $updata['stime']        = $this->format_lottery_limit('00:01:00');
+            $updata['etime']        = $this->format_lottery_limit('00:10:00');
             $updata['lottery_ids']  = json_encode($lottery_ids);
             $lock                   = $lockModel->addData($updata);
         }
-
+        wr("系统定期开奖记录检测中.....................\n");
         if (!($lock['stime'] <= $this->nowTime && $lock['etime'] >= $this->nowTime)) {
+            wr("系统检测更新未到开始时间\n");
             return;
         }
 
@@ -937,22 +938,27 @@ class Lottery extends Base
             $lockModel->updateById(1,$updata);
         }else{
             $updata                 = [];
-            $updata['stime']        = $this->format_lottery_limit('03:00:00') + 86400;
-            $updata['etime']        = $this->format_lottery_limit('04:00:00') + 86400;
+            $updata['stime']        = $this->format_lottery_limit('00:05:00') + 86400;
+            $updata['etime']        = $this->format_lottery_limit('00:10:00') + 86400;
             $updata['lottery_ids']  = json_encode($lottery_ids);
             $lockModel->updateById(1,$updata);
+            wr("系统检测更新完成\n");
             return;
         }
 
         //每一期时间间隔
         $updata                 = [];
         $lotteryTag             = config('lottery.lottery_tag');
-        if (!isset($lotteryTag[$this->lotteryid]) ) return true;
+        if (!isset($lotteryTag[$this->lotteryid]) ){
+            wr("系统检测到彩种【" . $this->lotteryid . "】不存在\n");
+            return true;
+        }
 
         //每一期时间间隔
         $updata                 = [];
         $lastItem               = config('lottery.lottery_expect');
         if (!(isset($lastItem[$this->lotteryid]) && $lastItem[$this->lotteryid] > 0)){
+            wr("系统检测到彩种【" . $this->lotteryid . "】时间间隔不存在\n");
             return true;
         }
 
@@ -961,8 +967,9 @@ class Lottery extends Base
 
         //删除3天前的数据
         if ($this->lotteryid != 100) {
-            $del_time           = $this->format_lottery_limit('00:00:00') - 86400*3;
-            $dbModel->where('create_time','elt',$del_time)->delete();
+            $del_time           = $this->format_lottery_limit('00:00:00') - 86400*1 - 3600;
+            $count              = $dbModel->where('create_time','elt',$del_time)->delete();
+            wr("系统检测到删除彩种【" . $this->lotteryid . "】" . date('Y-m-d H:i:s',$del_time). "之前的" . $count . "个数据\n");
         }
 
         $delay                  = model('category')->where('id','=',$this->lotteryid)->value('delay');
@@ -970,17 +977,24 @@ class Lottery extends Base
         
         $stime                  = isset($start_time[$this->lotteryid]) ? $start_time[$this->lotteryid] : '00:00:00';
 
-        $days                   = 86400*1;
+        $days                   = 86400*0;
         $first_expect_time      = $this->format_lottery_limit($stime) + $days;
         $first_expect_time1     = $this->format_lottery_limit('22:00:00') + $days + $delay;
         $first_expect_time2     = $this->format_lottery_limit('09:51:00') + $days + $delay;
+        $first_expect_time3     = $this->format_lottery_limit('00:00:00') + $days;
 
         //查找是否正常生成完数据
-        $code                   = md5($first_expect_time.'-'.$this->lotteryid);
+        $code                   = md5($this->format_lottery_limit($stime).'-'.$this->lotteryid);
         $count                  = $dbModel->where('code','=',$code)->count('id');
+
+        wr("\n系统开始更新【" . $this->lotteryid . "】的数据\n第一期原始时间为：" . date('Y-m-d H:i:s',$this->format_lottery_limit($stime)) . 
+            "\n第一期实际时间为：" . date('Y-m-d H:i:s',$first_expect_time) ."\n当前数据标识为：" . $code . "\n当前已有数据：" . $count . "\n");
+
         if ($count != $lastItem[$this->lotteryid]) {
             $dbModel->where('code','=',$code)->delete();
+            wr("系统检测到删除彩种【" . $this->lotteryid . "】标识为" . $code. "的" . $count . "个数据\n");
         }else{
+            wr("系统检测到彩种【" . $this->lotteryid . "】的数据完整 无需生成\n");
             return true;
         }
 
@@ -1026,7 +1040,7 @@ class Lottery extends Base
                 case 94:
                     $initial_expect         = 281096;
                     $initial_time           = strtotime('2018-11-09 00:00:00');
-                    $expect                 = $initial_expect + ($this->format_lottery_limit('00:00:00')-$initial_time)/86400 * $lastItem[$this->lotteryid];
+                    $expect                 = $initial_expect + ($first_expect_time3-$initial_time)/86400 * $lastItem[$this->lotteryid];
 
                     $opentimestamp   = $delay_expect_time + $i*$limit_time;
                     $expect          = $expect > 9999999 ? $expect : substr('0000000' . ($i+$expect), -7);
@@ -1042,7 +1056,7 @@ class Lottery extends Base
                 case 97:
                     $initial_expect         = 713818;
                     $initial_time           = strtotime('2018-11-09 00:00:00');
-                    $expect                 = $initial_expect + ($this->format_lottery_limit('00:00:00')-$initial_time)/86400 * $lastItem[$this->lotteryid];
+                    $expect                 = $initial_expect + ($first_expect_time3-$initial_time)/86400 * $lastItem[$this->lotteryid];
 
                     $opentimestamp   = $delay_expect_time + $i*$limit_time;
                     $expect          = intval($i+$expect);
@@ -1077,15 +1091,14 @@ class Lottery extends Base
                 case 116:
                     $initial_expect         = 919795;
                     $initial_time           = strtotime('2018-11-09 00:00:00');
-                    $expect                 = $initial_expect + ($this->format_lottery_limit('00:00:00')-$initial_time)/86400 * $lastItem[$this->lotteryid];
+                    $expect                 = $initial_expect + ($first_expect_time3-$initial_time)/86400 * $lastItem[$this->lotteryid];
 
                     $opentimestamp   = $delay_expect_time + $i*$limit_time;
                     $expect          = intval($i+$expect);
                     $opentime        = date('Y-m-d H:i:s' ,$opentimestamp - $delay);
                     $term_number     = intval($expect);
                     break;
-                default:
-                    echo $this->lotteryid;exit;break;
+                default: echo $this->lotteryid;exit;break;
             }
 
             $updata[]   = [
@@ -1101,6 +1114,7 @@ class Lottery extends Base
         }
 
         $dbModel->saveLotteryInfoAll($updata);
+        wr("系统检测到彩种【" . $this->lotteryid . "】成功生成" . count($updata) . "个数据,预期数据" . $lastItem[$this->lotteryid] . "\n");
         return true;
     }
 
@@ -1115,7 +1129,7 @@ class Lottery extends Base
         $delayKey       = "delay_saveLottery_3s_".$this->lotteryid;
         $delay          = cache($delayKey);
         if (!empty($delay) && $delay > $this->nowTime) {
-            wr("\n" .$this->lotteryid."：延迟3秒开奖" ."\n");return false;
+            return false;
         }
 
         cache($delayKey,$this->nowTime+3);
@@ -1143,7 +1157,6 @@ class Lottery extends Base
             if (!empty($info) && $info['status'] == 2 && $this->lotteryid != 100 ) {
 
                 //删除预存未开奖数据
-                //$dbmodel->delLotteryInfoByExpect($expect,$this->lotteryid);
                 $updata = [
                     'status'=>1,
                     'expect'=>$opdata['expect'],
