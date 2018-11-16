@@ -218,9 +218,9 @@ class Lottery extends Base
             $cacheTime                  = cache($cacheKey);
 
             if ($interval_time > $limit_time && !empty($cacheTime)) {
-                $opentimestamp          = $cacheTime;wr("=========1");
+                $opentimestamp          = $cacheTime;wr("=========1",'info1.txt');
             }else{
-                cache($cacheKey,$opentimestamp);wr("=========1");
+                cache($cacheKey,$opentimestamp);wr("=========2",'info1.txt');
             }
 
             $data                       = [];
@@ -233,8 +233,6 @@ class Lottery extends Base
 
             if ($id == 92) {
                 wr([
-                    $data,
-                    $stayOpen,
                     date('Y-m-d H:i:s',$stayOpen['opentimestamp']),
                     date('Y-m-d H:i:s',$opentimestamp),
                     date('Y-m-d H:i:s',time()),
