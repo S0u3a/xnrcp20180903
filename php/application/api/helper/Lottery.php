@@ -233,6 +233,7 @@ class Lottery extends Base
 
             if ($id == 92) {
                 wr([
+                    $id,
                     date('Y-m-d H:i:s',$stayOpen['opentimestamp']),
                     date('Y-m-d H:i:s',$opentimestamp),
                     date('Y-m-d H:i:s',time()),
