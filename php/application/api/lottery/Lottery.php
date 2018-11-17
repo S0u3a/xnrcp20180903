@@ -984,11 +984,11 @@ class Lottery extends Base
         $first_expect_time3     = $this->format_lottery_limit('00:00:00') + $days;
 
         //查找是否正常生成完数据
-        $code                   = md5($this->format_lottery_limit($stime).'-'.$this->lotteryid);
+        $code                   = md5($first_expect_time . '-'.$this->lotteryid);
         $count                  = $dbModel->where('code','=',$code)->count('id');
 
-        wr("\n系统开始更新【" . $this->lotteryid . "】的数据\n第一期原始时间为：" . date('Y-m-d H:i:s',$this->format_lottery_limit($stime)) . 
-            "\n第一期实际时间为：" . date('Y-m-d H:i:s',$first_expect_time) ."\n当前数据标识为：" . $code . "\n当前已有数据：" . $count . "\n");
+        wr("\n系统开始更新【" . $this->lotteryid . "】的数据\n第一期原始时间为：" . date('Y-m-d H:i:s',$first_expect_time) . 
+            "\n第一期实际时间为：" . date('Y-m-d H:i:s',$first_expect_time + $delay) ."\n当前数据标识为：" . $code . "\n当前已有数据：" . $count . "\n");
 
         if ($count != $lastItem[$this->lotteryid]) {
             $dbModel->where('code','=',$code)->delete();
