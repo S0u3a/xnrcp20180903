@@ -201,12 +201,12 @@ class Lottery extends Base
 
             //unset($list[0]);
 
-            foreach ($list as $key => $value) {
+            /*foreach ($list as $key => $value) {
                 if (empty($value['opencode'])) unset($list[$key]);
             }
 
             sort($list);
-            krsort($list);
+            krsort($list);*/
 
             //待开奖数据
             $stayOpen                   = $lottery->getNearInfoExpect();
