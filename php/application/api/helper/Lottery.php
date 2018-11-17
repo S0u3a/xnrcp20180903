@@ -217,10 +217,10 @@ class Lottery extends Base
             $cacheKey                   = 'opentimestamp_' . $info['id'];
             $cacheTime                  = cache($cacheKey);
 
-            if ($interval_time > $limit_time && !empty($cacheTime)) {
-                $opentimestamp          = $cacheTime;wr("=========1",'info1.txt');
+            if ($interval_time > $limit_time && $interval_time < ($limit_time * 3) && !empty($cacheTime)) {
+                $opentimestamp          = $cacheTime;
             }else{
-                cache($cacheKey,$opentimestamp);wr("=========2",'info1.txt');
+                cache($cacheKey,$opentimestamp);
             }
 
             $data                       = [];
