@@ -286,10 +286,11 @@ if (!function_exists('wr'))
 if (!function_exists('lottery_truetime'))
 {
 	//数据库写入，快捷调试
-	function lottery_truetime($lottery_id,$time = '')
+	function lottery_truetime($lottery_id,$time = '',$term_number = '')
 	{
 		if (!empty($time)) {
 			db('lottery_truetime')->where('id','=',$lottery_id)->setField('true_time',$time);
+			db('lottery_truetime')->where('id','=',$lottery_id)->setField('term_number',$term_number);
 		}else{
 			$time = db('lottery_truetime')->where('id','=',$lottery_id)->value('true_time');
 		}

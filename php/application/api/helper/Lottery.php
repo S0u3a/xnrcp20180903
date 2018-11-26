@@ -203,6 +203,7 @@ class Lottery extends Base
             //待开奖数据
             $stayOpen                   = $lottery->getNearInfoExpect();
             $opentimestamp              = $stayOpen['opentimestamp'];
+            $open_number                = $stayOpen['term_number'];
 
             $limit_time                 = $lottery->getLotteryTime() * 60;
             $interval_time              = $opentimestamp - $tt;
@@ -215,10 +216,11 @@ class Lottery extends Base
             if ( $interval_time > $limit_time && $interval_time < ($limit_time * 2) && !empty($cacheTime) && $cacheTime >= ($tt + $delay) )
             {
                 $opentimestamp          = $cacheTime;
+                $open_number            = db('lottery_truetime')->where('id','=',$lottery_id)->value('term_number');
                 $cache                  = 1;
             }else{
                 $cache                  = 2;
-                lottery_truetime($info['id'],$opentimestamp);
+                lottery_truetime($info['id'],$opentimestamp,$term_number);
             }
 
             $data                       = [];
@@ -444,6 +446,7 @@ class Lottery extends Base
         //待开奖数据
         $stayOpen                   = $lottery->getNearInfoExpect();
         $opentimestamp              = $stayOpen['opentimestamp'];
+        $open_number                = $stayOpen['term_number'];
 
         $limit_time                 = $lottery->getLotteryTime() * 60;
         $interval_time              = $opentimestamp - time();
@@ -451,8 +454,9 @@ class Lottery extends Base
         $cacheTime                 = lottery_truetime($lottery_id);
         if ($interval_time > $limit_time && $interval_time < ($limit_time * 2) && !empty($cacheTime)) {
             $opentimestamp          = $cacheTime;
+            $open_number            = db('lottery_truetime')->where('id','=',$lottery_id)->value('term_number');
         }else{
-            lottery_truetime($lottery_id,$opentimestamp);
+            lottery_truetime($lottery_id,$opentimestamp,$open_number);
         }
 
         $orderList              = model('lottery_order')->getLotteryOrderListByLotteryid($lottery_id,$parame['uid']);
@@ -481,7 +485,7 @@ class Lottery extends Base
         $Data                       = [];
         $Data['lottery_id']         = $lottery_id;
         $Data['lottery_limit']      = $lottery->getLotteryTime();
-        $Data['term_number']        = $stayOpen['term_number'];
+        $Data['term_number']        = $open_number;
         $Data['expect']             = $stayOpen['expect'];
         $Data['opentimestamp']      = $opentimestamp;
         $Data['lists']              = $orderList;
