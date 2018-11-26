@@ -229,7 +229,7 @@ class Lottery extends Base
             $data['open_number']        = $stayOpen['term_number'];
             $data['opentimestamp']      = $opentimestamp;
 
-            if ( in_array($id,[89,100])) {
+            if ( in_array($id,[92,100])) {
                 wr([
                     $cache,
                     $id,
