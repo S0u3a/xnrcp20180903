@@ -237,7 +237,8 @@ class Lottery extends Base
                     date('Y-m-d H:i:s',$opentimestamp),
                     date('Y-m-d H:i:s',$tt),
                     $opentimestamp-$tt,
-                    $cacheTime
+                    $cacheTime,
+                    $data
                 ],'info1.txt');
             }
 
