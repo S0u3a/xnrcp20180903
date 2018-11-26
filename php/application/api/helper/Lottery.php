@@ -216,7 +216,7 @@ class Lottery extends Base
             if ( $interval_time > $limit_time && $interval_time < ($limit_time * 2) && !empty($cacheTime) && $cacheTime >= ($tt + $delay) )
             {
                 $opentimestamp          = $cacheTime;
-                $open_number            = db('lottery_truetime')->where('id','=',$lottery_id)->value('term_number');
+                //$open_number            = db('lottery_truetime')->where('id','=',$lottery_id)->value('term_number');
                 $cache                  = 1;
             }else{
                 $cache                  = 2;
@@ -454,7 +454,7 @@ class Lottery extends Base
         $cacheTime                 = lottery_truetime($lottery_id);
         if ($interval_time > $limit_time && $interval_time < ($limit_time * 2) && !empty($cacheTime)) {
             $opentimestamp          = $cacheTime;
-            $open_number            = db('lottery_truetime')->where('id','=',$lottery_id)->value('term_number');
+            //$open_number            = db('lottery_truetime')->where('id','=',$lottery_id)->value('term_number');
         }else{
             lottery_truetime($lottery_id,$opentimestamp,$open_number);
         }
