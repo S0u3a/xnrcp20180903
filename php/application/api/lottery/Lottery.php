@@ -66,15 +66,22 @@ class Lottery extends Base
         
         $delay         = model('category')->where('id','=',$this->lotteryid)->value('delay');
         $delay         = !empty($delay) ? intval($delay) : 0;
-
         $map           = [];
-        $map[]         = ['opentimestamp','gt',$this->nowTime - $delay];
-        $map[]         = ['id','gt',$open_id];
-        $map[]         = ['opencode','eq',''];
+
+        //测试六合彩
+        if ($this->lotteryid == 100 && config('system_config.hk6_opennum') != 'no')
+        {
+            $map[]         = ['opentimestamp','gt',$this->nowTime - $delay];
+        }else{
+            $map[]         = ['opentimestamp','gt',$this->nowTime - $delay];
+            $map[]         = ['id','gt',$open_id];
+            $map[]         = ['opencode','eq',''];
+        }
 
         $noOpenInfo                 = $dbModel->where($map)->order('opentimestamp asc')->find();
+        $noOpenInfo                 = !empty($noOpenInfo) ? $noOpenInfo->toArray() : [];
 
-        return !empty($noOpenInfo) ? $noOpenInfo->toArray() : [];
+        return $noOpenInfo;
     }
     //获取最近
     public function getLotteryList($parame=[])
@@ -967,9 +974,10 @@ class Lottery extends Base
 
         //删除3天前的数据
         if ($this->lotteryid != 100) {
-            $del_time           = $this->format_lottery_limit('00:00:00') - 86400*1 - 3600;
+            $del_time           = $this->format_lottery_limit('00:00:00') - 86400*7 - 3600;
             $count              = $dbModel->where('create_time','elt',$del_time)->delete();
             wr("系统检测到删除彩种【" . $this->lotteryid . "】" . date('Y-m-d H:i:s',$del_time). "之前的" . $count . "个数据\n");
+            wr("预定时间删除：彩种【" . $this->lotteryid . "】" . date('Y-m-d H:i:s',$del_time). "之前的" . $count . "个数据\n",'detele0.txt');
         }
 
         $delay                  = model('category')->where('id','=',$this->lotteryid)->value('delay');
@@ -993,6 +1001,7 @@ class Lottery extends Base
         if ($count != $lastItem[$this->lotteryid]) {
             $dbModel->where('code','=',$code)->delete();
             wr("系统检测到删除彩种【" . $this->lotteryid . "】标识为" . $code. "的" . $count . "个数据\n");
+            wr("数量不对称删除：彩种【" . $this->lotteryid . "】标识为" . $code. "的" . $count . "个数据\n",'detele1.txt');
         }else{
             wr("系统检测到彩种【" . $this->lotteryid . "】的数据完整 无需生成\n");
             return true;
@@ -1129,10 +1138,11 @@ class Lottery extends Base
         $delayKey       = "delay_saveLottery_3s_".$this->lotteryid;
         $delay          = cache($delayKey);
         if (!empty($delay) && $delay > $this->nowTime) {
+            wr("延迟10秒钟【" . $this->lotteryid . "】\n");
             return false;
         }
 
-        cache($delayKey,$this->nowTime+3);
+        cache($delayKey,$this->nowTime + 10);
 
         $lotteryTag             = config('lottery.lottery_tag');
         if (!isset($lotteryTag[$this->lotteryid]) ) return true;

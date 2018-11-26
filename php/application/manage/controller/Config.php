@@ -134,21 +134,22 @@ class Config extends Base
 
         //测试六合彩开奖临时代码，上线需要删除
         if (isset($postData['hk6_opennum']) && !empty($postData['hk6_opennum'])) {
-            $opennum        = $postData['hk6_opennum'];
+            $opennum        = $postData['hk6_opennum'] == 'no' ? '' : $postData['hk6_opennum'];
             $info           = model('lottery_hk6')->where('id','>',1)->limit(1)->order('id desc')->find();
             $info           = !empty($info) ? $info->toArray() : [];
             $updata                     = [];
-            $time                       = time()-10;
-            $updata['opencode']         = $postData['hk6_opennum'];
-            $updata['opentime']         = date('Y-m-d H:i:s',$time);
-            $updata['opentimestamp']    = $time;
+            $time                       = time() + 120;
+            $updata['opencode']         = $opennum;
+            $updata['opentimestamp']    = !empty($opennum) ? $time : strtotime($info['opentime']);
             model('lottery_hk6')->updateById($info['id'],$updata);
 
-            //更新订单
-            $map                        = [];
-            $map[]                      = ['status','=',2];
-            $map[]                      = ['lottery_id','=',100];
-            model('lottery_order')->where($map)->update(['opentimestamp'=>time()]);
+            if (!empty($opennum)) {
+                //更新订单
+                $map                        = [];
+                $map[]                      = ['status','=',2];
+                $map[]                      = ['lottery_id','=',100];
+                model('lottery_order')->where($map)->update(['opentimestamp'=>$time]);
+            }
         }
 
         $config                     = !empty($postData) ? json_encode($postData) : '';

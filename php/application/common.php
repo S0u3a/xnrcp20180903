@@ -282,6 +282,22 @@ if (!function_exists('wr'))
 		$return == true ? file_put_contents('../runtime/'.$file,var_export($data,true),FILE_APPEND) : file_put_contents('../runtime/'.$file,var_export($data,true));
 	}
 }
+
+if (!function_exists('lottery_truetime'))
+{
+	//数据库写入，快捷调试
+	function lottery_truetime($lottery_id,$time = '')
+	{
+		if (!empty($time)) {
+			db('lottery_truetime')->where('id','=',$lottery_id)->setField('true_time',$time);
+		}else{
+			$time = db('lottery_truetime')->where('id','=',$lottery_id)->value('true_time');
+		}
+
+		return $time;
+	}
+}
+
 if (!function_exists('dblog'))
 {
 	//数据库写入，快捷调试

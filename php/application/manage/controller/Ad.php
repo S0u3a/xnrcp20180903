@@ -32,7 +32,7 @@ class Ad extends Base
         $this->apiUrl['quickedit']    = 'Api/Ad/quickEditData';
         $this->apiUrl['del']          = 'Api/Ad/delData';
     }
-
+    
 	//列表页面
 	public function index()
     {
@@ -86,33 +86,6 @@ class Ad extends Base
         $pageData['title2']             = '广告索引与管理';
         $pageData['notice']             = ['列表只是展示部分字段信息，详情请点击编辑查看.'];
 
-        $time                       = time();
-        $data                       = [];
-        $data['insCode']            = '80000384';
-        $data['insMerchantCode']    = '887581298600467';
-        $data['hpMerCode']          = 'WKJGWKQTCS@20180813173307';
-        $data['orderNo']            = date('YmdHis',$time) . randomString(6);;
-        $data['orderDate']          = date('Ymd',$time);
-        $data['orderTime']          = date('YmdHis',$time);
-        $data['currencyCode']       = 156;
-        $data['orderAmount']        = 100;
-        $data['orderType']          = 'D0';
-        $data['certType']           = '01';
-        $data['certNumber']         = '341126197709218366';
-        $data['accountType']        = '01';
-        $data['accountName']        = '互联网';
-        $data['accountNumber']      = '6221558812340000';
-        $data['mainBankName']       = '';
-        $data['mainBankCode']       = '';
-        $data['openBranchBankName'] = '';
-        $data['mobile']             = '13552535506';
-        $data['attach']             = '用户提现';
-        $data['nonceStr']           = randomString(15,7);
-
-        $keys       = '3F7DB75AFBE34A4B40ECD0CC4A8B6492';
-        $signArr    = [$data['insCode'],$data['insMerchantCode'],$data['hpMerCode'],$data['orderNo'],$data['orderDate'],$data['orderTime'],$data['currencyCode'],$data['orderAmount'],$data['orderType'],$data['accountType'],$data['accountName'],$data['accountNumber'],$data['nonceStr'],$keys];
-        $data['signature']          = md5(implode('|',$signArr));
-
         //渲染数据到页面模板上
         $assignData['_page']            = $p;
         $assignData['_total']           = $total;
@@ -122,7 +95,6 @@ class Ad extends Base
         $assignData['listNode']         = $listNode;
         $assignData['listData']         = $listData;
         $assignData['pageData']         = $pageData;
-        $assignData['testPay']          = $data;
         $this->assignData($assignData);
 
         //记录当前列表页的cookie

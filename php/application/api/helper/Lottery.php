@@ -173,6 +173,7 @@ class Lottery extends Base
     {
         //主表数据库模型
     	$dbModel			= model($this->mainTable);
+        $tt                 = time();
 
         //数据ID
         $id                 = isset($parame['lotteryid']) ? intval($parame['lotteryid']) : 0;
@@ -199,28 +200,25 @@ class Lottery extends Base
             $nearfuture_time        = isset($list[0]['opentimestamp'])?$list[0]['opentimestamp']:'';
             $nearfuture_code        = isset($list[0]['opencode']) ? $list[0]['opencode'] : '';
 
-            //unset($list[0]);
-
-            /*foreach ($list as $key => $value) {
-                if (empty($value['opencode'])) unset($list[$key]);
-            }
-
-            sort($list);
-            krsort($list);*/
-
             //待开奖数据
             $stayOpen                   = $lottery->getNearInfoExpect();
             $opentimestamp              = $stayOpen['opentimestamp'];
 
             $limit_time                 = $lottery->getLotteryTime() * 60;
-            $interval_time              = $opentimestamp - time();
-            $cacheKey                   = 'opentimestamp_' . $info['id'];
-            $cacheTime                  = cache($cacheKey);
+            $interval_time              = $opentimestamp - $tt;
 
-            if ($interval_time > $limit_time && $interval_time < ($limit_time * 3) && !empty($cacheTime)) {
+            $cacheTime                 = lottery_truetime($info['id']);
+            
+            $delay                     = model('category')->where('id','=',$id)->value('delay');
+            $delay                     = !empty($delay) ? intval($delay) : 0;
+
+            if ( $interval_time > $limit_time && $interval_time < ($limit_time * 2) && !empty($cacheTime) && $cacheTime >= ($tt + $delay) )
+            {
                 $opentimestamp          = $cacheTime;
+                $cache                  = 1;
             }else{
-                cache($cacheKey,$opentimestamp);
+                $cache                  = 2;
+                lottery_truetime($info['id'],$opentimestamp);
             }
 
             $data                       = [];
@@ -231,13 +229,15 @@ class Lottery extends Base
             $data['open_number']        = $stayOpen['term_number'];
             $data['opentimestamp']      = $opentimestamp;
 
-            if ($id == 92) {
+            if ( in_array($id,[89,100])) {
                 wr([
+                    $cache,
                     $id,
                     date('Y-m-d H:i:s',$stayOpen['opentimestamp']),
                     date('Y-m-d H:i:s',$opentimestamp),
-                    date('Y-m-d H:i:s',time()),
-                    $opentimestamp-time(),
+                    date('Y-m-d H:i:s',$tt),
+                    $opentimestamp-$tt,
+                    $cacheTime
                 ],'info1.txt');
             }
 
@@ -442,19 +442,17 @@ class Lottery extends Base
         
         //待开奖数据
         $stayOpen                   = $lottery->getNearInfoExpect();
-        $opentimestamp              = strtotime($stayOpen['opentime']);
+        $opentimestamp              = $stayOpen['opentimestamp'];
 
         $limit_time                 = $lottery->getLotteryTime() * 60;
         $interval_time              = $opentimestamp - time();
-        $cacheKey                   = 'opentimestamp_' . $lottery_id;
-        $cacheTime                  = cache($cacheKey);
 
-        if ($interval_time > $limit_time && !empty($cacheTime)) {
+        $cacheTime                 = lottery_truetime($lottery_id);
+        if ($interval_time > $limit_time && $interval_time < ($limit_time * 2) && !empty($cacheTime)) {
             $opentimestamp          = $cacheTime;
         }else{
-            cache($cacheKey,$opentimestamp);
+            lottery_truetime($lottery_id,$opentimestamp);
         }
-
 
         $orderList              = model('lottery_order')->getLotteryOrderListByLotteryid($lottery_id,$parame['uid']);
         $pay_money              = 0;
