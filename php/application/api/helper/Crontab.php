@@ -342,7 +342,7 @@ class Crontab extends Base
                 try {
                     $compkey                = "0401090933523utT0MeA";        
                     $return                 = request()->param();
-                    wr($return,'paylog.txt');
+                    
                     $p1_yingyongnum         = $return['p1_yingyongnum'];               
                     $p2_ordernumber         = $return['p2_ordernumber'];
                     $p3_money               = $return['p3_money'];
@@ -359,7 +359,7 @@ class Crontab extends Base
                     $presign                = $p1_yingyongnum."&".$p2_ordernumber."&".$p3_money."&".$p4_zfstate."&".$p5_orderid."&".$p6_productcode."&".$p7_bank_card_code."&".$p8_charset."&".$p9_signtype."&".$p11_pdesc."&".$p13_zfmoney"&".$compkey;
                     // echo $presign."<br/>";
                     $sign                       =strtoupper(md5($presign));
-
+                    wr([$sign,$return],'paylog.txt');
                     if ($sign == $return['p10_sign'] && $return['p4_zfstate'] == "1")
                     {
                         
