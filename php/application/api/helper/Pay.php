@@ -103,7 +103,7 @@ class Pay extends Base
             $extend['pay_type']     = $paytype;
             $extend['uid']          = $parame['uid'] ;
 
-            $payInfo   = $this->getPayInfo($order_sn,$body,$attach,$fee,$paytype,$extend,$uid,$banktag);
+            $payInfo   = $this->getPayInfo($order_sn,$body,$attach,$fee,$paytype,$extend,$uid,$banktag,$parame['terminal']);
             if($payInfo['Code'] !== '000000') return ['Code' => $payInfo['Code'], 'Msg'=>$payInfo['Msg']];
 
             //事先写入订单数据 未支付状态
@@ -249,7 +249,7 @@ class Pay extends Base
 
     /*接口扩展*/
 
-    private function getPayInfo($order_sn, $body, $attach, $fee, $paytype,$extend,$uid,$banktag='')
+    private function getPayInfo($order_sn, $body, $attach, $fee, $paytype,$extend,$uid,$banktag='',$terminal = 0)
     {
         switch (intval($paytype)){
             case 1 :
@@ -303,40 +303,43 @@ class Pay extends Base
                     return ['Code'=>'10000','Msg'=>$exception->errorMessage()] ;
                 }
                 break ;
-            case 3://泰佳科技-聚合通道 H5订单交易接口<微信v1.0>
+            case 3:
                 try{
-                    //获取配置
-                    $config                     = config('pay.sslpayment');
+                    $compkey                = "0401090933523utT0MeA";   //商户密钥
+                    $p1_yingyongnum         = "01018111680801";         //商户应用号
+                    $p2_ordernumber         = $order_sn;                //商户订单号
+                    $p3_money               = $fee;                     //商户订单金额，保留两位小数
+                    $p6_ordertime           = date("YmdHis", time());   //商户订单时间
+                    $p7_productcode         = "ZFB";                    //产品支付类型编码
+                    $presign                = $p1_yingyongnum."&".$p2_ordernumber."&".$p3_money."&".$p6_ordertime."&".$p7_productcode."&".$compkey;
+                    $p8_sign                = md5($presign);                //订单签名
 
-                    //获取配置
-                    $payData                    = [];
-                    $payData['TrCode']          = '4005';
-                    $payData['InstNo']          = $config['InstNo'];
-                    $payData['MchtNo']          = $config['MchtNo'];
-                    $payData['ReturnURL']       = $config['ReturnURL'] . '/3/uid/'.$uid;
-                    $payData['OrderNo']         = $order_sn;
-                    $payData['OrderAmount']     = $fee;
-                    $payData['Rsv']             = '0';
-                    $mac                        = md5($config['InstNo'].$payData['OrderNo'].$config['SignKey']);
-                    $payData['Mac']             = strtoupper($mac);
+                    $p9_signtype            = "";                       //签名方式
+                    $p10_bank_card_code     = "";                       //银行卡或卡类编码
 
-                    $url                        = 'http://www.uhjbv.top:8080/TopWeb/HLCNL/HLpay.do';
-                    $payInfo                    = CurlHttp($url,$payData,'POST');
+                    $types                  = [2=>2,3=>3];
+                    $p25_terminal           = isset($types[$terminal]) ? intval($types[$terminal]) : 0; //商户终端设备值
+ 
+                    // 终端设备值1 pc 2 ios  3 安卓
+                    $p26_ext1              = "1.1";                     //商户标识
 
-                    $payInfo                    = !empty($payInfo) ? json_decode($payInfo,true) : '';
-
-                    wr($payInfo,'pay.txt');
-                    if (isset($payInfo['PayUrl']) && !empty($payInfo['PayUrl'])) {
-                        
-                        /*$qrcode     = new \xnrcms\QRcode();
-                        $filename   = './uploads/payqrcode/'. $mac . '.png';
-                        $qrcode->png($payInfo['PayUrl'],$filename,'L',6);*/
-
-                        $path       = $payInfo['PayUrl'];
-                        return ['Code' => '000000','Msg'=>lang('000000'),'Data'=>['alipay'=>$path,'wxpay'=>[]]];
-                    }
-                    return ['Code' => '200004', 'Msg'=>lang('200004')];break ;
-
+                    $url        = 'http://toamlxm.sunlin1.com/jh-web-order/order/receiveOrder';
+                    $html       = '<!doctype html><html><head><meta http-equiv="content-type" content="text/html; charset=UTF-8"><meta charset="utf-8"></head><body onload="submitForm();">';
+                    $html       .= "<form id='yeepay' action='".$url."' method='post' >";
+                    $html       .= "<input type='hidden' name='p1_yingyongnum' value='".$p1_yingyongnum."'>";
+                    $html       .= "<input type='hidden' name='p2_ordernumber'          value='".$p2_ordernumber."'>";
+                    $html       .= "<input type='hidden' name='p3_money' value='".$p3_money."'>";
+                    $html       .= "<input type='hidden' name='p6_ordertime' value='".$p6_ordertime."'>";
+                    $html       .= "<input type='hidden' name='p7_productcode' value='".$p7_productcode."'>";
+                    $html       .= "<input type='hidden' name='p8_sign' value='".$p8_sign."'>";
+                    $html       .= "<input type='hidden' name='p9_signtype' value='".$p9_signtype."'>";
+                    $html       .= "<input type='hidden' name='p10_bank_card_code' value='".$p10_bank_card_code."'>";
+                    $html       .= "<input type='hidden' name='p25_terminal' value='".$p25_terminal."'>";
+                    $html       .= "<input type='hidden' name='p26_ext1' value='".$p26_ext1."'>";
+                    $html       .= "</form>";
+                    $html       .= '<script type="text/javascript">function submitForm() { document.getElementById("yeepay").submit();}</script></body></html>';
+                    return ['Code' => '000000','Msg'=>lang('000000'),'Data'=>['alipay'=>$html,'wxpay'=>[]]];
+                    break ;
                 }catch (PayException $exception){
                     return ['Code'=>'10000','Msg'=>$exception->errorMessage()] ;
                 }

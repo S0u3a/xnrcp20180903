@@ -287,15 +287,19 @@ if (!function_exists('lottery_truetime'))
 {
 	//数据库写入，快捷调试
 	function lottery_truetime($lottery_id,$time = '',$term_number = '')
-	{
+	{	
+		$dbModel 		= db('lottery_truetime');
 		if (!empty($time)) {
-			db('lottery_truetime')->where('id','=',$lottery_id)->setField('true_time',$time);
-			db('lottery_truetime')->where('id','=',$lottery_id)->setField('term_number',$term_number);
+			$dbModel->where('id','=',$lottery_id)->update(['true_time'=>$time,'term_number'=>$term_number]);
 		}else{
-			$time = db('lottery_truetime')->where('id','=',$lottery_id)->value('true_time');
+			$info 				= $dbModel->where('id','=',$lottery_id)->field('true_time,term_number')->find();
+			if (!empty($info)) {
+				$time 				= $info['true_time'];
+				$term_number 		= $info['term_number'];
+			}
 		}
 
-		return $time;
+		return [$time,$term_number];
 	}
 }
 
