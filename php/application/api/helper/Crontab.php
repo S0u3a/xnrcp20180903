@@ -356,7 +356,7 @@ class Crontab extends Base
                     $p11_pdesc              = $return['p11_pdesc'];
                     $p13_zfmoney            = $return['p13_zfmoney'];
                 
-                    $presign                = $p1_yingyongnum."&".$p2_ordernumber."&".$p3_money."&".$p4_zfstate."&".$p5_orderid."&".$p6_productcode."&".$p7_bank_card_code."&".$p8_charset."&".$p9_signtype."&".$p11_pdesc."&".$p13_zfmoney"&".$compkey;
+                    $presign                = $p1_yingyongnum."&".$p2_ordernumber."&".$p3_money."&".$p4_zfstate."&".$p5_orderid."&".$p6_productcode."&".$p7_bank_card_code."&".$p8_charset."&".$p9_signtype."&".$p11_pdesc."&".$p13_zfmoney."&".$compkey;
                     // echo $presign."<br/>";
                     $sign                       =strtoupper(md5($presign));
                     wr([$sign,$return],'paylog.txt');
