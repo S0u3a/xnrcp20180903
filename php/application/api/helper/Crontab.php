@@ -342,6 +342,7 @@ class Crontab extends Base
                 try {
                     $compkey                = "0401090933523utT0MeA";        
                     $return                 = request()->param();
+                    
                     wr($return,'paylog.txt');
                     $p1_yingyongnum         = $return['p1_yingyongnum'];               
                     $p2_ordernumber         = $return['p2_ordernumber'];
