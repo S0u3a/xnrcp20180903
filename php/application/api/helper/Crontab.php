@@ -343,7 +343,7 @@ class Crontab extends Base
                     $compkey                = "0401090933523utT0MeA";        
                     $return                 = request()->param();
                     wr($return,'paylog.txt');
-                    /*$p1_yingyongnum         = $return['p1_yingyongnum'];               
+                    $p1_yingyongnum         = $return['p1_yingyongnum'];               
                     $p2_ordernumber         = $return['p2_ordernumber'];
                     $p3_money               = $return['p3_money'];
                     $p4_zfstate             = $return['p4_zfstate'];
@@ -368,13 +368,11 @@ class Crontab extends Base
                         $out_trade_no  = $p2_ordernumber;
 
                         //业务处理
-                       echo "success"; 
+                       echo "success";
 
                     }else{
                           exit('fail');
                     }
-
-                    wr($return,'paylog.txt');*/
                 } catch (PayException $e) {
                     dblog($e) ;
                     exit;
