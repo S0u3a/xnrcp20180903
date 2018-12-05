@@ -364,7 +364,7 @@ class Crontab extends Base
                     {
                         
                         $payType       = isset($return['pay_type']) ? $return['pay_type'] : 0;
-                        $money         = isset($return['PayAmount']) ? $return['PayAmount'] : 0;
+                        $money         = isset($return['p3_money']) ? $return['p3_money'] : 0;
                         $out_trade_no  = $p2_ordernumber;
 
                         //业务处理
