@@ -340,22 +340,41 @@ class Crontab extends Base
                 break ;
             case 3:
                 try {
-                    //获取配置
-                    $config            = config('pay.sslpayment');
-                    $return            = request()->param();
+                    $compkey = "0401090933523utT0MeA";        
+                    $return                 = request()->param();
                     wr($return,'paylog.txt');
-                    $sign              = isset($return['Mac']) ? $return['Mac'] : '';
-                    $order_sn          = isset($return['OrderNo']) ? $return['OrderNo'] : '';
-                    $status            = isset($return['TranStat']) ? $return['TranStat'] : '';
-                    $mac               = md5($config['InstNo'].$order_sn.$config['SignKey']);
-                    if (!empty($return) && strtoupper($mac) === $sign && !empty($order_sn) && $status == '0000')
+                    $p1_yingyongnum         = $return['p1_yingyongnum'];               
+                    $p2_ordernumber         = $return['p2_ordernumber'];
+                    $p3_money               = $return['p3_money'];
+                    $p4_zfstate             = $return['p4_zfstate'];
+                    $p5_orderid             = $return['p5_orderid'];
+                    $p6_productcode         = $return['p6_productcode'];
+                    $p7_bank_card_code      = $return['p7_bank_card_code'];
+                    $p8_charset             = $return['p8_charset'];
+                    $p9_signtype            = $return['p9_signtype'];
+                    $p10_sign               = $return['p10_sign'];
+                    $p11_pdesc              = $return['p11_pdesc'];
+                    $p13_zfmoney            = $return['p13_zfmoney'];
+                
+                    $presign                = $p1_yingyongnum."&".$p2_ordernumber."&".$p3_money."&".$p4_zfstate."&".$p5_orderid."&".$p6_productcode."&".$p7_bank_card_code."&".$p8_charset."&".$p9_signtype."&".$p11_pdesc."&".$p13_zfmoney"&".$compkey;
+                    // echo $presign."<br/>";
+                    $sign                       =strtoupper(md5($presign));
+
+                    if ($sign == $return['p10_sign'] && $return['p4_zfstate'] == "1")
                     {
+                        
                         $payType       = isset($return['pay_type']) ? $return['pay_type'] : 0;
                         $money         = isset($return['PayAmount']) ? $return['PayAmount'] : 0;
-                        $out_trade_no  = $order_sn;
+                        $out_trade_no  = $p2_ordernumber;
+
+                        //业务处理
+                       echo "success"; 
+
                     }else{
-                      exit('fail');
+                          exit('fail');
                     }
+
+                    wr($return,'paylog.txt');
                 } catch (PayException $e) {
                     dblog($e) ;
                     exit;
