@@ -338,7 +338,9 @@ class Cash extends Base
         $postData['uid']            = $this->uid;
         $postData['hashid']         = $this->hashid;
         $postData['id']             = intval($ids);
-
+    
+        model('bank_cash')->updateById($postData['id'],['status'=>3]);
+        
         //请求数据
         $res       = $this->apiData($postData,'Api/Pay/substitute') ;
         $data      = $this->getApiData();
